@@ -1,58 +1,58 @@
-const W = 'w';
-const A = 'a';
-const S = 's';
-const D = 'd';
-const SHIFT = 'shift';
+const W = 'KeyW';
+const A = 'KeyA';
+const S = 'KeyS';
+const D = 'KeyD';
+const SHIFT = 'ShiftLeft';
 const DIRECTIONS = [W, A, S, D];
 
 class KeyDisplay {
     constructor() {
         this.map = new Map();
-        const w = document.createElement("div");
-        const a = document.createElement("div");
-        const s = document.createElement("div");
-        const d = document.createElement("div");
-        const shift = document.createElement("div");
+        const w = {element:document.createElement("div"), display:'w'};
+        const a = {element:document.createElement("div"), display:'a'};
+        const s = {element:document.createElement("div"), display:'s'};
+        const d = {element:document.createElement("div"), display:'d'};
+        const shift = {element:document.createElement("div"), display:'shift'};
         this.map.set(W, w);
         this.map.set(A, a);
         this.map.set(S, s);
         this.map.set(D, d);
         this.map.set(SHIFT, shift);
         this.map.forEach((v, k) => {
-            v.style.color = 'blue';
-            v.style.fontSize = '50px';
-            v.style.fontWeight = '800';
-            v.style.position = 'absolute';
-            v.textContent = k;
+            v.element.style.color = 'blue';
+            v.element.style.fontSize = '50px';
+            v.element.style.fontWeight = '800';
+            v.element.style.position = 'absolute';
+            v.element.textContent = v.display;
         });
         this.updatePosition();
         this.map.forEach((v, _) => {
-            document.body.append(v);
+            document.body.append(v.element);
         });
     }
 
     updatePosition() {
-        this.map.get(W).style.top = `${window.innerHeight - 150}px`;
-        this.map.get(A).style.top = `${window.innerHeight - 100}px`;
-        this.map.get(S).style.top = `${window.innerHeight - 100}px`;
-        this.map.get(D).style.top = `${window.innerHeight - 100}px`;
-        this.map.get(SHIFT).style.top = `${window.innerHeight - 100}px`;
-        this.map.get(W).style.left = `300px`;
-        this.map.get(A).style.left = `200px`;
-        this.map.get(S).style.left = `300px`;
-        this.map.get(D).style.left = `400px`;
-        this.map.get(SHIFT).style.left = `50px`;
+        this.map.get(W).element.style.top = `${window.innerHeight - 150}px`;
+        this.map.get(A).element.style.top = `${window.innerHeight - 100}px`;
+        this.map.get(S).element.style.top = `${window.innerHeight - 100}px`;
+        this.map.get(D).element.style.top = `${window.innerHeight - 100}px`;
+        this.map.get(SHIFT).element.style.top = `${window.innerHeight - 100}px`;
+        this.map.get(W).element.style.left = `300px`;
+        this.map.get(A).element.style.left = `200px`;
+        this.map.get(S).element.style.left = `300px`;
+        this.map.get(D).element.style.left = `400px`;
+        this.map.get(SHIFT).element.style.left = `50px`;
     }
 
     down(key) {
-        if (this.map.get(key.toLowerCase())) {
-            this.map.get(key.toLowerCase()).style.color = 'red';
+        if (this.map.get(key)) {
+            this.map.get(key).element.style.color = 'red';
         }
     }
 
     up(key) {
-        if (this.map.get(key.toLowerCase())) {
-            this.map.get(key.toLowerCase()).style.color = 'blue';
+        if (this.map.get(key)) {
+            this.map.get(key).element.style.color = 'blue';
         }
     }
 }

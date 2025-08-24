@@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // SCENE
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xa8def0);
+scene.background = new THREE.Color('#a8def0');
 
 // CAMERA
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -49,6 +49,7 @@ new GLTFLoader().load('models/Soldier.glb', function (gltf) {
     const mixer = new THREE.AnimationMixer(model);
     const animationsMap = new Map();
     gltfAnimations.filter(a => a.name != 'TPose').forEach(function (a) {
+        console.log(a.name);
         animationsMap.set(a.name, mixer.clipAction(a));
     });
 
@@ -59,16 +60,20 @@ new GLTFLoader().load('models/Soldier.glb', function (gltf) {
 const keysPressed = {};
 const keyDisplayQueue = new KeyDisplay();
 document.addEventListener('keydown', function (event) {
-    keyDisplayQueue.down(event.key);
+    // console.log('key down');
+    // console.log(event.code);
+    keyDisplayQueue.down(event.code);
     if (event.shiftKey && characterControls) {
         characterControls.switchRunToggle();
     } else {
-        keysPressed[event.key.toLowerCase()] = true;
+        keysPressed[event.code] = true;
     }
 }, false);
 document.addEventListener('keyup', function (event) {
-    keyDisplayQueue.up(event.key);
-    keysPressed[event.key.toLowerCase()] = false;
+    // console.log('key up');
+    // console.log(event.code);
+    keyDisplayQueue.up(event.code);
+    keysPressed[event.code] = false;
 }, false);
 
 const clock = new THREE.Clock();
