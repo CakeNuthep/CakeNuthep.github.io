@@ -1,10 +1,8 @@
 # threejs-character-controls-example
-threejs-character-controls-example
+Thank you original source code from [Stackblitz](https://stackblitz.com/github/tamani-coding/threejs-character-controls-example)  
 
-`npm install` and `npm run start`  
+We have convert it from TypeScript to javaScript.
   
-Try the [Stackblitz](https://stackblitz.com/github/tamani-coding/threejs-character-controls-example)  
-  
-Checkout the file `characterControls.ts` for the character controller implementation.
+Checkout the file `characterControls.js` for the character controller implementation.
 
 ![Screenshot](https://github.com/tamani-coding/threejs-character-controls-example/blob/main/screenshot01.png?raw=true)
