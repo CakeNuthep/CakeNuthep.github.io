@@ -4,6 +4,10 @@ import * as THREE from 'three';
 import { CameraHelper } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+
+
 
 // SCENE
 const scene = new THREE.Scene();
@@ -29,6 +33,57 @@ orbitControls.maxDistance = 15;
 orbitControls.enablePan = false;
 orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
 orbitControls.update();
+
+
+
+//Link Label
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const cube = new THREE.Mesh(geometry, material);
+cube.position.set(2, 0, 0);
+
+//// Attach a custom property with the link data
+cube.userData.link = 'https://threejs.org/';
+cube.userData.label = 'Click Me!';
+
+//// Create the HTML label element
+const labelDiv = document.createElement('a');
+labelDiv.className = 'link-label';
+labelDiv.textContent = cube.userData.label;
+labelDiv.href = cube.userData.link; // Set the link URL
+labelDiv.target = '_blank'; // Open in a new tab
+
+const label = new CSS2DObject(labelDiv);
+label.position.set(0, 1, 0); // Position relative to the cube
+cube.add(label);
+scene.add(cube);
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function onClick(event) {
+  // Calculate mouse position in normalized device coordinates
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(scene.children, true);
+
+  if (intersects.length > 0) {
+    const object = intersects[0].object;
+    if (object.userData.link) {
+      window.open(object.userData.link, '_blank');
+    }
+  }
+}
+
+window.addEventListener('click', onClick);
+
+const cssRenderer = new CSS2DRenderer();
+cssRenderer.setSize(window.innerWidth, window.innerHeight);
+cssRenderer.domElement.id = 'label-container';
+document.body.appendChild(cssRenderer.domElement);
+
 
 // LIGHTS
 light();
@@ -84,6 +139,10 @@ function animate() {
         characterControls.update(mixerUpdateDelta, keysPressed);
     }
     orbitControls.update();
+    // Update the CSS renderer
+    cssRenderer.render(scene, camera);
+
+    // Standard 3D renderer
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
 }
@@ -94,6 +153,7 @@ animate();
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+    cssRenderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setSize(window.innerWidth, window.innerHeight);
     keyDisplayQueue.updatePosition();
 }
