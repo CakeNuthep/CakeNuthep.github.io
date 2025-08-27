@@ -14,7 +14,20 @@ class KeyDisplay {
         const a = {element:document.createElement("div"), display:'a'};
         const s = {element:document.createElement("div"), display:'s'};
         const d = {element:document.createElement("div"), display:'d'};
-        const shift = {element:document.createElement("div"), display:'shift'};
+        const shift = {element:document.createElement("button"), display:'run'};
+        shift.element.style.border = '2px solid #007BFF';
+        shift.element.style.borderRadius = '50%';
+        shift.element.style.width = 'auto';
+        shift.element.style.height = 'auto';
+        shift.element.style.padding = '0.5em 1em';
+        shift.element.style.background = '#007BFF';
+        shift.element.style.color = 'white';
+        shift.element.style.fontSize = 'clamp(1rem, 2.5vw, 2rem)';
+        shift.element.style.fontWeight = 'bold';
+        shift.element.style.textAlign = 'center';
+        shift.element.style.lineHeight = 'normal';
+        shift.element.style.cursor = 'pointer';
+        shift.element.style.transition = 'transform 0.2s, background 0.2s';
         this.map.set(W, w);
         this.map.set(A, a);
         this.map.set(S, s);
@@ -82,6 +95,17 @@ class KeyDisplay {
         }
         if (key === SHIFT && this.characterControls) {
                     this.characterControls.switchRunToggle();
+                    if(this.characterControls.toggleRun) {
+                        const shift = this.map.get(SHIFT);
+                        shift.element.style.transform = 'scale(1)';
+                        shift.element.style.background = '#3b6cf1ff'; // Green for active
+                        shift.element.style.color = 'white';
+                    } else {
+                        const shift = this.map.get(SHIFT);
+                        shift.element.style.transform = 'scale(0.9)';
+                        shift.element.style.background = '#807072ff'; // Red for inactive
+                        shift.element.style.color = 'white';
+                    }
         }
         keysPressed[key] = true;
     }
