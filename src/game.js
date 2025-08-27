@@ -38,7 +38,11 @@ orbitControls.update();
 
 //Link Label
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const material = new THREE.MeshStandardMaterial({
+    color: 0xff5733, // Change to a new color
+    metalness: 0.5, // Add metallic property
+    roughness: 0.7  // Add roughness property
+});
 const cube = new THREE.Mesh(geometry, material);
 cube.position.set(2, 0, 0);
 
