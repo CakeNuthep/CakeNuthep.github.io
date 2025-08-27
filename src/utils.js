@@ -20,10 +20,16 @@ class KeyDisplay {
         this.map.set(SHIFT, shift);
         this.map.forEach((v, k) => {
             v.element.style.color = 'blue';
-            v.element.style.fontSize = '50px';
+            v.element.style.fontSize = 'clamp(1.2rem, 6vw, 3rem)';
             v.element.style.fontWeight = '800';
             v.element.style.position = 'absolute';
+            v.element.style.padding = '0.2em 0.5em';
+            v.element.style.borderRadius = '0.4em';
+            v.element.style.background = 'rgba(0,0,0,0.15)';
             v.element.textContent = v.display;
+            v.element.style.boxSizing = 'border-box';
+            v.element.style.wordBreak = 'break-word';
+            v.element.style.transition = 'font-size 0.2s, background 0.2s';
         });
         this.updatePosition();
         this.map.forEach((v, _) => {
