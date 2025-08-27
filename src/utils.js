@@ -4,9 +4,11 @@ const S = 'KeyS';
 const D = 'KeyD';
 const SHIFT = 'ShiftLeft';
 const DIRECTIONS = [W, A, S, D];
+const keysPressed = {};
 
 class KeyDisplay {
-    constructor() {
+    constructor(characterControls) {
+        this.characterControls = characterControls;
         this.map = new Map();
         const w = {element:document.createElement("div"), display:'w'};
         const a = {element:document.createElement("div"), display:'a'};
@@ -32,8 +34,31 @@ class KeyDisplay {
             v.element.style.transition = 'font-size 0.2s, background 0.2s';
         });
         this.updatePosition();
-        this.map.forEach((v, _) => {
+        this.map.forEach((v, k) => {
             document.body.append(v.element);
+            v.element.style.cursor = 'pointer';
+            let code = k;
+            let intervalId = null;
+
+            const dispatchKeyDown = () => {
+                v.element.style.color = 'red';
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: v.display, code: code, bubbles: true }));
+            };
+
+            const dispatchKeyUp = () => {
+                v.element.style.color = 'blue';
+                document.dispatchEvent(new KeyboardEvent('keyup', { key: v.display, code: code, bubbles: true }));
+            };
+
+            v.element.addEventListener('mousedown', () => {
+                dispatchKeyDown();
+                intervalId = setInterval(dispatchKeyDown, 100);
+            });
+
+            v.element.addEventListener('mouseup', () => {
+                dispatchKeyUp();
+                clearInterval(intervalId);
+            });
         });
     }
 
@@ -51,15 +76,25 @@ class KeyDisplay {
     }
 
     down(key) {
+        console.log('key down in key display ' + key);
         if (this.map.get(key)) {
             this.map.get(key).element.style.color = 'red';
         }
+        if (key === SHIFT && this.characterControls) {
+                    this.characterControls.switchRunToggle();
+        }
+        keysPressed[key] = true;
     }
 
     up(key) {
         if (this.map.get(key)) {
             this.map.get(key).element.style.color = 'blue';
         }
+        keysPressed[key] = false;
+    }
+
+    getKeysPressed() {
+        return keysPressed;
     }
 }
 

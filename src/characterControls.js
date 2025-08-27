@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { A, D, DIRECTIONS, S, W } from './utils.js';
+import { A, D, DIRECTIONS, S, W, SHIFT } from './utils.js';
 
 class CharacterControls {
     constructor(model, mixer, animationsMap, orbitControl, camera, currentAction) {
@@ -85,6 +85,8 @@ class CharacterControls {
         this.cameraTarget.z = this.model.position.z;
         this.orbitControl.target = this.cameraTarget;
     }
+
+    
 
     directionOffset(keysPressed) {
         let directionOffset = 0; // w

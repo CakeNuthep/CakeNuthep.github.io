@@ -93,6 +93,7 @@ generateFloor();
 
 // MODEL WITH ANIMATIONS
 var characterControls;
+var keyDisplayQueue;
 new GLTFLoader().load('models/Soldier.glb', function (gltf) {
     const model = gltf.scene;
     model.traverse(function (object) {
@@ -109,33 +110,37 @@ new GLTFLoader().load('models/Soldier.glb', function (gltf) {
     });
 
     characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
+    keyDisplayQueue = new KeyDisplay(characterControls);
 });
 
 // CONTROL KEYS
-const keysPressed = {};
-const keyDisplayQueue = new KeyDisplay();
+// const keysPressed = {};
 document.addEventListener('keydown', function (event) {
     // console.log('key down');
     // console.log(event.code);
-    keyDisplayQueue.down(event.code);
-    if (event.shiftKey && characterControls) {
-        characterControls.switchRunToggle();
-    } else {
-        keysPressed[event.code] = true;
+    if (characterControls) {
+        keyDisplayQueue.down(event.code);
+    //     characterControls.switchRunToggle();
+    // } else {
+        // keysPressed[event.code] = true;
     }
 }, false);
 document.addEventListener('keyup', function (event) {
     // console.log('key up');
     // console.log(event.code);
-    keyDisplayQueue.up(event.code);
-    keysPressed[event.code] = false;
+    if (characterControls) {
+        keyDisplayQueue.up(event.code);
+        // keysPressed[event.code] = false;
+    }
 }, false);
 
 const clock = new THREE.Clock();
 // ANIMATE
 function animate() {
     var mixerUpdateDelta = clock.getDelta();
-    if (characterControls) {
+    
+    if (characterControls && keyDisplayQueue) {
+        var keysPressed = keyDisplayQueue.getKeysPressed();
         characterControls.update(mixerUpdateDelta, keysPressed);
     }
     orbitControls.update();
