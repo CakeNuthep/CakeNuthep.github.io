@@ -76,12 +76,12 @@ class KeyDisplay {
     }
 
     updatePosition() {
-        this.map.get(W).element.style.top = `${window.innerHeight - 150}px`;
+        this.map.get(W).element.style.top = `${window.innerHeight - 180}px`;
         this.map.get(A).element.style.top = `${window.innerHeight - 100}px`;
         this.map.get(S).element.style.top = `${window.innerHeight - 100}px`;
         this.map.get(D).element.style.top = `${window.innerHeight - 100}px`;
         this.map.get(SHIFT).element.style.top = `${window.innerHeight - 100}px`;
-        this.map.get(W).element.style.left = `300px`;
+        this.map.get(W).element.style.left = `295px`;
         this.map.get(A).element.style.left = `200px`;
         this.map.get(S).element.style.left = `300px`;
         this.map.get(D).element.style.left = `400px`;
