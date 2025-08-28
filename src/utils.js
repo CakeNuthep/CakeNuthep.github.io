@@ -3,6 +3,7 @@ const A = 'KeyA';
 const S = 'KeyS';
 const D = 'KeyD';
 const SHIFT = 'ShiftLeft';
+const SPACE = 'Space';
 const DIRECTIONS = [W, A, S, D];
 const keysPressed = {};
 
@@ -15,12 +16,14 @@ class KeyDisplay {
         const s = {element:document.createElement("div"), display:'s'};
         const d = {element:document.createElement("div"), display:'d'};
         const shift = {element:document.createElement("button"), display:'run'};
+        const space = {element:document.createElement("div"), display:'jump'};
         
         this.map.set(W, w);
         this.map.set(A, a);
         this.map.set(S, s);
         this.map.set(D, d);
         this.map.set(SHIFT, shift);
+        this.map.set(SPACE, space);
 
         this.map.forEach((v, k) => {
             v.element.style.color = 'blue';
@@ -98,11 +101,13 @@ class KeyDisplay {
         this.map.get(S).element.style.top = `${window.innerHeight - 100}px`;
         this.map.get(D).element.style.top = `${window.innerHeight - 100}px`;
         this.map.get(SHIFT).element.style.top = `${window.innerHeight - 100}px`;
+        this.map.get(SPACE).element.style.top = `${window.innerHeight - 100}px`;
         this.map.get(W).element.style.left = `295px`;
         this.map.get(A).element.style.left = `200px`;
         this.map.get(S).element.style.left = `300px`;
         this.map.get(D).element.style.left = `400px`;
         this.map.get(SHIFT).element.style.left = `50px`;
+        this.map.get(SPACE).element.style.right = `50px`;
     }
 
     down(key) {
