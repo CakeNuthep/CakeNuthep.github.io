@@ -15,24 +15,13 @@ class KeyDisplay {
         const s = {element:document.createElement("div"), display:'s'};
         const d = {element:document.createElement("div"), display:'d'};
         const shift = {element:document.createElement("button"), display:'run'};
-        shift.element.style.border = '2px solid #007BFF';
-        shift.element.style.borderRadius = '50%';
-        shift.element.style.width = 'auto';
-        shift.element.style.height = 'auto';
-        shift.element.style.padding = '0.5em 1em';
-        shift.element.style.background = '#007BFF';
-        shift.element.style.color = 'white';
-        shift.element.style.fontSize = 'clamp(1rem, 2.5vw, 2rem)';
-        shift.element.style.fontWeight = 'bold';
-        shift.element.style.textAlign = 'center';
-        shift.element.style.lineHeight = 'normal';
-        shift.element.style.cursor = 'pointer';
-        shift.element.style.transition = 'transform 0.2s, background 0.2s';
+        
         this.map.set(W, w);
         this.map.set(A, a);
         this.map.set(S, s);
         this.map.set(D, d);
         this.map.set(SHIFT, shift);
+
         this.map.forEach((v, k) => {
             v.element.style.color = 'blue';
             v.element.style.fontSize = 'clamp(1.2rem, 6vw, 3rem)';
@@ -46,31 +35,59 @@ class KeyDisplay {
             v.element.style.wordBreak = 'break-word';
             v.element.style.transition = 'font-size 0.2s, background 0.2s';
         });
+        shift.element.style.border = '2px solid #007BFF';
+        shift.element.style.width = 'auto';
+        shift.element.style.height = 'auto';
+        shift.element.style.textAlign = 'center';
+        shift.element.style.lineHeight = 'normal';
+        shift.element.style.cursor = 'pointer';
+        shift.element.style.transform = 'scale(0.9)';
+        shift.element.style.background = '#3b6cf1ff'; // Green for active
+        shift.element.style.color = 'white';
+
         this.updatePosition();
         this.map.forEach((v, k) => {
             document.body.append(v.element);
             v.element.style.cursor = 'pointer';
             let code = k;
             let intervalId = null;
+            let holdTimer;
+            const holdDuration = 500; // milliseconds
 
             const dispatchKeyDown = () => {
-                v.element.style.color = 'red';
                 document.dispatchEvent(new KeyboardEvent('keydown', { key: v.display, code: code, bubbles: true }));
             };
 
             const dispatchKeyUp = () => {
-                v.element.style.color = 'blue';
                 document.dispatchEvent(new KeyboardEvent('keyup', { key: v.display, code: code, bubbles: true }));
             };
 
             v.element.addEventListener('mousedown', () => {
                 dispatchKeyDown();
-                intervalId = setInterval(dispatchKeyDown, 100);
             });
 
             v.element.addEventListener('mouseup', () => {
                 dispatchKeyUp();
-                clearInterval(intervalId);
+            });
+
+            v.element.addEventListener('touchstart', (event) => {
+                event.preventDefault(); // Prevent default touch behavior
+                console.log('touch start');
+                dispatchKeyDown();
+                holdTimer = setTimeout(() => {
+                    // This code executes if the hold duration is met
+                    console.log('Button held!');
+                    // Add your hold action here
+                }, holdDuration);
+            });
+
+            v.element.addEventListener('touchend', () => {
+                clearTimeout(holdTimer); // Clear the timer if finger is lifted
+                dispatchKeyUp();
+            });
+
+            v.element.addEventListener('touchcancel', () => {
+                clearTimeout(holdTimer); // Clear the timer if touch is cancelled
             });
         });
     }
@@ -97,23 +114,24 @@ class KeyDisplay {
                     this.characterControls.switchRunToggle();
                     if(this.characterControls.toggleRun) {
                         const shift = this.map.get(SHIFT);
-                        shift.element.style.transform = 'scale(1)';
+                        shift.element.style.transform = 'scale(0.9)';
                         shift.element.style.background = '#3b6cf1ff'; // Green for active
                         shift.element.style.color = 'white';
                     } else {
                         const shift = this.map.get(SHIFT);
-                        shift.element.style.transform = 'scale(0.9)';
+                        shift.element.style.transform = 'scale(1)';
                         shift.element.style.background = '#807072ff'; // Red for inactive
-                        shift.element.style.color = 'white';
+                        shift.element.style.color = '#cdcdcd70';
                     }
         }
         keysPressed[key] = true;
     }
 
     up(key) {
-        if (this.map.get(key)) {
+        if (key !== SHIFT && this.map.get(key)) {
             this.map.get(key).element.style.color = 'blue';
         }
+        
         keysPressed[key] = false;
     }
 
