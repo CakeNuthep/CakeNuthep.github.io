@@ -5,7 +5,7 @@ import { CameraHelper } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
-
+import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 
 
 
@@ -181,6 +181,28 @@ function generateFloor() {
     var LENGTH = 80;
 
     var geometry = new THREE.PlaneGeometry(WIDTH, LENGTH, 512, 512);
+    geometry.rotateX(-Math.PI / 2);
+
+    // Create an instance of ImprovedNoise
+    const noise = new ImprovedNoise();
+    const positionAttribute = geometry.getAttribute('position');
+    for (let i = 0; i < positionAttribute.count; i++) {
+        const x = positionAttribute.getX(i);
+        const z = positionAttribute.getZ(i);
+
+        // Generate height using Simplex noise
+        const y = noise.noise(x * 0.02, z * 0.02,0)*20;
+
+        // Set the vertex's new y position
+        positionAttribute.setY(i, y);
+    }
+
+    // Mark the attribute as needing an update
+    positionAttribute.needsUpdate = true;
+    geometry.computeVertexNormals();
+
+
+
     var material = new THREE.MeshStandardMaterial({
         map: sandBaseColor,
         normalMap: sandNormalMap,
@@ -195,8 +217,7 @@ function generateFloor() {
     // const material = new THREE.MeshPhongMaterial({ map: placeholder})
 
     var floor = new THREE.Mesh(geometry, material);
-    floor.receiveShadow = true;
-    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;;
     scene.add(floor);
 }
 
@@ -222,3 +243,5 @@ function light() {
     scene.add(dirLight);
     // scene.add( new THREE.CameraHelper(dirLight.shadow.camera))
 }
+
+
