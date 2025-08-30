@@ -93,6 +93,7 @@ document.body.appendChild(cssRenderer.domElement);
 light();
 
 // FLOOR
+var floor;
 generateFloor();
 
 // MODEL WITH ANIMATIONS
@@ -116,6 +117,9 @@ new GLTFLoader().load('models/Soldier.glb', function (gltf) {
     characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
     keyDisplayQueue = new KeyDisplay(characterControls);
 });
+
+//Floor collision detection
+const down = new THREE.Vector3(0, -1, 0); // Ray points straight down
 
 // CONTROL KEYS
 // const keysPressed = {};
@@ -146,6 +150,32 @@ function animate() {
     if (characterControls && keyDisplayQueue) {
         var keysPressed = keyDisplayQueue.getKeysPressed();
         characterControls.update(mixerUpdateDelta, keysPressed);
+
+        //Floor collision detection
+        // Update the raycaster to point downwards from the player's position
+        const player = characterControls.model;
+        const rayOrigin = new THREE.Vector3(
+            player.position.x,
+            player.position.y + 10, // Start slightly higher than the player
+            player.position.z
+        );
+
+        raycaster.set(rayOrigin, down);
+        const intersects = raycaster.intersectObject(floor);
+        if (intersects.length > 0) {
+            const intersectionPoint = intersects[0].point;
+            // Adjust the player's Y position to be at the terrain's height
+            player.position.y = intersectionPoint.y;
+
+            // Get the current height of the terrain beneath the player
+            const terrainHeight = intersectionPoint.y;
+
+            // Check if the player is currently below the terrain
+            if (player.position.y < terrainHeight) {
+                // If so, move the player up to the terrain height
+                player.position.y = terrainHeight;
+            }
+        }
     }
     orbitControls.update();
     // Update the CSS renderer
@@ -204,7 +234,7 @@ function generateFloor() {
     geometry.computeVertexNormals();
 
 
-    
+
 
     var material = new THREE.MeshStandardMaterial({
         map: sandBaseColor,
@@ -219,7 +249,7 @@ function generateFloor() {
     wrapAndRepeatTexture(material.aoMap);
     // const material = new THREE.MeshPhongMaterial({ map: placeholder})
 
-    var floor = new THREE.Mesh(geometry, material);
+    floor = new THREE.Mesh(geometry, material);
     floor.receiveShadow = true;;
     scene.add(floor);
 }
