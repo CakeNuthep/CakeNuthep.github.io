@@ -183,6 +183,8 @@ function generateFloor() {
     var geometry = new THREE.PlaneGeometry(WIDTH, LENGTH, 512, 512);
     geometry.rotateX(-Math.PI / 2);
 
+    
+    //// Generating terrain dynamically three.js with Perlin Noise function
     // Create an instance of ImprovedNoise
     const noise = new ImprovedNoise();
     const positionAttribute = geometry.getAttribute('position');
@@ -190,7 +192,7 @@ function generateFloor() {
         const x = positionAttribute.getX(i);
         const z = positionAttribute.getZ(i);
 
-        // Generate height using Simplex noise
+        // Generate height using Perlin noise
         const y = noise.noise(x * 0.02, z * 0.02,0)*20;
 
         // Set the vertex's new y position
@@ -202,6 +204,7 @@ function generateFloor() {
     geometry.computeVertexNormals();
 
 
+    
 
     var material = new THREE.MeshStandardMaterial({
         map: sandBaseColor,
