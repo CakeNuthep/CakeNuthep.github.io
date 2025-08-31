@@ -22,7 +22,7 @@ class CharacterControls {
         this.walkVelocity = 2;
 
         this.playInitialAnimation();
-        this.updateCameraTarget(0, 0);
+        this.setupCameraTarget();
     }
 
     playInitialAnimation() {
@@ -149,14 +149,43 @@ class CharacterControls {
     }
 
     updateCameraTarget(moveX, moveZ) {
-        // Move camera
-        this.camera.position.x += moveX;
-        this.camera.position.z += moveZ;
+        const distance = 5; // Desired distance from the model
+        const direction = new THREE.Vector3();
+        direction.subVectors(this.model.position, this.camera.position);
+        const magnitude = direction.length();
+
+        // 2. Normalize the direction vector (set its length to 1)
+        direction.normalize();
+
+        // 3. Scale the direction vector by the step size
+        direction.multiplyScalar(magnitude - distance);
+
+         // 4. Add the resulting vector to vectorA
+        const cameraPosition = this.camera.position.clone().add(direction);
+
+        this.camera.position.lerp(cameraPosition, 0.1); // Smooth transition
+        this.camera.position.y = this.model.position.y + 3; // Maintain a height above the model
 
         // Update camera target
         this.cameraTarget.set(
             this.model.position.x,
-            this.model.position.y + 1,
+            this.model.position.y + 1, // Keep target slightly above the model
+            this.model.position.z
+        );
+        this.orbitControl.target = this.cameraTarget;
+    }
+
+    setupCameraTarget() {
+        // Set initial camera position for third-person view
+        const cameraOffset = new THREE.Vector3(0, 3, -4); // Adjust height and distance
+        const initialCameraPosition = this.model.position.clone().add(cameraOffset);
+
+        this.camera.position.copy(initialCameraPosition);
+
+        // Set initial camera target
+        this.cameraTarget.set(
+            this.model.position.x,
+            this.model.position.y + 1, // Keep target slightly above the model
             this.model.position.z
         );
         this.orbitControl.target = this.cameraTarget;

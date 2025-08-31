@@ -24,12 +24,12 @@ function init() {
     setupScene();
     setupCamera();
     setupRenderer();
-    setupControls();
     setupLights();
     setupFloor();
     setupInteractiveCube();
     loadCharacterModel();
     setupEventListeners();
+    setupControls();
     animate();
 }
 
