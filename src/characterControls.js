@@ -11,6 +11,10 @@ class CharacterControls {
 
         this.currentAction = initialAction;
         this.toggleRun = true;
+        this.isJumping = false;
+        this.onGround = true;
+        this.velocityY = 0;
+        this.jumpStrength = 1;
 
         this.walkDirection = new THREE.Vector3();
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
@@ -36,14 +40,27 @@ class CharacterControls {
         this.toggleRun = !this.toggleRun;
     }
 
+    jump() {
+        if (this.onGround) {
+            this.onGround = false;
+            this.velocityY = this.jumpStrength;
+            this.isJumping = true;
+            console.log('Jump initiated');
+        }
+        else {
+            // Prevent double jump
+            return;
+        }
+    }
+
     update(delta, keysPressed) {
         const directionPressed = this.isDirectionPressed(keysPressed);
-        const nextAction = this.determineNextAction(directionPressed);
-
+        const {isJump,isMove,nextAction} = this.determineNextAction(directionPressed);
+        console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
         this.updateAnimation(nextAction);
         this.mixer.update(delta);
 
-        if (this.isMoving(nextAction)) {
+        if (isMove) {
             this.handleMovement(delta, keysPressed);
         }
     }
@@ -53,13 +70,32 @@ class CharacterControls {
     }
 
     determineNextAction(directionPressed) {
-        if (directionPressed && this.toggleRun) {
-            return 'Run';
-        } else if (directionPressed) {
-            return 'Walk';
-        } else {
-            return 'Idle';
+        var isJump = false;
+        var nextAction = 'Idle';
+        var isMove = false;
+        if (this.isJumping) {
+            isJump = true;
+            nextAction = 'Idle';
         }
+        if (directionPressed && this.toggleRun) {
+            isMove = true;
+
+            if(!isJump){
+                nextAction = 'Run';
+            }
+        } else if (directionPressed) {
+            isMove = true;
+            if(!isJump){
+                nextAction = 'Walk';
+            }
+        } else {
+            if(!isJump){
+                nextAction = 'Idle';
+            }
+        }
+
+        
+        return {isJump, isMove, nextAction};
     }
 
     updateAnimation(nextAction) {

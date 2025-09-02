@@ -119,6 +119,9 @@ class KeyDisplay {
         if (key === SHIFT && this.characterControls) {
             this.toggleShiftKey();
         }
+        if (key === SPACE && this.characterControls) {
+            this.characterControls.jump();
+        }
         keysPressed[key] = true;
     }
 

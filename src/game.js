@@ -14,7 +14,7 @@ const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
 
 let scene, camera, renderer, cssRenderer, orbitControls;
-let floor, characterControls, keyDisplayQueue, raycaster, velocityY = 0;
+let floor, characterControls, keyDisplayQueue, raycaster;
 
 
 const clock = new THREE.Clock();
@@ -234,8 +234,8 @@ function animate() {
 function applyGravity() {
     const player = characterControls.model;
     const down = new THREE.Vector3(0, -1, 0); // Ray points straight down
-    velocityY -= GRAVITY;
-    player.position.y += velocityY;
+    characterControls.velocityY -= GRAVITY;
+    player.position.y += characterControls.velocityY;
 
     const rayOrigin = new THREE.Vector3(player.position.x, player.position.y + 10, player.position.z);
     raycaster.set(rayOrigin, down);
@@ -244,7 +244,9 @@ function applyGravity() {
         const terrainHeight = intersects[0].point.y;
         if (player.position.y < terrainHeight) {
             player.position.y = terrainHeight;
-            velocityY = 0;
+            characterControls.velocityY = 0;
+            characterControls.onGround = true;
+            characterControls.isJumping = false;
         }
     }
 }
