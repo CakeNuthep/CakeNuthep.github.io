@@ -63,6 +63,7 @@ class CharacterControls {
         if (isMove) {
             this.handleMovement(delta, keysPressed);
         }
+        this.updateCameraTarget();
     }
 
     isDirectionPressed(keysPressed) {
@@ -173,8 +174,6 @@ class CharacterControls {
 
         this.model.position.x += moveX;
         this.model.position.z += moveZ;
-
-        this.updateCameraTarget(moveX, moveZ);
     }
 
     calculateWalkDirection(directionOffset) {
@@ -184,7 +183,7 @@ class CharacterControls {
         this.walkDirection.applyAxisAngle(this.rotateAngle, directionOffset);
     }
 
-    updateCameraTarget(moveX, moveZ) {
+    updateCameraTarget() {
         const distance = 5; // Desired distance from the model
         const direction = new THREE.Vector3();
         direction.subVectors(this.model.position, this.camera.position);
