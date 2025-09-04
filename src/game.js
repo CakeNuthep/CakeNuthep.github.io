@@ -1,11 +1,11 @@
 import { KeyDisplay } from './utils.js';
 import { CharacterControls } from './characterControls.js';
 import * as THREE from 'three';
-import { CameraHelper } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
+import { Object } from './Objects.js';
 
 // Constants
 const GRAVITY = 0.1;
@@ -14,7 +14,9 @@ const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
 
 let scene, camera, renderer, cssRenderer, orbitControls;
-let floor, characterControls, keyDisplayQueue, raycaster;
+let floor, characterControls, keyDisplayQueue
+let raycaster = new THREE.Raycaster();;
+let objects = [];
 
 
 const clock = new THREE.Clock();
@@ -137,30 +139,38 @@ function wrapAndRepeatTexture(map) {
 
 // Setup interactive cube
 function setupInteractiveCube() {
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({
-        color: 0xff5733,
-        metalness: 0.5,
-        roughness: 0.7,
-    });
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.set(2, 0, 0);
-    cube.userData.link = 'https://threejs.org/';
-    cube.userData.label = 'Click Me!';
+    // const geometry = new THREE.BoxGeometry(1, 1, 1);
+    // const material = new THREE.MeshStandardMaterial({
+    //     color: 0xff5733,
+    //     metalness: 0.5,
+    //     roughness: 0.7,
+    // });
+    // const cube = new THREE.Mesh(geometry, material);
+    // cube.position.set(2, 1, 0);
+    // cube.userData.link = 'https://threejs.org/';
+    // cube.userData.label = 'Click Me!';
 
-    const labelDiv = document.createElement('a');
-    labelDiv.className = 'link-label';
-    labelDiv.textContent = cube.userData.label;
-    labelDiv.href = cube.userData.link;
-    labelDiv.target = '_blank';
+    // const labelDiv = document.createElement('a');
+    // labelDiv.className = 'link-label';
+    // labelDiv.textContent = cube.userData.label;
+    // labelDiv.href = cube.userData.link;
+    // labelDiv.target = '_blank';
 
-    const label = new CSS2DObject(labelDiv);
-    label.position.set(0, 1, 0);
-    cube.add(label);
-    scene.add(cube);
+    // const label = new CSS2DObject(labelDiv);
+    // label.position.set(0, 1, 0);
+    // cube.add(label);
+    const objParams = {
+        width: 1,
+        height: 1,
+        depth: 1,
+        position: new THREE.Vector3(2, 1, 0)
+    };
+    const cubeObject = new Object(objParams);
+    scene.add(cubeObject.model);
+    objects.push(cubeObject);
 
-    raycaster = new THREE.Raycaster();
-    window.addEventListener('click', (event) => handleCubeClick(event, cube));
+    // Add click event listener
+    window.addEventListener('click', (event) => handleCubeClick(event, cubeObject.model));
 }
 
 // Handle cube click
@@ -221,6 +231,17 @@ function animate() {
         applyGravity();
     }
 
+    if(characterControls && objects.length>0){
+        objects.forEach(obj => {
+            obj.updateSides();
+            // Simple collision detection with the floor
+            if (boxCollision({ box1: characterControls, box2: obj })) {
+                console.log('Collision detected with object at position:', obj.position);
+            }
+
+        });
+    }
+
     orbitControls.update();
     // Update the CSS renderer
     cssRenderer.render(scene, camera);
@@ -252,4 +273,15 @@ function applyGravity() {
 }
 
 // Initialize the game
+
+
+function boxCollision({ box1, box2 }) {
+    const xCollision = box1.right >= box2.left && box1.left <= box2.right
+    const yCollision =
+        box1.bottom <= box2.top && box1.top >= box2.bottom
+    const zCollision = box1.front >= box2.back && box1.back <= box2.front
+
+    return xCollision && yCollision && zCollision
+}
+
 init();

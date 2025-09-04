@@ -1,8 +1,20 @@
 import * as THREE from 'three';
 import { A, D, DIRECTIONS, S, W, SHIFT } from './utils.js';
+import {Box} from './Box.js';
 
-class CharacterControls {
+class CharacterControls extends Box {
     constructor(model, mixer, animationsMap, orbitControl, camera, initialAction) {
+        const box = new THREE.Box3().setFromObject(model);
+
+        // Get the size of the bounding box
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        super({
+            width: size.x,
+            height: size.y,
+            depth: size.z,
+            position: model.position
+        });
         this.model = model;
         this.mixer = mixer;
         this.animationsMap = animationsMap;
@@ -27,6 +39,7 @@ class CharacterControls {
 
         this.playInitialAnimation();
         this.setupCameraTarget();
+        
     }
 
     playInitialAnimation() {
@@ -64,6 +77,7 @@ class CharacterControls {
             this.handleMovement(delta, keysPressed);
         }
         this.updateCameraTarget();
+        this.updateSides();
     }
 
     isDirectionPressed(keysPressed) {
