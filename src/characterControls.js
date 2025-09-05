@@ -71,17 +71,28 @@ class CharacterControls extends Box {
         console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
         this.updateAnimation(nextAction);
         this.mixer.update(delta);
+        const currentPosition = this.model.position.clone();
 
         if (isMove) {
+            this.updateSides(this.model.position);
             this.handleMovement(delta, keysPressed,objects);
         }
-        this.updateCameraTarget();
+        
         this.updateSides(this.model.position);
         let { y, velocity, onGround } =  this.applyGravity(floor);
         this.model.position.y = y;
-        console.log(`y: ${y}, velocity: ${velocity}, onGround: ${onGround}`);
         if(onGround){
             this.isJumping = false;
+        }
+        // let isColiitionthis = this.collisionDetection(objects);
+        // if (isColiitionthis) {
+        //     console.log('Reverting to previous position due to collision');
+        //     this.updateSides(this.model.position); // Update sides after reverting position
+        //     this.model.position.copy(currentPosition);
+        // }
+
+        if(this.isMoving(this.currentAction) || isJump){
+            this.updateCameraTarget();
         }
     }
 
