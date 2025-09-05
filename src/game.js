@@ -139,26 +139,6 @@ function wrapAndRepeatTexture(map) {
 
 // Setup interactive cube
 function setupInteractiveCube() {
-    // const geometry = new THREE.BoxGeometry(1, 1, 1);
-    // const material = new THREE.MeshStandardMaterial({
-    //     color: 0xff5733,
-    //     metalness: 0.5,
-    //     roughness: 0.7,
-    // });
-    // const cube = new THREE.Mesh(geometry, material);
-    // cube.position.set(2, 1, 0);
-    // cube.userData.link = 'https://threejs.org/';
-    // cube.userData.label = 'Click Me!';
-
-    // const labelDiv = document.createElement('a');
-    // labelDiv.className = 'link-label';
-    // labelDiv.textContent = cube.userData.label;
-    // labelDiv.href = cube.userData.link;
-    // labelDiv.target = '_blank';
-
-    // const label = new CSS2DObject(labelDiv);
-    // label.position.set(0, 1, 0);
-    // cube.add(label);
     const objParams = {
         width: 1,
         height: 1,
@@ -227,19 +207,8 @@ function animate() {
 
     if (characterControls && keyDisplayQueue) {
         var keysPressed = keyDisplayQueue.getKeysPressed();
-        characterControls.update(mixerUpdateDelta, keysPressed);
-        applyGravity();
-    }
-
-    if(characterControls && objects.length>0){
-        objects.forEach(obj => {
-            obj.updateSides();
-            // Simple collision detection with the floor
-            if (boxCollision({ box1: characterControls, box2: obj })) {
-                console.log('Collision detected with object at position:', obj.position);
-            }
-
-        });
+        characterControls.update(mixerUpdateDelta, keysPressed, floor, objects);
+        // applyGravity();
     }
 
     orbitControls.update();
@@ -251,37 +220,6 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// Apply gravity to the character
-function applyGravity() {
-    const player = characterControls.model;
-    const down = new THREE.Vector3(0, -1, 0); // Ray points straight down
-    characterControls.velocityY -= GRAVITY;
-    player.position.y += characterControls.velocityY;
-
-    const rayOrigin = new THREE.Vector3(player.position.x, player.position.y + 10, player.position.z);
-    raycaster.set(rayOrigin, down);
-    const intersects = raycaster.intersectObject(floor);
-    if (intersects.length > 0) {
-        const terrainHeight = intersects[0].point.y;
-        if (player.position.y < terrainHeight) {
-            player.position.y = terrainHeight;
-            characterControls.velocityY = 0;
-            characterControls.onGround = true;
-            characterControls.isJumping = false;
-        }
-    }
-}
-
 // Initialize the game
-
-
-function boxCollision({ box1, box2 }) {
-    const xCollision = box1.right >= box2.left && box1.left <= box2.right
-    const yCollision =
-        box1.bottom <= box2.top && box1.top >= box2.bottom
-    const zCollision = box1.front >= box2.back && box1.back <= box2.front
-
-    return xCollision && yCollision && zCollision
-}
 
 init();

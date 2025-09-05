@@ -25,7 +25,6 @@ class CharacterControls extends Box {
         this.toggleRun = true;
         this.isJumping = false;
         this.onGround = true;
-        this.velocityY = 0;
         this.jumpStrength = 1;
 
         this.walkDirection = new THREE.Vector3();
@@ -56,7 +55,7 @@ class CharacterControls extends Box {
     jump() {
         if (this.onGround) {
             this.onGround = false;
-            this.velocityY = this.jumpStrength;
+            this.velocity.y = this.jumpStrength;
             this.isJumping = true;
             console.log('Jump initiated');
         }
@@ -66,7 +65,7 @@ class CharacterControls extends Box {
         }
     }
 
-    update(delta, keysPressed) {
+    update(delta, keysPressed, floor, objects=[]) {
         const directionPressed = this.isDirectionPressed(keysPressed);
         const {isJump,isMove,nextAction} = this.determineNextAction(directionPressed);
         console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
@@ -74,10 +73,16 @@ class CharacterControls extends Box {
         this.mixer.update(delta);
 
         if (isMove) {
-            this.handleMovement(delta, keysPressed);
+            this.handleMovement(delta, keysPressed,objects);
         }
         this.updateCameraTarget();
-        this.updateSides();
+        this.updateSides(this.model.position);
+        let { y, velocity, onGround } =  this.applyGravity(floor);
+        this.model.position.y = y;
+        console.log(`y: ${y}, velocity: ${velocity}, onGround: ${onGround}`);
+        if(onGround){
+            this.isJumping = false;
+        }
     }
 
     isDirectionPressed(keysPressed) {
@@ -129,12 +134,30 @@ class CharacterControls extends Box {
         return action === 'Run' || action === 'Walk';
     }
 
-    handleMovement(delta, keysPressed) {
+    handleMovement(delta, keysPressed, objects=[]) {
         const angleYCameraDirection = this.calculateCameraDirectionAngle();
         const directionOffset = this.calculateDirectionOffset(keysPressed);
+        const currentPosition = this.model.position.clone();
 
         this.rotateModel(angleYCameraDirection, directionOffset);
         this.moveModel(delta, directionOffset);
+        this.updateSides(this.model.position);
+        let isColiitionthis = this.collisionDetection(objects);
+        if (isColiitionthis) {
+            this.model.position.copy(currentPosition);
+            this.updateSides(this.model.position); // Update sides after reverting position
+        }
+        
+    }
+
+    collisionDetection(objects) {
+        for (let obj of objects) {
+            if (this.boxCollision({ box1: this, box2: obj })) {
+                console.log('Collision detected with object at position:', obj.position);
+                return true;
+            } 
+        }
+        return false;
     }
 
     calculateCameraDirectionAngle() {
