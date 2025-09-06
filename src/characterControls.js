@@ -35,6 +35,8 @@ class CharacterControls extends Box {
         this.fadeDuration = 0.2;
         this.runVelocity = 5;
         this.walkVelocity = 2;
+        this.collisionDetectionEnabled = false;
+        this.gravityEnabled = true;
 
         this.playInitialAnimation();
         this.setupCameraTarget();
@@ -81,24 +83,26 @@ class CharacterControls extends Box {
         
         
         
-        // let isColiitionthis = this.collisionDetection(objects);
-        // if (isColiitionthis) {
-        //     console.log('Reverting to previous position due to collision');
-        //     this.updateSides(this.model.position); // Update sides after reverting position
-        //     this.model.position.copy(currentPosition);
-        //     this.velocity.y = 0;
-        //     this.updateSides(this.model.position);
-        //     this.isJumping = false;
-        // }
-        // else
-        {
+        let isColiitionthis = this.collisionDetection(objects);
+        if (isColiitionthis && this.collisionDetectionEnabled) {
+            console.log('Reverting to previous position due to collision');
+            this.updateSides(this.model.position); // Update sides after reverting position
+            this.model.position.copy(currentPosition);
+            this.velocity.y = 0;
             this.updateSides(this.model.position);
-            let { y, velocity, onGround } =  this.applyGravity(floor);
-            this.model.position.y = y;
-            if(onGround){
-                this.isJumping = false;
+            this.isJumping = false;
+        }
+        else
+        {
+            if(this.gravityEnabled)
+            {
+                this.updateSides(this.model.position);
+                let { y, velocity, onGround } =  this.applyGravity(floor);
+                this.model.position.y = y;
+                if(onGround){
+                    this.isJumping = false;
+                }
             }
-            
         }
 
         if(this.isMoving(this.currentAction) || isJump){

@@ -6,6 +6,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Object } from './Objects.js';
+import GUI from 'lil-gui';
 
 // Constants
 const GRAVITY = 0.1;
@@ -23,6 +24,7 @@ const clock = new THREE.Clock();
 
 
 function init() {
+    createMenuSettings();
     setupScene();
     setupCamera();
     setupRenderer();
@@ -221,5 +223,27 @@ function animate() {
 }
 
 // Initialize the game
+function createMenuSettings(){
+    const gui = new GUI();
+    // Create an object to hold the settings
+    const settings = {
+        collisionDetection: false,
+        gravityEnabled: true
+    };
+
+    // Add controls to the GUI
+
+    gui.add(settings, 'collisionDetection').name('Collision Detection').onChange((value) => {
+        if( characterControls){
+            characterControls.collisionDetectionEnabled = value;
+        }
+    });
+
+    gui.add(settings, 'gravityEnabled').name('Gravity Enabled').onChange((value) => {
+        if( characterControls){
+            characterControls.gravityEnabled = value;
+        }
+    });
+}
 
 init();
