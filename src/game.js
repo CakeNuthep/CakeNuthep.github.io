@@ -185,6 +185,7 @@ function loadCharacterModel() {
 
         characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
         keyDisplayQueue = new KeyDisplay(characterControls);
+        scene.add(characterControls.cube);
     });
 }
 
@@ -207,10 +208,15 @@ function onWindowResize() {
 function animate() {
     var mixerUpdateDelta = clock.getDelta();
 
-    if (characterControls && keyDisplayQueue) {
-        var keysPressed = keyDisplayQueue.getKeysPressed();
-        characterControls.update(mixerUpdateDelta, keysPressed, floor, objects);
-        // applyGravity();
+    if (characterControls) {
+        if(keyDisplayQueue)
+        {
+            var keysPressed = keyDisplayQueue.getKeysPressed();
+            characterControls.update(mixerUpdateDelta, keysPressed, floor, objects);
+        }
+        if(characterControls.showBox){
+            characterControls.cube.visible = characterControls.showBox;
+        }
     }
 
     orbitControls.update();
@@ -220,6 +226,7 @@ function animate() {
     // Standard 3D renderer
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
+
 }
 
 // Initialize the game
@@ -228,7 +235,10 @@ function createMenuSettings(){
     // Create an object to hold the settings
     const settings = {
         collisionDetection: false,
-        gravityEnabled: true
+        showCollisionBoxes: false,
+        gravityEnabled: true,
+        soundEffect: true,
+        soundBackground: true
     };
 
     // Add controls to the GUI
@@ -239,10 +249,27 @@ function createMenuSettings(){
         }
     });
 
+    gui.add(settings, 'showCollisionBoxes').name('Show Collision Boxes').onChange((value) => {
+        // Handle showing/hiding collision boxes
+        if( characterControls){
+            characterControls.showCollisionBox = value;
+        }
+    });
+
     gui.add(settings, 'gravityEnabled').name('Gravity Enabled').onChange((value) => {
         if( characterControls){
             characterControls.gravityEnabled = value;
         }
+    });
+
+    gui.add(settings, 'soundEffect').name('Sound Effects').onChange((value) => {
+        // Handle sound effect toggle
+        console.log('Sound Effects toggled:', value);
+    });
+
+    gui.add(settings, 'soundBackground').name('Background Sound').onChange((value) => {
+        // Handle background sound toggle
+        console.log('Background Sound toggled:', value);
     });
 }
 

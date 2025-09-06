@@ -35,7 +35,6 @@ class CharacterControls extends Box {
         this.fadeDuration = 0.2;
         this.runVelocity = 5;
         this.walkVelocity = 2;
-        this.collisionDetectionEnabled = false;
         this.gravityEnabled = true;
 
         this.playInitialAnimation();
@@ -84,7 +83,7 @@ class CharacterControls extends Box {
         
         
         let isColiitionthis = this.collisionDetection(objects);
-        if (isColiitionthis && this.collisionDetectionEnabled) {
+        if (isColiitionthis) {
             console.log('Reverting to previous position due to collision');
             this.updateSides(this.model.position); // Update sides after reverting position
             this.model.position.copy(currentPosition);

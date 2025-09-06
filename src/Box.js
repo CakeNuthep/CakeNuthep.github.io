@@ -10,7 +10,7 @@ class Box {
             gravity = 0.1
             
         }) {
-        this.GRAVITY = 0.1;
+        this.GRAVITY = gravity;
         this.width = width;
         this.height = height;
         this.depth = depth
@@ -28,6 +28,10 @@ class Box {
         this.front = this.position.z + this.depth / 2;
         this.back = this.position.z - this.depth / 2;
         this.raycaster = new THREE.Raycaster();
+
+        this.cube = this.createBox();
+        this.showCollisionBox = false;
+        this.collisionDetectionEnabled = false;
     }
 
     updateSides(position) {
@@ -40,6 +44,8 @@ class Box {
 
         this.front = this.position.z + this.depth / 2
         this.back = this.position.z - this.depth / 2
+        this.updateBox();
+        this.cube.visible = this.showCollisionBox;
     }
 
     describe() {
@@ -47,12 +53,15 @@ class Box {
     }  
 
     boxCollision({ box1, box2 }) {
-        const xCollision = box1.right >= box2.left && box1.left <= box2.right
-        const yCollision =
-            box1.bottom <= box2.top && box1.top >= box2.bottom
-        const zCollision = box1.front >= box2.back && box1.back <= box2.front
+        if(this.collisionDetectionEnabled){
+            const xCollision = box1.right >= box2.left && box1.left <= box2.right
+            const yCollision =
+                box1.bottom <= box2.top && box1.top >= box2.bottom
+            const zCollision = box1.front >= box2.back && box1.back <= box2.front
 
-        return xCollision && yCollision && zCollision
+            return xCollision && yCollision && zCollision
+        }
+        return false;
     }
 
     applyGravity(floor) {
@@ -78,6 +87,22 @@ class Box {
                 velocity: this.velocity.y, 
                 onGround: this.onGround 
             };
+    }
+
+    createBox() {
+        const geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
+        const material = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            wireframe: true,
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(this.position.x, this.position.y, this.position.z);
+        return cube;
+    }
+
+    updateBox() {
+        this.cube.position.set(this.position.x, this.position.y, this.position.z);
+        this.cube.scale.set(this.width, this.height, this.depth);
     }
 }
 
