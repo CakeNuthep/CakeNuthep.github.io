@@ -149,6 +149,7 @@ function setupInteractiveCube() {
     };
     const cubeObject = new Object(objParams);
     scene.add(cubeObject.model);
+    scene.add(cubeObject.cube);
     objects.push(cubeObject);
 
     // Add click event listener
@@ -214,9 +215,10 @@ function animate() {
             var keysPressed = keyDisplayQueue.getKeysPressed();
             characterControls.update(mixerUpdateDelta, keysPressed, floor, objects);
         }
-        if(characterControls.showBox){
-            characterControls.cube.visible = characterControls.showBox;
-        }
+    }
+
+    for (let obj of objects) {
+        obj.update();
     }
 
     orbitControls.update();
@@ -253,6 +255,10 @@ function createMenuSettings(){
         // Handle showing/hiding collision boxes
         if( characterControls){
             characterControls.showCollisionBox = value;
+        }
+
+        for (let obj of objects) {
+            obj.showCollisionBox = value;
         }
     });
 

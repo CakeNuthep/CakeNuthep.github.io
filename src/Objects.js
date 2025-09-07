@@ -42,6 +42,10 @@ class Object extends Box {
         cube.add(label);
         return cube;
     } 
+
+    update() {
+        this.updateSides(this.model.position);
+    }
 }
 
 export { Object };

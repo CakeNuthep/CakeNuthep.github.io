@@ -92,8 +92,9 @@ class Box {
     createBox() {
         const geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         const material = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
+            color: 0x0000ff,
             wireframe: true,
+            wireframeLinewidth:10,
         });
         const cube = new THREE.Mesh(geometry, material);
         cube.position.set(this.position.x, this.position.y, this.position.z);
