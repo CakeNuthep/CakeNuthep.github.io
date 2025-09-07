@@ -18,6 +18,7 @@ class Box {
         this.raycaster = new THREE.Raycaster();
 
         this.cube = this.createBox(width, height, depth, position);
+        this.cube.name = 'CollisionBox';
         this.showCollisionBox = false;
         this.collisionDetectionEnabled = false;
         this.updateSides();
