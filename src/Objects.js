@@ -14,12 +14,13 @@ class Object extends Box {
             width,
             height,
             depth,
-            position
+            position: new THREE.Vector3(0, 0, 0),
         });
-        this.model = this.setupInteractiveCube();
+        this.model = this.setupInteractiveCube(position);
+        this.model.add(this.cube);
     }
 
-    setupInteractiveCube() {
+    setupInteractiveCube(position) {
         const geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         const material = new THREE.MeshStandardMaterial({
             color: 0xff5733,
@@ -27,7 +28,7 @@ class Object extends Box {
             roughness: 0.7,
         });
         const cube = new THREE.Mesh(geometry, material);
-        cube.position.set(this.position.x, this.position.y, this.position.z);
+        cube.position.set(position.x, position.y, position.z);
         cube.userData.link = 'https://threejs.org/';
         cube.userData.label = 'Click Me!';
     
@@ -44,7 +45,7 @@ class Object extends Box {
     } 
 
     update() {
-        this.updateSides(this.model.position);
+        this.updateSides();
     }
 }
 

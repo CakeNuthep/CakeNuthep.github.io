@@ -149,7 +149,7 @@ function setupInteractiveCube() {
     };
     const cubeObject = new Object(objParams);
     scene.add(cubeObject.model);
-    scene.add(cubeObject.cube);
+    // scene.add(cubeObject.cube);
     objects.push(cubeObject);
 
     // Add click event listener
@@ -186,7 +186,7 @@ function loadCharacterModel() {
 
         characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
         keyDisplayQueue = new KeyDisplay(characterControls);
-        scene.add(characterControls.cube);
+        // scene.add(characterControls.cube);
     });
 }
 

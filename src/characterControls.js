@@ -4,17 +4,19 @@ import {Box} from './Box.js';
 
 class CharacterControls extends Box {
     constructor(model, mixer, animationsMap, orbitControl, camera, initialAction) {
-        const box = new THREE.Box3().setFromObject(model);
+        // const box = new THREE.Box3().setFromObject(model,true);
 
-        // Get the size of the bounding box
-        const size = new THREE.Vector3();
-        box.getSize(size);
+        // // Get the size of the bounding box
+        // const size = new THREE.Vector3();
+        const size = new THREE.Vector3(1,1.5,1);
+        // box.getSize(size);
         super({
             width: size.x,
             height: size.y,
             depth: size.z,
-            position: model.position
+            position: new THREE.Vector3(0, 0, 0),
         });
+        model.add(this.cube);
         this.model = model;
         this.mixer = mixer;
         this.animationsMap = animationsMap;
@@ -69,13 +71,13 @@ class CharacterControls extends Box {
     update(delta, keysPressed, floor, objects=[]) {
         const directionPressed = this.isDirectionPressed(keysPressed);
         const {isJump,isMove,nextAction} = this.determineNextAction(directionPressed);
-        console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
+        // console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
         this.updateAnimation(nextAction);
         this.mixer.update(delta);
         const currentPosition = this.model.position.clone();
 
         if (isMove) {
-            this.updateSides(this.model.position);
+            this.updateSides();
             this.handleMovement(delta, keysPressed,objects);
         }
         
@@ -85,10 +87,9 @@ class CharacterControls extends Box {
         let isColiitionthis = this.collisionDetection(objects);
         if (isColiitionthis) {
             console.log('Reverting to previous position due to collision');
-            this.updateSides(this.model.position); // Update sides after reverting position
+            this.updateSides(); // Update sides after reverting position
             this.model.position.copy(currentPosition);
             this.velocity.y = 0;
-            this.updateSides(this.model.position);
             this.isJumping = false;
         }
         else
@@ -169,7 +170,6 @@ class CharacterControls extends Box {
         let isColiitionthis = this.collisionDetection(objects);
         if (isColiitionthis) {
             this.model.position.copy(currentPosition);
-            this.updateSides(this.model.position); // Update sides after reverting position
         }
         
     }

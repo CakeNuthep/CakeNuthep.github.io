@@ -11,45 +11,41 @@ class Box {
             
         }) {
         this.GRAVITY = gravity;
-        this.width = width;
-        this.height = height;
-        this.depth = depth
+        // this.width = width;
+        // this.height = height;
+        // this.depth = depth
         this.onGround = false;
 
-        this.position = position;
+        // this.position = position;
         this.velocity = velocity;
 
-        this.right = this.position.x + this.width / 2;
-        this.left = this.position.x - this.width / 2;
-
-        this.bottom = this.position.y - this.height / 2;
-        this.top = this.position.y + this.height / 2;
-
-        this.front = this.position.z + this.depth / 2;
-        this.back = this.position.z - this.depth / 2;
+       
         this.raycaster = new THREE.Raycaster();
 
-        this.cube = this.createBox();
+        this.cube = this.createBox(width, height, depth, position);
         this.showCollisionBox = false;
         this.collisionDetectionEnabled = false;
+        this.updateSides();
     }
 
-    updateSides(position) {
-        this.position.set(position.x, position.y, position.z);
-        this.right = this.position.x + this.width / 2
-        this.left = this.position.x - this.width / 2
+    updateSides() {
+        // this.position.set(position.x, position.y, position.z);
+        if(!this.cube) return;
+        const position = new THREE.Vector3();
+        this.cube.getWorldPosition(position);
+        this.right = position.x + this.cube.scale.x / 2
+        this.left = position.x - this.cube.scale.x / 2
 
-        this.bottom = this.position.y - this.height / 2
-        this.top = this.position.y + this.height / 2
+        this.bottom = position.y - this.cube.scale.y / 2
+        this.top = position.y + this.cube.scale.y / 2
 
-        this.front = this.position.z + this.depth / 2
-        this.back = this.position.z - this.depth / 2
-        this.updateBox();
+        this.front = position.z + this.cube.scale.z / 2
+        this.back = position.z - this.cube.scale.z / 2
         this.cube.visible = this.showCollisionBox;
     }
 
     describe() {
-        return `Box: width=${this.width}, height=${this.height}, area=${this.area()}, perimeter=${this.perimeter()}`;
+        return `Box: width=${this.cube.x}, height=${this.cube.y}, depth=${this.cube.z}`;
     }  
 
     boxCollision({ box1, box2 }) {
@@ -67,43 +63,40 @@ class Box {
     applyGravity(floor) {
         // const player = characterControls.model;
         const down = new THREE.Vector3(0, -1, 0); // Ray points straight down
+        const position = new THREE.Vector3();
+        this.cube.getWorldPosition(position);
         this.velocity.y -= this.GRAVITY;
-        this.position.y += this.velocity.y;
+        position.y += this.velocity.y;
     
-        const rayOrigin = new THREE.Vector3(this.position.x, this.position.y + 10, this.position.z);
+        const rayOrigin = new THREE.Vector3(position.x, position.y + 10, position.z);
         this.raycaster.set(rayOrigin, down);
         const intersects = this.raycaster.intersectObject(floor);
         if (intersects.length > 0) {
             const terrainHeight = intersects[0].point.y;
-            if (this.position.y < terrainHeight) {
-                this.position.y = terrainHeight;
+            if (position.y < terrainHeight) {
+                position.y = terrainHeight;
                 this.velocity.y = 0;
                 this.onGround = true;
                 
             }
         }
         return { 
-                y: this.position.y, 
+                y: position.y, 
                 velocity: this.velocity.y, 
                 onGround: this.onGround 
             };
     }
 
-    createBox() {
-        const geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
+    createBox(width, height, depth,position) {
+        const geometry = new THREE.BoxGeometry(width, height, depth);
         const material = new THREE.MeshBasicMaterial({
             color: 0x0000ff,
             wireframe: true,
             wireframeLinewidth:10,
         });
         const cube = new THREE.Mesh(geometry, material);
-        cube.position.set(this.position.x, this.position.y, this.position.z);
+        cube.position.set(position.x, position.y, position.z);
         return cube;
-    }
-
-    updateBox() {
-        this.cube.position.set(this.position.x, this.position.y, this.position.z);
-        this.cube.scale.set(this.width, this.height, this.depth);
     }
 }
 
