@@ -77,17 +77,12 @@ class CharacterControls extends Box {
         const currentPosition = this.model.position.clone();
 
         if (isMove) {
-            this.updateSides();
             this.handleMovement(delta, keysPressed,objects);
         }
-        
-        
-        
         
         let isColiitionthis = this.collisionDetection(objects);
         if (isColiitionthis) {
             console.log('Reverting to previous position due to collision');
-            this.updateSides(); // Update sides after reverting position
             this.model.position.copy(currentPosition);
             this.velocity.y = 0;
             this.isJumping = false;
@@ -96,7 +91,6 @@ class CharacterControls extends Box {
         {
             if(this.gravityEnabled)
             {
-                this.updateSides(this.model.position);
                 let { y, velocity, onGround } =  this.applyGravity(floor);
                 this.model.position.y = y;
                 if(onGround){
@@ -166,7 +160,6 @@ class CharacterControls extends Box {
 
         this.rotateModel(angleYCameraDirection, directionOffset);
         this.moveModel(delta, directionOffset);
-        this.updateSides(this.model.position);
         let isColiitionthis = this.collisionDetection(objects);
         if (isColiitionthis) {
             this.model.position.copy(currentPosition);
@@ -175,7 +168,9 @@ class CharacterControls extends Box {
     }
 
     collisionDetection(objects) {
+        this.updateSides(this.model.position);
         for (let obj of objects) {
+            obj.updateSides();
             if (this.boxCollision({ box1: this, box2: obj })) {
                 console.log('Collision detected with object at position:', obj.position);
                 return true;

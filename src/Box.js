@@ -66,12 +66,13 @@ class Box {
         const position = new THREE.Vector3();
         this.cube.getWorldPosition(position);
         this.velocity.y -= this.GRAVITY;
-        position.y += this.velocity.y;
+        
     
         const rayOrigin = new THREE.Vector3(position.x, position.y + 10, position.z);
         this.raycaster.set(rayOrigin, down);
         const intersects = this.raycaster.intersectObject(floor);
         if (intersects.length > 0) {
+            position.y += this.velocity.y;
             const terrainHeight = intersects[0].point.y;
             if (position.y < terrainHeight) {
                 position.y = terrainHeight;
