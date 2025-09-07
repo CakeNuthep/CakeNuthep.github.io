@@ -18,6 +18,17 @@ class CharacterControls extends Box {
         });
         model.add(this.cube);
         this.model = model;
+        this.showFootBoxes = false;
+        this.rightFootBone = this.getBones('mixamorigRightFoot');
+        this.rightFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
+        this.rightFootBox.visible = this.showFootBoxes;
+        this.rightFootBox.name = 'RightFootBox';
+        this.rightFootBone.add(this.rightFootBox);
+        this.leftFootBone = this.getBones('mixamorigLeftFoot');
+        this.leftFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
+        this.leftFootBox.visible = this.showFootBoxes;
+        this.leftFootBox.name = 'LeftFootBox';
+        this.leftFootBone.add(this.leftFootBox);
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.orbitControl = orbitControl;
@@ -68,7 +79,23 @@ class CharacterControls extends Box {
         }
     }
 
+    getBones(boneName) {
+        let bone = null;
+        this.model.traverse((object) => {
+            if (object.isBone && object.name === boneName) {
+                bone = object;
+            }
+        });
+        return bone;
+    }
+
+
     update(delta, keysPressed, floor, objects=[]) {
+        if(this.showFootBoxes)
+        {
+            this.rightFootBox.visible = true;
+            this.leftFootBox.visible = true;
+        }
         const directionPressed = this.isDirectionPressed(keysPressed);
         const {isJump,isMove,nextAction} = this.determineNextAction(directionPressed);
         // console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
@@ -118,6 +145,12 @@ class CharacterControls extends Box {
 
             if(!isJump){
                 nextAction = 'Run';
+                let positionLeft = new THREE.Vector3();
+                this.leftFootBone.getWorldPosition(positionLeft);
+                let positionRight = new THREE.Vector3();
+                this.rightFootBone.getWorldPosition(positionRight);
+                console.log(`Left Foot Y Position: ${this.leftFootBone.parent.position.y} left Foot X Position: ${this.leftFootBone.parent.position.x} Z Position: ${this.leftFootBone.position.z}`);
+                console.log(`Right Foot Y Position: ${this.rightFootBone.parent.position.y} Right Foot X Position: ${this.rightFootBone.parent.position.x} Z Position: ${this.rightFootBone.position.z}`);
             }
         } else if (directionPressed) {
             isMove = true;
@@ -214,7 +247,7 @@ class CharacterControls extends Box {
             this.rotateAngle,
             angleYCameraDirection + directionOffset
         );
-        this.model.quaternion.rotateTowards(this.rotateQuaternion, 0.35);
+        this.model.quaternion.rotateTowards(this.rotateQuaternion, 0.5);
     }
 
     moveModel(delta, directionOffset) {

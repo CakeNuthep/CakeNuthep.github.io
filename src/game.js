@@ -148,6 +148,7 @@ function setupInteractiveCube() {
         position: new THREE.Vector3(2, 1, 0)
     };
     const cubeObject = new Object(objParams);
+    cubeObject.model.name = 'InteractiveCube';
     scene.add(cubeObject.model);
     // scene.add(cubeObject.cube);
     objects.push(cubeObject);
@@ -173,6 +174,7 @@ function handleCubeClick(event, cube) {
 function loadCharacterModel() {
     new GLTFLoader().load('models/Soldier.glb', (gltf) => {
         const model = gltf.scene;
+        model.name = 'Soldier';
         model.traverse((object) => {
             if (object.isMesh) object.castShadow = true;
         });
@@ -186,7 +188,8 @@ function loadCharacterModel() {
 
         characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
         keyDisplayQueue = new KeyDisplay(characterControls);
-        // scene.add(characterControls.cube);
+        
+        
     });
 }
 
@@ -238,9 +241,10 @@ function createMenuSettings(){
     const settings = {
         collisionDetection: false,
         showCollisionBoxes: false,
+        showFootBoxes: false,
         gravityEnabled: true,
         soundEffect: true,
-        soundBackground: true
+        soundBackground: true        
     };
 
     // Add controls to the GUI
@@ -259,6 +263,13 @@ function createMenuSettings(){
 
         for (let obj of objects) {
             obj.showCollisionBox = value;
+        }
+    });
+
+    gui.add(settings, 'showFootBoxes').name('Show Foot Boxes').onChange((value) => {
+        // Handle showing/hiding foot boxes
+        if( characterControls){
+            characterControls.showFootBoxes = value;
         }
     });
 
