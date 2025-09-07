@@ -11,12 +11,7 @@ class Box {
             
         }) {
         this.GRAVITY = gravity;
-        // this.width = width;
-        // this.height = height;
-        // this.depth = depth
         this.onGround = false;
-
-        // this.position = position;
         this.velocity = velocity;
 
        
@@ -29,9 +24,8 @@ class Box {
     }
 
     updateSides() {
-        // this.position.set(position.x, position.y, position.z);
         if(!this.cube) return;
-        const position = new THREE.Vector3();
+        let position = new THREE.Vector3();
         this.cube.getWorldPosition(position);
         this.right = position.x + this.cube.scale.x / 2
         this.left = position.x - this.cube.scale.x / 2
@@ -63,8 +57,9 @@ class Box {
     applyGravity(floor) {
         // const player = characterControls.model;
         const down = new THREE.Vector3(0, -1, 0); // Ray points straight down
-        const position = new THREE.Vector3();
+        let position = new THREE.Vector3();
         this.cube.getWorldPosition(position);
+        position.y = position.y - this.cube.position.y; 
         this.velocity.y -= this.GRAVITY;
         
     

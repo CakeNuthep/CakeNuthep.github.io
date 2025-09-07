@@ -14,7 +14,7 @@ class CharacterControls extends Box {
             width: size.x,
             height: size.y,
             depth: size.z,
-            position: new THREE.Vector3(0, 0, 0),
+            position: new THREE.Vector3(0, size.y/2, 0),
         });
         model.add(this.cube);
         this.model = model;
@@ -74,28 +74,25 @@ class CharacterControls extends Box {
         // console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
         this.updateAnimation(nextAction);
         this.mixer.update(delta);
-        const currentPosition = this.model.position.clone();
 
         if (isMove) {
             this.handleMovement(delta, keysPressed,objects);
         }
         
-        let isColiitionthis = this.collisionDetection(objects);
-        if (isColiitionthis) {
-            console.log('Reverting to previous position due to collision');
-            this.model.position.copy(currentPosition);
-            this.velocity.y = 0;
-            this.isJumping = false;
-        }
-        else
+
+        if(this.gravityEnabled)
         {
-            if(this.gravityEnabled)
-            {
-                let { y, velocity, onGround } =  this.applyGravity(floor);
-                this.model.position.y = y;
-                if(onGround){
-                    this.isJumping = false;
-                }
+            const currentPosition = this.model.position.clone();
+            let { y, velocity, onGround } =  this.applyGravity(floor);
+            this.model.position.y = y;
+            let isColiitionthis = this.collisionDetection(objects);
+            if (isColiitionthis) {
+                this.model.position.copy(currentPosition);
+                this.isJumping = false;
+            }
+            if(onGround){
+                
+                this.isJumping = false;
             }
         }
 
@@ -217,7 +214,7 @@ class CharacterControls extends Box {
             this.rotateAngle,
             angleYCameraDirection + directionOffset
         );
-        this.model.quaternion.rotateTowards(this.rotateQuaternion, 0.2);
+        this.model.quaternion.rotateTowards(this.rotateQuaternion, 0.35);
     }
 
     moveModel(delta, directionOffset) {
