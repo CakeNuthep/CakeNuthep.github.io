@@ -111,7 +111,7 @@ class KeyDisplay {
         });
     }
 
-    down(key) {
+    down(key, callbackFuntion=null) {
         console.log('key down in key display ' + key);
         if (this.map.get(key)) {
             this.map.get(key).element.style.color = 'red';
@@ -123,6 +123,11 @@ class KeyDisplay {
             this.characterControls.jump();
         }
         keysPressed[key] = true;
+
+        if(callbackFuntion)
+        {
+            callbackFuntion();
+        }
     }
 
     toggleShiftKey() {

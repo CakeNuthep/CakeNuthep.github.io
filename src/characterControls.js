@@ -3,7 +3,13 @@ import { A, D, DIRECTIONS, S, W, SHIFT } from './utils.js';
 import {Box} from './Box.js';
 
 class CharacterControls extends Box {
-    constructor(model, mixer, animationsMap, orbitControl, camera, initialAction) {
+    constructor(model, mixer, animationsMap, orbitControl, camera, initialAction,
+        collisionDetectionEnabled=true,
+        showFootBoxes=false,
+        gravityEnabled=true,
+        showCollisionBox=false,
+
+    ) {
         // const box = new THREE.Box3().setFromObject(model,true);
 
         // // Get the size of the bounding box
@@ -48,7 +54,10 @@ class CharacterControls extends Box {
         this.fadeDuration = 0.2;
         this.runVelocity = 5;
         this.walkVelocity = 2;
-        this.gravityEnabled = true;
+        this.gravityEnabled = gravityEnabled;
+        this.showCollisionBox = showCollisionBox;
+        this.showFootBoxes = showFootBoxes;
+        this.collisionDetectionEnabled = collisionDetectionEnabled;
 
         this.playInitialAnimation();
         this.setupCameraTarget();
@@ -202,7 +211,7 @@ class CharacterControls extends Box {
         for (let obj of objects) {
             obj.updateSides();
             if (this.boxCollision({ box1: this, box2: obj })) {
-                console.log('Collision detected with object at position:', obj.position);
+                console.log('Collision detected');
                 return true;
             } 
         }

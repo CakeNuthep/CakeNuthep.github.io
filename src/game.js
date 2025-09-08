@@ -17,10 +17,17 @@ const TERRAIN_HEIGHT = 20;
 let scene, camera, renderer, cssRenderer, orbitControls;
 let floor, characterControls, keyDisplayQueue
 let audioBackground;
-let isPlayBackgroundMusic = true;
 let raycaster = new THREE.Raycaster();;
 let objects = [];
 
+const settings = {
+        collisionDetection: true,
+        showCollisionBoxes: false,
+        showFootBoxes: false,
+        gravityEnabled: true,
+        soundEffect: true,
+        soundBackground: true        
+    };
 
 const clock = new THREE.Clock();
 
@@ -39,6 +46,7 @@ function init() {
     
     animate();
     createBackGroundMusic();
+    updateSetting();
 }
 
 // Setup the scene
@@ -190,7 +198,18 @@ function loadCharacterModel() {
             animationsMap.set(a.name, mixer.clipAction(a));
         });
 
-        characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
+        characterControls = new CharacterControls(
+            model, 
+            mixer, 
+            animationsMap, 
+            orbitControls, 
+            camera, 
+            'Idle',
+            settings.collisionDetectionEnabled,
+            settings.showFootBoxes,
+            settings.gravityEnabled,
+            settings.showCollisionBoxes
+        );
         keyDisplayQueue = new KeyDisplay(characterControls);
         
         
@@ -201,8 +220,7 @@ function loadCharacterModel() {
 function setupEventListeners() {
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('keydown', (event) => {
-        keyDisplayQueue?.down(event.code);
-        playBackGroundMusic();
+        keyDisplayQueue?.down(event.code, playBackGroundMusic);
     });
     document.addEventListener('keyup', (event) => {
         keyDisplayQueue?.up(event.code);
@@ -247,63 +265,53 @@ function animate() {
 function createMenuSettings(){
     const gui = new GUI();
     // Create an object to hold the settings
-    const settings = {
-        collisionDetection: false,
-        showCollisionBoxes: false,
-        showFootBoxes: false,
-        gravityEnabled: true,
-        soundEffect: true,
-        soundBackground: true        
-    };
 
     // Add controls to the GUI
 
     gui.add(settings, 'collisionDetection').name('Collision Detection').onChange((value) => {
-        if( characterControls){
-            characterControls.collisionDetectionEnabled = value;
-        }
+        updateSetting();
     });
 
     gui.add(settings, 'showCollisionBoxes').name('Show Collision Boxes').onChange((value) => {
-        // Handle showing/hiding collision boxes
-        if( characterControls){
-            characterControls.showCollisionBox = value;
-        }
-
-        for (let obj of objects) {
-            obj.showCollisionBox = value;
-        }
+        updateSetting();
     });
 
     gui.add(settings, 'showFootBoxes').name('Show Foot Boxes').onChange((value) => {
-        // Handle showing/hiding foot boxes
-        if( characterControls){
-            characterControls.showFootBoxes = value;
-        }
+        updateSetting();
     });
 
     gui.add(settings, 'gravityEnabled').name('Gravity Enabled').onChange((value) => {
-        if( characterControls){
-            characterControls.gravityEnabled = value;
-        }
+        updateSetting();
     });
 
     gui.add(settings, 'soundEffect').name('Sound Effects').onChange((value) => {
-        // Handle sound effect toggle
-        console.log('Sound Effects toggled:', value);
+        updateSetting();
     });
 
     gui.add(settings, 'soundBackground').name('Background Sound').onChange((value) => {
-        // Handle background sound toggle
-        isPlayBackgroundMusic = value;
-        playBackGroundMusic();
+        updateSetting();
         console.log('Background Sound toggled:', value);
         
     });
 }
 
+function updateSetting(){
+    if(characterControls)
+    {
+        characterControls.collisionDetectionEnabled = settings.collisionDetection;
+        characterControls.showFootBoxes = settings.showFootBoxes;
+        characterControls.gravityEnabled = settings.gravityEnabled;
+        characterControls.showCollisionBox = settings.showCollisionBoxes;
+    }
+
+    for (let obj of objects) {
+        obj.showCollisionBox = settings.showCollisionBoxes;
+    }
+}
+
 function playBackGroundMusic(){
-    if(isPlayBackgroundMusic){
+    console.log("!audioBackground.isPlaying" + !audioBackground.isPlaying);
+    if(settings.soundBackground){
         if(!audioBackground.isPlaying){
             audioBackground.play();
         }
