@@ -16,6 +16,8 @@ const TERRAIN_HEIGHT = 20;
 
 let scene, camera, renderer, cssRenderer, orbitControls;
 let floor, characterControls, keyDisplayQueue
+let audioBackground;
+let isPlayBackgroundMusic = true;
 let raycaster = new THREE.Raycaster();;
 let objects = [];
 
@@ -34,7 +36,9 @@ function init() {
     loadCharacterModel();
     setupEventListeners();
     setupControls();
+    
     animate();
+    createBackGroundMusic();
 }
 
 // Setup the scene
@@ -196,8 +200,13 @@ function loadCharacterModel() {
 // Setup event listeners
 function setupEventListeners() {
     window.addEventListener('resize', onWindowResize);
-    document.addEventListener('keydown', (event) => keyDisplayQueue?.down(event.code));
-    document.addEventListener('keyup', (event) => keyDisplayQueue?.up(event.code));
+    document.addEventListener('keydown', (event) => {
+        keyDisplayQueue?.down(event.code);
+        playBackGroundMusic();
+    });
+    document.addEventListener('keyup', (event) => {
+        keyDisplayQueue?.up(event.code);
+    });
 }
 
 // Handle window resize
@@ -286,8 +295,36 @@ function createMenuSettings(){
 
     gui.add(settings, 'soundBackground').name('Background Sound').onChange((value) => {
         // Handle background sound toggle
+        isPlayBackgroundMusic = value;
+        playBackGroundMusic();
         console.log('Background Sound toggled:', value);
+        
     });
+}
+
+function playBackGroundMusic(){
+    if(isPlayBackgroundMusic){
+        if(!audioBackground.isPlaying){
+            audioBackground.play();
+        }
+    } else {
+        if(audioBackground.isPlaying){
+            audioBackground.pause();
+        }
+    }
+}
+
+function createBackGroundMusic(){
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+    audioBackground = new THREE.Audio( listener );
+    const audioLoad = new THREE.AudioLoader();
+    audioLoad.load( './Sound/Sound Background/Epic Spectrum.mp3', function( buffer ) {
+        audioBackground.setBuffer( buffer );
+        audioBackground.setLoop( true );
+        audioBackground.setVolume( 0.5 );
+        // audioBackground.play();
+    } );
 }
 
 init();
