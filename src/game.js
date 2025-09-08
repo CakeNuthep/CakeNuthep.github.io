@@ -290,6 +290,7 @@ function createMenuSettings(){
 
     gui.add(settings, 'soundBackground').name('Background Sound').onChange((value) => {
         updateSetting();
+        playBackGroundMusic();
         console.log('Background Sound toggled:', value);
         
     });
