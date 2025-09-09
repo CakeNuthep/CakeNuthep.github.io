@@ -5,6 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
+import { Sky } from 'three/addons/objects/Sky.js';
 import { Object } from './Objects.js';
 import GUI from 'lil-gui';
 
@@ -15,10 +16,15 @@ const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
 
 let scene, camera, renderer, cssRenderer, orbitControls;
-let floor, characterControls, keyDisplayQueue
+let floor, characterControls, keyDisplayQueue;
+let sky, sun;
 let audioBackground;
 let raycaster = new THREE.Raycaster();;
 let objects = [];
+
+const gui = new GUI();
+const settingGUI = gui.addFolder("Generic")
+const skySettingGUI = gui.addFolder("Sky")
 
 const settings = {
         collisionDetection: true,
@@ -38,6 +44,7 @@ function init() {
     setupCamera();
     setupRenderer();
     setupLights();
+    initSky();
     setupFloor();
     setupInteractiveCube();
     loadCharacterModel();
@@ -103,6 +110,59 @@ function setupLights() {
     dirLight.shadow.mapSize.height = 4096;
     scene.add(dirLight);
     // scene.add( new THREE.CameraHelper(dirLight.shadow.camera))
+}
+
+function initSky() {
+
+    // Add Sky
+    sky = new Sky();
+    sky.scale.setScalar( 450000 );
+    scene.add( sky );
+
+    sun = new THREE.Vector3();
+
+    /// GUI
+
+    const effectController = {
+        turbidity: 0,
+        rayleigh: 0.46,
+        mieCoefficient: 0.007,
+        mieDirectionalG: 0.594,
+        elevation: 5.9,
+        azimuth: -180,
+        exposure: renderer.toneMappingExposure
+    };
+
+    function guiChanged() {
+
+        const uniforms = sky.material.uniforms;
+        uniforms[ 'turbidity' ].value = effectController.turbidity;
+        uniforms[ 'rayleigh' ].value = effectController.rayleigh;
+        uniforms[ 'mieCoefficient' ].value = effectController.mieCoefficient;
+        uniforms[ 'mieDirectionalG' ].value = effectController.mieDirectionalG;
+
+        const phi = THREE.MathUtils.degToRad( 90 - effectController.elevation );
+        const theta = THREE.MathUtils.degToRad( effectController.azimuth );
+
+        sun.setFromSphericalCoords( 1, phi, theta );
+
+        uniforms[ 'sunPosition' ].value.copy( sun );
+
+        renderer.toneMappingExposure = effectController.exposure;
+        renderer.render( scene, camera );
+
+    }
+
+    skySettingGUI.add( effectController, 'turbidity', 0.0, 20.0, 0.1 ).onChange( guiChanged );
+    skySettingGUI.add( effectController, 'rayleigh', 0.0, 4, 0.001 ).onChange( guiChanged );
+    skySettingGUI.add( effectController, 'mieCoefficient', 0.0, 0.1, 0.001 ).onChange( guiChanged );
+    skySettingGUI.add( effectController, 'mieDirectionalG', 0.0, 1, 0.001 ).onChange( guiChanged );
+    skySettingGUI.add( effectController, 'elevation', 0, 90, 0.1 ).onChange( guiChanged );
+    skySettingGUI.add( effectController, 'azimuth', - 180, 180, 0.1 ).onChange( guiChanged );
+    skySettingGUI.add( effectController, 'exposure', 0, 1, 0.0001 ).onChange( guiChanged );
+
+    guiChanged();
+
 }
 
 
@@ -263,32 +323,31 @@ function animate() {
 
 // Initialize the game
 function createMenuSettings(){
-    const gui = new GUI();
     // Create an object to hold the settings
 
     // Add controls to the GUI
 
-    gui.add(settings, 'collisionDetection').name('Collision Detection').onChange((value) => {
+    settingGUI.add(settings, 'collisionDetection').name('Collision Detection').onChange((value) => {
         updateSetting();
     });
 
-    gui.add(settings, 'showCollisionBoxes').name('Show Collision Boxes').onChange((value) => {
+    settingGUI.add(settings, 'showCollisionBoxes').name('Show Collision Boxes').onChange((value) => {
         updateSetting();
     });
 
-    gui.add(settings, 'showFootBoxes').name('Show Foot Boxes').onChange((value) => {
+    settingGUI.add(settings, 'showFootBoxes').name('Show Foot Boxes').onChange((value) => {
         updateSetting();
     });
 
-    gui.add(settings, 'gravityEnabled').name('Gravity Enabled').onChange((value) => {
+    settingGUI.add(settings, 'gravityEnabled').name('Gravity Enabled').onChange((value) => {
         updateSetting();
     });
 
-    gui.add(settings, 'soundEffect').name('Sound Effects').onChange((value) => {
+    settingGUI.add(settings, 'soundEffect').name('Sound Effects').onChange((value) => {
         updateSetting();
     });
 
-    gui.add(settings, 'soundBackground').name('Background Sound').onChange((value) => {
+    settingGUI.add(settings, 'soundBackground').name('Background Sound').onChange((value) => {
         updateSetting();
         playBackGroundMusic();
         console.log('Background Sound toggled:', value);
