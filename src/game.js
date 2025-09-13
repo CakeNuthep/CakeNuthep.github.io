@@ -244,7 +244,7 @@ function handleCubeClick(event, cube) {
 
 // Load character model
 function loadCharacterModel() {
-    new GLTFLoader().load('models/Soldier.glb', (gltf) => {
+    new GLTFLoader().load('models/MyAvatar.glb', (gltf) => {
         const model = gltf.scene;
         model.name = 'Soldier';
         model.traverse((object) => {

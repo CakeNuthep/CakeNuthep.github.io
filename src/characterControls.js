@@ -25,16 +25,16 @@ class CharacterControls extends Box {
         model.add(this.cube);
         this.model = model;
         this.showFootBoxes = false;
-        const rightFootBone = this.getBones('mixamorigRightFoot');
-        this.rightFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
-        this.rightFootBox.visible = this.showFootBoxes;
-        this.rightFootBox.name = 'RightFootBox';
-        rightFootBone.add(this.rightFootBox);
-        const leftFootBone = this.getBones('mixamorigLeftFoot');
-        this.leftFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
-        this.leftFootBox.visible = this.showFootBoxes;
-        this.leftFootBox.name = 'LeftFootBox';
-        leftFootBone.add(this.leftFootBox);
+        // const rightFootBone = this.getBones('mixamorigRightFoot');
+        // this.rightFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
+        // this.rightFootBox.visible = this.showFootBoxes;
+        // this.rightFootBox.name = 'RightFootBox';
+        // rightFootBone.add(this.rightFootBox);
+        // const leftFootBone = this.getBones('mixamorigLeftFoot');
+        // this.leftFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
+        // this.leftFootBox.visible = this.showFootBoxes;
+        // this.leftFootBox.name = 'LeftFootBox';
+        // leftFootBone.add(this.leftFootBox);
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.orbitControl = orbitControl;
@@ -102,8 +102,8 @@ class CharacterControls extends Box {
     update(delta, keysPressed, floor, objects=[]) {
         if(this.showFootBoxes)
         {
-            this.rightFootBox.visible = true;
-            this.leftFootBox.visible = true;
+            // this.rightFootBox.visible = true;
+            // this.leftFootBox.visible = true;
         }
         const directionPressed = this.isDirectionPressed(keysPressed);
         const {isJump,isMove,nextAction} = this.determineNextAction(directionPressed);
@@ -147,19 +147,19 @@ class CharacterControls extends Box {
         var isMove = false;
         if (this.isJumping) {
             isJump = true;
-            nextAction = 'Idle';
+            nextAction = 'ForwardFlip';
         }
         if (directionPressed && this.toggleRun) {
             isMove = true;
 
             if(!isJump){
                 nextAction = 'Run';
-                let positionLeft = new THREE.Vector3();
-                this.leftFootBox.getWorldPosition(positionLeft);
-                let positionRight = new THREE.Vector3();
-                this.rightFootBox.getWorldPosition(positionRight);
-                console.log(`Left Foot Y Position: ${this.leftFootBox.parent.position.y} left Foot X Position: ${this.leftFootBox.parent.position.x} Z Position: ${this.leftFootBox.position.z}`);
-                console.log(`Right Foot Y Position: ${this.rightFootBox.parent.position.y} Right Foot X Position: ${this.rightFootBox.parent.position.x} Z Position: ${this.rightFootBox.position.z}`);
+                // let positionLeft = new THREE.Vector3();
+                // this.leftFootBox.getWorldPosition(positionLeft);
+                // let positionRight = new THREE.Vector3();
+                // this.rightFootBox.getWorldPosition(positionRight);
+                // console.log(`Left Foot Y Position: ${this.leftFootBox.parent.position.y} left Foot X Position: ${this.leftFootBox.parent.position.x} Z Position: ${this.leftFootBox.position.z}`);
+                // console.log(`Right Foot Y Position: ${this.rightFootBox.parent.position.y} Right Foot X Position: ${this.rightFootBox.parent.position.x} Z Position: ${this.rightFootBox.position.z}`);
             }
         } else if (directionPressed) {
             isMove = true;
@@ -205,6 +205,8 @@ class CharacterControls extends Box {
         }
         
     }
+
+    
 
     collisionDetection(objects) {
         this.updateSides(this.model.position);
