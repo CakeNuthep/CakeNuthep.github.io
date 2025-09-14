@@ -26,6 +26,7 @@ class Box {
         this.showCollisionBox = false;
         this.collisionDetectionEnabled = isCollition;
         this.passThroughWhenCollision = passThroughWhenCollision;
+        this.action = 'Idle';
         this.updateSides();
     }
 
@@ -101,8 +102,8 @@ class Box {
         return cube;
     }
 
-    palyerAction(){
-        return {KeyCode:"KeyE", Action:"Dance"}
+    setPalyerAction(action){
+        this.action = action;
     }
 }
 

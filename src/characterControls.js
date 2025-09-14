@@ -199,6 +199,23 @@ class CharacterControls extends Box {
         return {isJump, isMove, nextAction};
     }
 
+    updateIdleAction(){
+        this.mapObject.forEach((object, objName) => {
+            const obj = object.object
+            if(object.collision)
+            {
+                this.updateIdleCurrentAction(obj.action);
+                this.updateIdleCurrentWaitAction(obj.action);
+            }
+        });
+        
+    }
+
+    setDefaultIdleAction(){
+        this.updateIdleCurrentAction(this.IdleAction);
+        this.updateIdleCurrentWaitAction(this.IdleYawnAction);
+    }
+
     updateIdleCurrentAction(newIdleAction){
         if(this.IdleCurrentAction != newIdleAction)
         {
@@ -206,7 +223,7 @@ class CharacterControls extends Box {
         }
     }
 
-    updateIdelCurrentWaitAction(newIdleAction){
+    updateIdleCurrentWaitAction(newIdleAction){
         if(this.IdelCurrentWaitAction != newIdleAction)
         {
             this.IdelCurrentWaitAction = newIdleAction;

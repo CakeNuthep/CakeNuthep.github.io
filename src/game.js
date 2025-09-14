@@ -243,6 +243,7 @@ function setupDanceCube() {
     };
     const cubeObject = new DanceObject(objParams);
     cubeObject.model.name = 'DanceCube';
+    cubeObject.setPalyerAction('Dance');
     scene.add(cubeObject.model);
     // scene.add(cubeObject.cube);
     objects.push(cubeObject);
