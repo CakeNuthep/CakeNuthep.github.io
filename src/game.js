@@ -216,6 +216,7 @@ function wrapAndRepeatTexture(map) {
 // Setup interactive cube
 function setupInteractiveCube() {
     const objParams = {
+        name: "InterActiveCube",
         width: 1,
         height: 1,
         depth: 1,
@@ -234,6 +235,7 @@ function setupInteractiveCube() {
 // Setup interactive cube
 function setupDanceCube() {
     const objParams = {
+        name: "DanceCube",
         width: 1,
         height: 1,
         depth: 1,
@@ -277,6 +279,7 @@ function loadCharacterModel() {
         });
 
         characterControls = new CharacterControls(
+            "Player",
             model, 
             mixer, 
             animationsMap, 
@@ -290,6 +293,7 @@ function loadCharacterModel() {
             settings.showCollisionBoxes
         );
         keyDisplayQueue = new KeyDisplay(characterControls);
+        initialObjectInCharacter()
         
         
     });
@@ -425,6 +429,14 @@ function createJumpLandSound(){
         jumpSound.setVolume( 1 );
     } );
     return jumpSound;
+}
+
+function initialObjectInCharacter(){
+    if(characterControls){
+        for (let obj of objects) {
+            characterControls.initialObjectDetection(obj);
+        }
+    }
 }
 
 init();

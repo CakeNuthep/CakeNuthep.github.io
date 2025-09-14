@@ -3,7 +3,7 @@ import { A, D, DIRECTIONS, S, W, SHIFT } from './utils.js';
 import {Box} from './Box.js';
 
 class CharacterControls extends Box {
-    constructor(model, mixer, animationsMap, orbitControl, camera, initialAction,
+    constructor(name,model, mixer, animationsMap, orbitControl, camera, initialAction,
         jumpSound,
         collisionDetectionEnabled=true,
         showFootBoxes=false,
@@ -18,6 +18,7 @@ class CharacterControls extends Box {
         const size = new THREE.Vector3(1,1.5,1);
         // box.getSize(size);
         super({
+            name: name,
             width: size.x,
             height: size.y,
             depth: size.z,
@@ -67,6 +68,7 @@ class CharacterControls extends Box {
 
         this.playInitialAnimation();
         this.setupCameraTarget();
+        this.mapObject = null;
         
     }
 
@@ -105,7 +107,7 @@ class CharacterControls extends Box {
     }
 
 
-    update(delta, keysPressed, floor, objects=[]) {
+    update(delta, keysPressed, floor) {
         if(this.showFootBoxes)
         {
             // this.rightFootBox.visible = true;
@@ -118,7 +120,7 @@ class CharacterControls extends Box {
         this.mixer.update(delta);
 
         if (isMove) {
-            this.handleMovement(delta, keysPressed,objects);
+            this.handleMovement(delta, keysPressed,this.mapObject);
         }
         
 
@@ -127,7 +129,7 @@ class CharacterControls extends Box {
             const currentPosition = this.model.position.clone();
             let { y, velocity, onGround } =  this.applyGravity(floor);
             this.model.position.y = y;
-            let {isColiision,isPassThrough}  = this.collisionDetection(objects);
+            let {isColiision,isPassThrough}  = this.collisionDetection(this.mapObject);
             if (isColiision && !isPassThrough) {
                 this.model.position.copy(currentPosition);
                 this.isJumping = false;
@@ -225,14 +227,14 @@ class CharacterControls extends Box {
         return action === 'Run' || action === 'Walk';
     }
 
-    handleMovement(delta, keysPressed, objects=[]) {
+    handleMovement(delta, keysPressed, mapObjects) {
         const angleYCameraDirection = this.calculateCameraDirectionAngle();
         const directionOffset = this.calculateDirectionOffset(keysPressed);
         const currentPosition = this.model.position.clone();
 
         this.rotateModel(angleYCameraDirection, directionOffset);
         this.moveModel(delta, directionOffset);
-        let {isColiision,isPassThrough} = this.collisionDetection(objects);
+        let {isColiision,isPassThrough} = this.collisionDetection(mapObjects);
         if (isColiision && !isPassThrough) {
             this.model.position.copy(currentPosition);
         }
@@ -241,13 +243,13 @@ class CharacterControls extends Box {
 
     
 
-    collisionDetection(objects) {
+    collisionDetection(mapObjects) {
         let isColiision = false;
         let isPassThrough = false;
         this.updateSides(this.model.position);
-        for (let obj of objects) {
+        mapObjects.forEach((object, objName) => {
+            const obj = object.object
             obj.updateSides();
-            
             if (this.boxCollision({ box1: this, box2: obj })) {
                 console.log('Collision detected');
                 isColiision = true;
@@ -256,7 +258,7 @@ class CharacterControls extends Box {
                     isPassThrough = true;
                 }
             } 
-        }
+        });
         return {isColiision, isPassThrough}
     }
 
@@ -361,6 +363,22 @@ class CharacterControls extends Box {
             this.model.position.z
         );
         this.orbitControl.target = this.cameraTarget;
+    }
+
+    initialObjectDetection(object){
+        if(object)
+        {
+            if(this.mapObject){
+                if(!this.mapObject.has(object.name))
+                {
+                    this.mapObject.set(object.name, {object: object, collision: false});
+                }
+            }
+            else{
+                this.mapObject = new Map();
+                this.mapObject.set(object.name, {object: object,  collision: false});
+            }
+        }
     }
 
     

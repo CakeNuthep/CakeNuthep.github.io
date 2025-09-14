@@ -4,6 +4,7 @@ import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
 class Object extends Box {
     constructor({
+            name,
             width,
             height,
             depth,
@@ -11,6 +12,7 @@ class Object extends Box {
             
         }) {
         super({
+            name,
             width,
             height,
             depth,

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 class Box {
     constructor({
+            name,
             width,
             height,
             depth,
@@ -12,6 +13,7 @@ class Box {
             passThroughWhenCollision = true,
             
         }) {
+        this.name = name;
         this.GRAVITY = gravity;
         this.onGround = false;
         this.velocity = velocity;
@@ -97,6 +99,10 @@ class Box {
         const cube = new THREE.Mesh(geometry, material);
         cube.position.set(position.x, position.y, position.z);
         return cube;
+    }
+
+    palyerAction(){
+        return {KeyCode:"KeyE", Action:"Dance"}
     }
 }
 
