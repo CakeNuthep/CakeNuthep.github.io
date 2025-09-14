@@ -11,12 +11,9 @@ class CharacterControls extends Box {
         showCollisionBox=false,
 
     ) {
-        // const box = new THREE.Box3().setFromObject(model,true);
 
-        // // Get the size of the bounding box
-        // const size = new THREE.Vector3();
+        // bounding box for collision detect
         const size = new THREE.Vector3(1,1.5,1);
-        // box.getSize(size);
         super({
             name: name,
             width: size.x,
@@ -28,16 +25,6 @@ class CharacterControls extends Box {
         this.model = model;
         this.showFootBoxes = false;
         this.jumpSound = jumpSound;
-        // const rightFootBone = this.getBones('mixamorigRightFoot');
-        // this.rightFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
-        // this.rightFootBox.visible = this.showFootBoxes;
-        // this.rightFootBox.name = 'RightFootBox';
-        // rightFootBone.add(this.rightFootBox);
-        // const leftFootBone = this.getBones('mixamorigLeftFoot');
-        // this.leftFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
-        // this.leftFootBox.visible = this.showFootBoxes;
-        // this.leftFootBox.name = 'LeftFootBox';
-        // leftFootBone.add(this.leftFootBox);
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.orbitControl = orbitControl;
@@ -69,6 +56,18 @@ class CharacterControls extends Box {
         this.playInitialAnimation();
         this.setupCameraTarget();
         this.mapObject = null;
+
+        
+        this.IdleAction = 'Idle';
+        this.IdleYawnAction = 'Yawn';
+        this.IdleDanceAction = 'Dance';
+        this.IdleChickenDanceAction = 'ChickenDance';
+        this.IdleSnakeDaceAction = 'SnakeDance';
+        this.RunAction = 'Run';
+        this.WalkAction = 'Walk';
+        this.JumpAction = 'ForwardFlip';
+        this.IdleCurrentAction = this.IdleAction;
+        this.IdelCurrentWaitAction = this.IdleYawnAction;
         
     }
 
@@ -108,11 +107,6 @@ class CharacterControls extends Box {
 
 
     update(delta, keysPressed, floor) {
-        if(this.showFootBoxes)
-        {
-            // this.rightFootBox.visible = true;
-            // this.leftFootBox.visible = true;
-        }
         const directionPressed = this.isDirectionPressed(keysPressed);
         const {isJump,isMove,nextAction} = this.determineNextAction(directionPressed);
         // console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
@@ -162,30 +156,24 @@ class CharacterControls extends Box {
 
     determineNextAction(directionPressed) {
         var isJump = false;
-        var nextAction = 'Idle';
+        var nextAction = this.IdleCurrentAction;
         var isMove = false;
         if (this.isJumping) {
             isJump = true;
-            nextAction = 'ForwardFlip';
+            nextAction = this.JumpAction;
             this.anyActionDateTime = Date.now(); 
         }
         if (directionPressed && this.toggleRun) {
             isMove = true;
 
             if(!isJump){
-                nextAction = 'Run';
-                // let positionLeft = new THREE.Vector3();
-                // this.leftFootBox.getWorldPosition(positionLeft);
-                // let positionRight = new THREE.Vector3();
-                // this.rightFootBox.getWorldPosition(positionRight);
-                // console.log(`Left Foot Y Position: ${this.leftFootBox.parent.position.y} left Foot X Position: ${this.leftFootBox.parent.position.x} Z Position: ${this.leftFootBox.position.z}`);
-                // console.log(`Right Foot Y Position: ${this.rightFootBox.parent.position.y} Right Foot X Position: ${this.rightFootBox.parent.position.x} Z Position: ${this.rightFootBox.position.z}`);
+                nextAction = this.RunAction;
             }
             this.anyActionDateTime = Date.now(); 
         } else if (directionPressed) {
             isMove = true;
             if(!isJump){
-                nextAction = 'Walk';
+                nextAction = this.WalkAction;
             }
             this.anyActionDateTime = Date.now(); 
         } else {
@@ -193,7 +181,7 @@ class CharacterControls extends Box {
                 const diffTime = (Date.now() - this.anyActionDateTime);
                 if(diffTime > this.idleTimeoutDurationMin)
                 {
-                    nextAction = 'Yawn'
+                    nextAction = this.IdelCurrentWaitAction;
                     if( diffTime > this.idleTimeoutDurationMax)
                     {
                         this.anyActionDateTime = Date.now();
@@ -202,13 +190,27 @@ class CharacterControls extends Box {
                 }
                 else
                 {
-                    nextAction = 'Idle';
+                    nextAction = this.IdleCurrentAction;
                 }
             }
         }
 
         
         return {isJump, isMove, nextAction};
+    }
+
+    updateIdleCurrentAction(newIdleAction){
+        if(this.IdleCurrentAction != newIdleAction)
+        {
+            this.IdleCurrentAction = newIdleAction;
+        }
+    }
+
+    updateIdelCurrentWaitAction(newIdleAction){
+        if(this.IdelCurrentWaitAction != newIdleAction)
+        {
+            this.IdelCurrentWaitAction = newIdleAction;
+        }
     }
 
     updateAnimation(nextAction) {
@@ -224,7 +226,7 @@ class CharacterControls extends Box {
     }
 
     isMoving(action) {
-        return action === 'Run' || action === 'Walk';
+        return action === this.RunAction || action === this.WalkAction;
     }
 
     handleMovement(delta, keysPressed, mapObjects) {
@@ -253,11 +255,15 @@ class CharacterControls extends Box {
             if (this.boxCollision({ box1: this, box2: obj })) {
                 console.log('Collision detected');
                 isColiision = true;
+                this.mapObject.set(objName, {object: obj, collision: true});
                 if(obj.passThroughWhenCollision)
                 {
                     isPassThrough = true;
                 }
             } 
+            else{
+                this.mapObject.set(objName, {object: obj, collision: false});
+            }
         });
         return {isColiision, isPassThrough}
     }
@@ -380,8 +386,6 @@ class CharacterControls extends Box {
             }
         }
     }
-
-    
 }
 
 export { CharacterControls };

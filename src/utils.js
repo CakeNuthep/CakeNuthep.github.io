@@ -116,7 +116,7 @@ class KeyDisplay {
     }
 
     down(key, callbackFuntion=null) {
-        console.log('key down in key display ' + key);
+        // console.log('key down in key display ' + key);
         if (this.map.get(key)) {
             this.map.get(key).element.style.color = 'red';
         }
@@ -130,8 +130,13 @@ class KeyDisplay {
         if(key == E && this.characterControls && !this.holdInterval){
             this.holdInterval = setInterval(() => {
                 console.log('E is still held...');
+                if(this.characterControls)
+                {
+                    this.characterControls.updateIdleCurrentAction(this.characterControls.IdleDanceAction);
+                    this.characterControls.updateIdelCurrentWaitAction(this.characterControls.IdleDanceAction);
+                }
                 // Perform actions that should repeat while the key is held
-            }, 500); // Repeat every 500 milliseconds
+            }, 300); // Repeat every 500 milliseconds
             console.log(this.holdInterval);
         }
         keysPressed[key] = true;
@@ -165,6 +170,8 @@ class KeyDisplay {
             this.map.get(key).element.style.color = 'blue';
         }
         if (key == E && this.holdInterval){
+            this.characterControls.updateIdleCurrentAction(this.characterControls.IdleAction);
+            this.characterControls.updateIdelCurrentWaitAction(this.characterControls.IdleYawnAction);
             console.log("Stop Interval")
             console.log(this.holdInterval);
             // Stop the continuous action

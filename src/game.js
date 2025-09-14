@@ -393,7 +393,7 @@ function updateSetting(){
 }
 
 function playBackGroundMusic(){
-    console.log("!audioBackground.isPlaying" + !audioBackground.isPlaying);
+    // console.log("!audioBackground.isPlaying" + !audioBackground.isPlaying);
     if(settings.soundBackground){
         if(!audioBackground.isPlaying){
             audioBackground.play();
