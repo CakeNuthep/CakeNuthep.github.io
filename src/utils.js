@@ -2,6 +2,7 @@ const W = 'KeyW';
 const A = 'KeyA';
 const S = 'KeyS';
 const D = 'KeyD';
+const E = 'KeyE';
 const SHIFT = 'ShiftLeft';
 const SPACE = 'Space';
 const DIRECTIONS = [W, A, S, D];
@@ -22,6 +23,7 @@ class KeyDisplay {
             [A, { element: document.createElement("div"), display: 'a' }],
             [S, { element: document.createElement("div"), display: 's' }],
             [D, { element: document.createElement("div"), display: 'd' }],
+            [E, { element: document.createElement("div"), display: 'e' }],
             [SHIFT, { element: document.createElement("button"), display: 'run' }],
             [SPACE, { element: document.createElement("div"), display: 'jump' }],
         ]);
@@ -102,6 +104,7 @@ class KeyDisplay {
             [A]: { top: `${window.innerHeight - 100}px`, left: '200px' },
             [S]: { top: `${window.innerHeight - 100}px`, left: '300px' },
             [D]: { top: `${window.innerHeight - 100}px`, left: '400px' },
+            [E]: { top: `${window.innerHeight - 100}px`, right: '230px' },
             [SHIFT]: { top: `${window.innerHeight - 100}px`, left: '50px' },
             [SPACE]: { top: `${window.innerHeight - 100}px`, right: '50px' },
         };
@@ -160,4 +163,4 @@ class KeyDisplay {
     }
 }
 
-export { W, A, S, D, SHIFT, DIRECTIONS, KeyDisplay };
+export { W, A, S, D,E, SHIFT, DIRECTIONS, KeyDisplay };
