@@ -61,6 +61,10 @@ class CharacterControls extends Box {
         this.showFootBoxes = showFootBoxes;
         this.collisionDetectionEnabled = collisionDetectionEnabled;
 
+        this.idleTimeoutDurationMin = 30000;
+        this.idleTimeoutDurationMax = 38000;
+        this.anyActionDateTime = Date.now();
+
         this.playInitialAnimation();
         this.setupCameraTarget();
         
@@ -161,6 +165,7 @@ class CharacterControls extends Box {
         if (this.isJumping) {
             isJump = true;
             nextAction = 'ForwardFlip';
+            this.anyActionDateTime = Date.now(); 
         }
         if (directionPressed && this.toggleRun) {
             isMove = true;
@@ -174,14 +179,29 @@ class CharacterControls extends Box {
                 // console.log(`Left Foot Y Position: ${this.leftFootBox.parent.position.y} left Foot X Position: ${this.leftFootBox.parent.position.x} Z Position: ${this.leftFootBox.position.z}`);
                 // console.log(`Right Foot Y Position: ${this.rightFootBox.parent.position.y} Right Foot X Position: ${this.rightFootBox.parent.position.x} Z Position: ${this.rightFootBox.position.z}`);
             }
+            this.anyActionDateTime = Date.now(); 
         } else if (directionPressed) {
             isMove = true;
             if(!isJump){
                 nextAction = 'Walk';
             }
+            this.anyActionDateTime = Date.now(); 
         } else {
             if(!isJump){
-                nextAction = 'Idle';
+                const diffTime = (Date.now() - this.anyActionDateTime);
+                if(diffTime > this.idleTimeoutDurationMin)
+                {
+                    nextAction = 'Yawn'
+                    if( diffTime > this.idleTimeoutDurationMax)
+                    {
+                        this.anyActionDateTime = Date.now();
+                    }
+                    
+                }
+                else
+                {
+                    nextAction = 'Idle';
+                }
             }
         }
 
