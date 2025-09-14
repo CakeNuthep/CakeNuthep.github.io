@@ -53,7 +53,7 @@ class CharacterControls extends Box {
         this.rotateQuaternion = new THREE.Quaternion();
         this.cameraTarget = new THREE.Vector3();
 
-        this.fadeDuration = 0.2;
+        this.fadeDuration = 0.01;
         this.runVelocity = 5;
         this.walkVelocity = 2;
         this.gravityEnabled = gravityEnabled;
