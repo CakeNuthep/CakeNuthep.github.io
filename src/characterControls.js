@@ -4,6 +4,7 @@ import {Box} from './Box.js';
 
 class CharacterControls extends Box {
     constructor(model, mixer, animationsMap, orbitControl, camera, initialAction,
+        jumpSound,
         collisionDetectionEnabled=true,
         showFootBoxes=false,
         gravityEnabled=true,
@@ -25,6 +26,7 @@ class CharacterControls extends Box {
         model.add(this.cube);
         this.model = model;
         this.showFootBoxes = false;
+        this.jumpSound = jumpSound;
         // const rightFootBone = this.getBones('mixamorigRightFoot');
         // this.rightFootBox = this.createBox(5,5,50,new THREE.Vector3(0,0,0));
         // this.rightFootBox.visible = this.showFootBoxes;
@@ -127,7 +129,18 @@ class CharacterControls extends Box {
                 this.isJumping = false;
             }
             if(onGround){
-                
+                if(this.isJumping)
+                {
+                    console.log("Play sound Jump Landing");
+                    if(this.jumpSound)
+                    {
+                        if (this.jumpSound.isPlaying) {
+                            this.jumpSound.stop(); // Stop if already playing to allow re-triggering
+                        }
+                        this.jumpSound.play();
+                        console.log("play jump sound")
+                    }
+                }
                 this.isJumping = false;
             }
         }
@@ -322,6 +335,8 @@ class CharacterControls extends Box {
         );
         this.orbitControl.target = this.cameraTarget;
     }
+
+    
 }
 
 export { CharacterControls };

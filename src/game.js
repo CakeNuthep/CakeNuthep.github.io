@@ -244,6 +244,7 @@ function handleCubeClick(event, cube) {
 
 // Load character model
 function loadCharacterModel() {
+    const jumpSound = createJumpLandSound();
     new GLTFLoader().load('models/MyAvatar.glb', (gltf) => {
         const model = gltf.scene;
         model.name = 'Soldier';
@@ -265,6 +266,7 @@ function loadCharacterModel() {
             orbitControls, 
             camera, 
             'Idle',
+            jumpSound,
             settings.collisionDetectionEnabled,
             settings.showFootBoxes,
             settings.gravityEnabled,
@@ -393,6 +395,19 @@ function createBackGroundMusic(){
         audioBackground.setVolume( 0.5 );
         // audioBackground.play();
     } );
+}
+
+function createJumpLandSound(){
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+    let jumpSound = new THREE.Audio( listener );
+    const audioLoad = new THREE.AudioLoader();
+    audioLoad.load( './Sound/Sound Effect/Jump Land.wav', function( buffer ) {
+        jumpSound.setBuffer( buffer );
+        jumpSound.setLoop( false );
+        jumpSound.setVolume( 1 );
+    } );
+    return jumpSound;
 }
 
 init();
