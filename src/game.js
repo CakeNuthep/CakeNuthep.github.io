@@ -47,6 +47,7 @@ function init() {
     initSky();
     setupFloor();
     setupInteractiveCube();
+    setupDanceCube();
     loadCharacterModel();
     setupEventListeners();
     setupControls();
@@ -227,6 +228,21 @@ function setupInteractiveCube() {
 
     // Add click event listener
     window.addEventListener('click', (event) => handleCubeClick(event, cubeObject.model));
+}
+
+// Setup interactive cube
+function setupDanceCube() {
+    const objParams = {
+        width: 1,
+        height: 1,
+        depth: 1,
+        position: new THREE.Vector3(5, 3, 0)
+    };
+    const cubeObject = new Object(objParams);
+    cubeObject.model.name = 'DanceCube';
+    scene.add(cubeObject.model);
+    // scene.add(cubeObject.cube);
+    objects.push(cubeObject);
 }
 
 // Handle cube click
