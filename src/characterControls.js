@@ -245,10 +245,13 @@ class CharacterControls extends Box {
         this.updateSides(this.model.position);
         for (let obj of objects) {
             obj.updateSides();
-            if (this.boxCollision({ box1: this, box2: obj })) {
-                console.log('Collision detected');
-                return true;
-            } 
+            if(obj.collisionDetectionEnabled && this.collisionDetectionEnabled)
+            {
+                if (this.boxCollision({ box1: this, box2: obj })) {
+                    console.log('Collision detected');
+                    return true;
+                } 
+            }
         }
         return false;
     }

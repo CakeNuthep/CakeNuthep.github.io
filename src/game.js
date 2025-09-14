@@ -7,6 +7,7 @@ import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Sky } from 'three/addons/objects/Sky.js';
 import { Object } from './Objects.js';
+import { DanceObject } from './DanceObject.js';
 import GUI from 'lil-gui';
 
 // Constants
@@ -238,7 +239,7 @@ function setupDanceCube() {
         depth: 1,
         position: new THREE.Vector3(5, 3, 0)
     };
-    const cubeObject = new Object(objParams);
+    const cubeObject = new DanceObject(objParams);
     cubeObject.model.name = 'DanceCube';
     scene.add(cubeObject.model);
     // scene.add(cubeObject.cube);

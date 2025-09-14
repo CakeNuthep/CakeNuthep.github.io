@@ -2,7 +2,7 @@ import {Box} from './Box.js';
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-class Object extends Box {
+class DanceObject extends Box {
     constructor({
             width,
             height,
@@ -15,6 +15,7 @@ class Object extends Box {
             height,
             depth,
             position: new THREE.Vector3(0, 0, 0),
+            isCollition: false,
         });
         this.model = this.setupInteractiveCube(position);
         this.model.add(this.cube);
@@ -23,9 +24,11 @@ class Object extends Box {
     setupInteractiveCube(position) {
         const geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         const material = new THREE.MeshStandardMaterial({
-            color: 0xff5733,
+            color: 0x005733,
             metalness: 0.5,
             roughness: 0.7,
+            transparent: true,
+            opacity: 0.5
         });
         const cube = new THREE.Mesh(geometry, material);
         cube.position.set(position.x, position.y, position.z);
@@ -37,4 +40,4 @@ class Object extends Box {
     }
 }
 
-export { Object };
+export { DanceObject };
