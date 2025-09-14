@@ -15,6 +15,7 @@ class KeyDisplay {
         this.setupKeyElements();
         this.updatePosition();
         this.attachEventListeners();
+        this.holdInterval = null;
     }
 
     initializeKeyMap() {
@@ -125,6 +126,14 @@ class KeyDisplay {
         if (key === SPACE && this.characterControls) {
             this.characterControls.jump();
         }
+
+        if(key == E && this.characterControls && !this.holdInterval){
+            this.holdInterval = setInterval(() => {
+                console.log('E is still held...');
+                // Perform actions that should repeat while the key is held
+            }, 500); // Repeat every 500 milliseconds
+            console.log(this.holdInterval);
+        }
         keysPressed[key] = true;
 
         if(callbackFuntion)
@@ -154,6 +163,13 @@ class KeyDisplay {
     up(key) {
         if (key !== SHIFT && this.map.get(key)) {
             this.map.get(key).element.style.color = 'blue';
+        }
+        if (key == E && this.holdInterval){
+            console.log("Stop Interval")
+            console.log(this.holdInterval);
+            // Stop the continuous action
+             clearInterval(this.holdInterval);
+             this.holdInterval = null;
         }
         keysPressed[key] = false;
     }
