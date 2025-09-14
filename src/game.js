@@ -402,7 +402,7 @@ function createJumpLandSound(){
     camera.add( listener );
     let jumpSound = new THREE.Audio( listener );
     const audioLoad = new THREE.AudioLoader();
-    audioLoad.load( './Sound/Sound Effect/Jump Land.wav', function( buffer ) {
+    audioLoad.load( './Sound/Sound Effect/Jump Land.mp3', function( buffer ) {
         jumpSound.setBuffer( buffer );
         jumpSound.setLoop( false );
         jumpSound.setVolume( 1 );
