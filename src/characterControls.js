@@ -127,8 +127,8 @@ class CharacterControls extends Box {
             const currentPosition = this.model.position.clone();
             let { y, velocity, onGround } =  this.applyGravity(floor);
             this.model.position.y = y;
-            let isColiitionthis = this.collisionDetection(objects);
-            if (isColiitionthis) {
+            let {isColiision,isPassThrough}  = this.collisionDetection(objects);
+            if (isColiision && !isPassThrough) {
                 this.model.position.copy(currentPosition);
                 this.isJumping = false;
             }
@@ -232,8 +232,8 @@ class CharacterControls extends Box {
 
         this.rotateModel(angleYCameraDirection, directionOffset);
         this.moveModel(delta, directionOffset);
-        let isColiitionthis = this.collisionDetection(objects);
-        if (isColiitionthis) {
+        let {isColiision,isPassThrough} = this.collisionDetection(objects);
+        if (isColiision && !isPassThrough) {
             this.model.position.copy(currentPosition);
         }
         
@@ -242,18 +242,22 @@ class CharacterControls extends Box {
     
 
     collisionDetection(objects) {
+        let isColiision = false;
+        let isPassThrough = false;
         this.updateSides(this.model.position);
         for (let obj of objects) {
             obj.updateSides();
-            if(obj.collisionDetectionEnabled && this.collisionDetectionEnabled)
-            {
-                if (this.boxCollision({ box1: this, box2: obj })) {
-                    console.log('Collision detected');
-                    return true;
-                } 
-            }
+            
+            if (this.boxCollision({ box1: this, box2: obj })) {
+                console.log('Collision detected');
+                isColiision = true;
+                if(obj.passThroughWhenCollision)
+                {
+                    isPassThrough = true;
+                }
+            } 
         }
-        return false;
+        return {isColiision, isPassThrough}
     }
 
     calculateCameraDirectionAngle() {

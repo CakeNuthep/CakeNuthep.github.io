@@ -8,7 +8,8 @@ class Box {
             position,
             velocity = new THREE.Vector3(0, 0, 0),
             gravity = 0.1,
-            isCollition = false
+            isCollition = true,
+            passThroughWhenCollision = true,
             
         }) {
         this.GRAVITY = gravity;
@@ -22,6 +23,7 @@ class Box {
         this.cube.name = 'CollisionBox';
         this.showCollisionBox = false;
         this.collisionDetectionEnabled = isCollition;
+        this.passThroughWhenCollision = passThroughWhenCollision;
         this.updateSides();
     }
 
@@ -45,7 +47,7 @@ class Box {
     }  
 
     boxCollision({ box1, box2 }) {
-        if(true){
+        if(box1.collisionDetectionEnabled && box2.collisionDetectionEnabled){
             const xCollision = box1.right >= box2.left && box1.left <= box2.right
             const yCollision =
                 box1.bottom <= box2.top && box1.top >= box2.bottom

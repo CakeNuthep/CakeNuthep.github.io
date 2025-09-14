@@ -15,7 +15,8 @@ class DanceObject extends Box {
             height,
             depth,
             position: new THREE.Vector3(0, 0, 0),
-            isCollition: false,
+            isCollition: true,
+            passThroughWhenCollision: true,
         });
         this.model = this.setupInteractiveCube(position);
         this.model.add(this.cube);

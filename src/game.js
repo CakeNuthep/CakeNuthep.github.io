@@ -354,9 +354,9 @@ function createMenuSettings(){
         updateSetting();
     });
 
-    settingGUI.add(settings, 'showFootBoxes').name('Show Foot Boxes').onChange((value) => {
-        updateSetting();
-    });
+    // settingGUI.add(settings, 'showFootBoxes').name('Show Foot Boxes').onChange((value) => {
+    //     updateSetting();
+    // });
 
     settingGUI.add(settings, 'gravityEnabled').name('Gravity Enabled').onChange((value) => {
         updateSetting();

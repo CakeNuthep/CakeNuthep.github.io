@@ -16,6 +16,7 @@ class Object extends Box {
             depth,
             position: new THREE.Vector3(0, 0, 0),
             isCollition: true,
+            passThroughWhenCollision: false,
         });
         this.model = this.setupInteractiveCube(position);
         this.model.add(this.cube);
