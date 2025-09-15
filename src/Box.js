@@ -27,6 +27,7 @@ class Box {
         this.collisionDetectionEnabled = isCollition;
         this.passThroughWhenCollision = passThroughWhenCollision;
         this.action = 'Idle';
+        this.htmlElement = null;
         this.updateSides();
     }
 
@@ -104,6 +105,30 @@ class Box {
 
     setPalyerAction(action){
         this.action = action;
+    }
+
+    getHtmlElement(){
+        return this.htmlElement;
+    }
+
+    setHtmlElement(htmlElement){
+        this.htmlElement = htmlElement;
+    }
+
+    showHtml(){
+        const html = this.getHtmlElement();
+        if(html){
+            html.style.display = "block";
+        }
+        
+    }
+
+    hideHtml(){
+        const html = this.getHtmlElement();
+        if(html)
+        {
+            html.style.display = "none";
+        }
     }
 }
 

@@ -22,6 +22,9 @@ class Object extends Box {
         });
         this.model = this.setupInteractiveCube(position);
         this.model.add(this.cube);
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
     }
 
     setupInteractiveCube(position) {
@@ -42,6 +45,7 @@ class Object extends Box {
         labelDiv.href = cube.userData.link;
         labelDiv.target = '_blank';
     
+        this.setHtmlElement(labelDiv);
         const label = new CSS2DObject(labelDiv);
         label.position.set(0, 1, 0);
         cube.add(label);

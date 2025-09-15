@@ -271,6 +271,7 @@ class CharacterControls extends Box {
             obj.updateSides();
             if (this.boxCollision({ box1: this, box2: obj })) {
                 console.log('Collision detected');
+                obj.showHtml();
                 isColiision = true;
                 this.mapObject.set(objName, {object: obj, collision: true});
                 if(obj.passThroughWhenCollision)
@@ -279,6 +280,7 @@ class CharacterControls extends Box {
                 }
             } 
             else{
+                obj.hideHtml();
                 this.mapObject.set(objName, {object: obj, collision: false});
             }
         });
@@ -400,6 +402,17 @@ class CharacterControls extends Box {
             else{
                 this.mapObject = new Map();
                 this.mapObject.set(object.name, {object: object,  collision: false});
+            }
+        }
+    }
+
+    getFirstObjecHasCollision(){
+        if(this.mapObject)
+        {
+            for(let [key, value] of this.mapObject.entries()){
+                if(value && value.collision){
+                    return value.object;
+                }
             }
         }
     }

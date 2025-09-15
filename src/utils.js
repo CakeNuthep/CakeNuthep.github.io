@@ -16,6 +16,8 @@ class KeyDisplay {
         this.updatePosition();
         this.attachEventListeners();
         this.holdInterval = null;
+        this.startTime = Date.now();
+        this.holdDuration = 8000;
     }
 
     initializeKeyMap() {
@@ -128,14 +130,37 @@ class KeyDisplay {
         }
 
         if(key == E && this.characterControls && !this.holdInterval){
+            this.startTime = Date.now();
             this.holdInterval = setInterval(() => {
                 console.log('E is still held...');
                 if(this.characterControls)
                 {
                     this.characterControls.updateIdleAction();
+                    const object = this.characterControls.getFirstObjecHasCollision();
+                    const html = object.getHtmlElement();
+                    if(html)
+                    {
+                        if (!html.classList.contains('completed'))
+                        {
+                            const progressCircle = html.querySelector('.progress-circle');
+                            const buttonText = html.querySelector('.button-text');
+                            html.classList.remove('completed');
+                            buttonText.textContent = '...';
+
+                            const elapsedTime = Date.now() - this.startTime;
+                            const progress = Math.min(100, (elapsedTime / this.holdDuration) * 100);
+                            
+                            progressCircle.style.background = `conic-gradient(#007bff ${progress}%, transparent ${progress}%)`;
+
+                            if (progress >= 100) {
+                                html.classList.add('completed');
+                                buttonText.textContent = 'Done!';
+                            }
+                        }
+                    }
                 }
                 // Perform actions that should repeat while the key is held
-            }, 300); // Repeat every 500 milliseconds
+            }, 30); // Repeat every 500 milliseconds
             console.log(this.holdInterval);
         }
         keysPressed[key] = true;
@@ -173,8 +198,21 @@ class KeyDisplay {
             console.log("Stop Interval")
             console.log(this.holdInterval);
             // Stop the continuous action
-             clearInterval(this.holdInterval);
-             this.holdInterval = null;
+            clearInterval(this.holdInterval);
+            this.holdInterval = null;
+
+            const object = this.characterControls.getFirstObjecHasCollision();
+            const html = object.getHtmlElement();
+
+            if(html)
+            {
+                const progressCircle = html.querySelector('.progress-circle');
+                const buttonText = html.querySelector('.button-text');
+                progressCircle.style.background = 'conic-gradient(transparent 0%, transparent 0%)';
+                if (!html.classList.contains('completed')) {
+                    buttonText.textContent = 'Hold E';
+                }
+            }
         }
         keysPressed[key] = false;
     }

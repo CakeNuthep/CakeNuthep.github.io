@@ -238,7 +238,7 @@ function setupDanceCube() {
     const objParams = {
         name: "DanceCube",
         width: 1,
-        height: 1,
+        height: 2,
         depth: 1,
         position: new THREE.Vector3(5, 3, 0)
     };
