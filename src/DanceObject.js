@@ -25,6 +25,7 @@ class DanceObject extends Box {
         this.depth = depth;
         this.model = this.setupInteractiveCube(position);
         this.model.add(this.cube);
+        this.animateDuration = 8000;
     }
 
     setupInteractiveCube(position) {
@@ -78,6 +79,43 @@ class DanceObject extends Box {
 
     update() {
         this.updateSides();
+    }
+
+    playAnimateHtml(elapsedTime){
+        const html = this.getHtmlElement();
+        if(html)
+        {
+            if (!html.classList.contains('completed'))
+            {
+                const progressCircle = html.querySelector('.progress-circle');
+                const buttonText = html.querySelector('.button-text');
+                html.classList.remove('completed');
+                buttonText.textContent = '...';
+
+                
+                const progress = Math.min(100, (elapsedTime / this.animateDuration) * 100);
+                
+                progressCircle.style.background = `conic-gradient(#007bff ${progress}%, transparent ${progress}%)`;
+
+                if (progress >= 100) {
+                    html.classList.add('completed');
+                    buttonText.textContent = 'Done!';
+                }
+            }
+        }
+    }
+
+    stopAnimateHtml(){
+        const html = this.getHtmlElement();
+        if(html)
+        {
+            const progressCircle = html.querySelector('.progress-circle');
+            const buttonText = html.querySelector('.button-text');
+            progressCircle.style.background = 'conic-gradient(transparent 0%, transparent 0%)';
+            if (!html.classList.contains('completed')) {
+                buttonText.textContent = 'Hold E';
+            }
+        }
     }
 }
 

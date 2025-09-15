@@ -130,6 +130,14 @@ class Box {
             html.style.display = "none";
         }
     }
+
+    playAnimateHtml(elapsedTime){
+
+    }
+
+    stopAnimateHtml(){
+
+    }
 }
 
 export { Box };

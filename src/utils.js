@@ -17,7 +17,6 @@ class KeyDisplay {
         this.attachEventListeners();
         this.holdInterval = null;
         this.startTime = Date.now();
-        this.holdDuration = 8000;
     }
 
     initializeKeyMap() {
@@ -137,27 +136,29 @@ class KeyDisplay {
                 {
                     this.characterControls.updateIdleAction();
                     const object = this.characterControls.getFirstObjecHasCollision();
-                    const html = object.getHtmlElement();
-                    if(html)
-                    {
-                        if (!html.classList.contains('completed'))
-                        {
-                            const progressCircle = html.querySelector('.progress-circle');
-                            const buttonText = html.querySelector('.button-text');
-                            html.classList.remove('completed');
-                            buttonText.textContent = '...';
+                    const elapsedTime = Date.now() - this.startTime;
+                    object.playAnimateHtml(elapsedTime);
+                    // const html = object.getHtmlElement();
+                    // if(html)
+                    // {
+                    //     if (!html.classList.contains('completed'))
+                    //     {
+                    //         const progressCircle = html.querySelector('.progress-circle');
+                    //         const buttonText = html.querySelector('.button-text');
+                    //         html.classList.remove('completed');
+                    //         buttonText.textContent = '...';
 
-                            const elapsedTime = Date.now() - this.startTime;
-                            const progress = Math.min(100, (elapsedTime / this.holdDuration) * 100);
                             
-                            progressCircle.style.background = `conic-gradient(#007bff ${progress}%, transparent ${progress}%)`;
+                    //         const progress = Math.min(100, (elapsedTime / this.holdDuration) * 100);
+                            
+                    //         progressCircle.style.background = `conic-gradient(#007bff ${progress}%, transparent ${progress}%)`;
 
-                            if (progress >= 100) {
-                                html.classList.add('completed');
-                                buttonText.textContent = 'Done!';
-                            }
-                        }
-                    }
+                    //         if (progress >= 100) {
+                    //             html.classList.add('completed');
+                    //             buttonText.textContent = 'Done!';
+                    //         }
+                    //     }
+                    // }
                 }
                 // Perform actions that should repeat while the key is held
             }, 30); // Repeat every 500 milliseconds
@@ -202,17 +203,7 @@ class KeyDisplay {
             this.holdInterval = null;
 
             const object = this.characterControls.getFirstObjecHasCollision();
-            const html = object.getHtmlElement();
-
-            if(html)
-            {
-                const progressCircle = html.querySelector('.progress-circle');
-                const buttonText = html.querySelector('.button-text');
-                progressCircle.style.background = 'conic-gradient(transparent 0%, transparent 0%)';
-                if (!html.classList.contains('completed')) {
-                    buttonText.textContent = 'Hold E';
-                }
-            }
+            object.stopAnimateHtml();
         }
         keysPressed[key] = false;
     }
