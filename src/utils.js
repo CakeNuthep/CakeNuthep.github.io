@@ -138,29 +138,7 @@ class KeyDisplay {
                     const object = this.characterControls.getFirstObjecHasCollision();
                     const elapsedTime = Date.now() - this.startTime;
                     object.playAnimateHtml(elapsedTime);
-                    // const html = object.getHtmlElement();
-                    // if(html)
-                    // {
-                    //     if (!html.classList.contains('completed'))
-                    //     {
-                    //         const progressCircle = html.querySelector('.progress-circle');
-                    //         const buttonText = html.querySelector('.button-text');
-                    //         html.classList.remove('completed');
-                    //         buttonText.textContent = '...';
-
-                            
-                    //         const progress = Math.min(100, (elapsedTime / this.holdDuration) * 100);
-                            
-                    //         progressCircle.style.background = `conic-gradient(#007bff ${progress}%, transparent ${progress}%)`;
-
-                    //         if (progress >= 100) {
-                    //             html.classList.add('completed');
-                    //             buttonText.textContent = 'Done!';
-                    //         }
-                    //     }
-                    // }
                 }
-                // Perform actions that should repeat while the key is held
             }, 30); // Repeat every 500 milliseconds
             console.log(this.holdInterval);
         }
