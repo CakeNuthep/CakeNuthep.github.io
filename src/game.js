@@ -282,6 +282,9 @@ function handleCubeClick(event, cube) {
 // Load character model
 function loadCharacterModel() {
     const jumpSound = createJumpLandSound();
+    const chickenSong = createChickenDanceSound();
+    const danceSong = createDanceSound();
+    const jinnSong = createJinnSong();
     new GLTFLoader().load('models/MyAvatar.glb', (gltf) => {
         const model = gltf.scene;
         model.name = 'Soldier';
@@ -305,6 +308,9 @@ function loadCharacterModel() {
             camera, 
             'Idle',
             jumpSound,
+            chickenSong,
+            danceSong,
+            jinnSong,
             settings.collisionDetectionEnabled,
             settings.showFootBoxes,
             settings.gravityEnabled,
@@ -321,7 +327,7 @@ function loadCharacterModel() {
 function setupEventListeners() {
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('keydown', (event) => {
-        keyDisplayQueue?.down(event.code, playBackGroundMusic);
+        keyDisplayQueue?.down(event.code, null);
     });
     document.addEventListener('keyup', (event) => {
         keyDisplayQueue?.up(event.code);
@@ -345,6 +351,20 @@ function animate() {
         {
             var keysPressed = keyDisplayQueue.getKeysPressed();
             characterControls.update(mixerUpdateDelta, keysPressed, floor, objects);
+            //get is dance from characterControls
+            if(characterControls.issDancing()){
+                //stop sound background
+                if(audioBackground.isPlaying){
+                    audioBackground.pause();
+                }
+
+                //play sound dance characterControls
+                characterControls.playDanceSong();
+            }
+            else{
+                characterControls.stopDanceSong();
+                playBackGroundMusic();
+            }
         }
     }
 
@@ -442,6 +462,46 @@ function createJumpLandSound(){
     let jumpSound = new THREE.Audio( listener );
     const audioLoad = new THREE.AudioLoader();
     audioLoad.load( './Sound/Sound Effect/Jump Land.mp3', function( buffer ) {
+        jumpSound.setBuffer( buffer );
+        jumpSound.setLoop( false );
+        jumpSound.setVolume( 1 );
+    } );
+    return jumpSound;
+}
+
+
+function createChickenDanceSound(){
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+    let jumpSound = new THREE.Audio( listener );
+    const audioLoad = new THREE.AudioLoader();
+    audioLoad.load( './Sound/Sound Background/ChickenSong.mp3', function( buffer ) {
+        jumpSound.setBuffer( buffer );
+        jumpSound.setLoop( false );
+        jumpSound.setVolume( 1 );
+    } );
+    return jumpSound;
+}
+
+function createDanceSound(){
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+    let jumpSound = new THREE.Audio( listener );
+    const audioLoad = new THREE.AudioLoader();
+    audioLoad.load( './Sound/Sound Background/Dance.mp3', function( buffer ) {
+        jumpSound.setBuffer( buffer );
+        jumpSound.setLoop( false );
+        jumpSound.setVolume( 1 );
+    } );
+    return jumpSound;
+}
+
+function createJinnSong(){
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+    let jumpSound = new THREE.Audio( listener );
+    const audioLoad = new THREE.AudioLoader();
+    audioLoad.load( './Sound/Sound Background/Jinn.mp3', function( buffer ) {
         jumpSound.setBuffer( buffer );
         jumpSound.setLoop( false );
         jumpSound.setVolume( 1 );

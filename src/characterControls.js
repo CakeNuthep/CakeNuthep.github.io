@@ -5,6 +5,9 @@ import {Box} from './Box.js';
 class CharacterControls extends Box {
     constructor(name,model, mixer, animationsMap, orbitControl, camera, initialAction,
         jumpSound,
+        chickenSong,
+        danceSong,
+        jinnSong,
         collisionDetectionEnabled=true,
         showFootBoxes=false,
         gravityEnabled=true,
@@ -25,6 +28,9 @@ class CharacterControls extends Box {
         this.model = model;
         this.showFootBoxes = false;
         this.jumpSound = jumpSound;
+        this.chickenSong = chickenSong;
+        this.danceSong = danceSong;
+        this.jinnSong = jinnSong;
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.orbitControl = orbitControl;
@@ -68,6 +74,7 @@ class CharacterControls extends Box {
         this.JumpAction = 'ForwardFlip';
         this.IdleCurrentAction = this.IdleAction;
         this.IdelCurrentWaitAction = this.IdleYawnAction;
+        this.currentDanceSong = this.danceSong;
         
     }
 
@@ -415,6 +422,37 @@ class CharacterControls extends Box {
                 }
             }
         }
+    }
+
+    playDanceSong(){
+        if(!this.currentDanceSong.isPlaying){
+            this.currentDanceSong.play();
+        }
+    }
+
+    stopDanceSong(){
+        if(this.currentDanceSong.isPlaying){
+            this.currentDanceSong.pause();
+        }
+    }
+
+    issDancing(){
+        if(this.IdleCurrentAction == this.IdleDanceAction)
+        {
+            this.currentDanceSong = this.danceSong;
+            return true;
+        }
+        else if(this.IdleCurrentAction == this.IdleChickenDanceAction )
+        {
+            this.currentDanceSong = this.chickenSong;
+            return true;
+        }
+        else if(this.IdleCurrentAction == this.IdleSnakeDaceAction)
+        {
+            this.currentDanceSong = this.jinnSong;
+            return true;
+        }
+        return false;
     }
 }
 
