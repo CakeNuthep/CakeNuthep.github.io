@@ -560,6 +560,12 @@ function setupStartMenu(){
         // Hide the menu by setting its CSS display property to 'none'
         menu.style.display = 'none';
         animate();
+        if (!document.fullscreenElement) {
+
+            document.body.requestFullscreen();
+            document.body.setAttribute("fullscreen",""); 
+
+        }
     });
 }
 
