@@ -13,6 +13,7 @@ import GUI from 'lil-gui';
 
 
 // Get UI elements
+const menu = document.getElementById('start-menu');
 const loadingScreen = document.getElementById('loading-screen');
 const progressBar = document.getElementById('progress-bar');
 const gameCanvas = document.getElementById('game-canvas');
@@ -62,6 +63,7 @@ const clock = new THREE.Clock();
 
 
 function init() {
+    setupStartMenu();
     createMenuSettings();
     setupScene();
     setupCamera();
@@ -544,5 +546,22 @@ init();
 // Start rendering only after everything is loaded
 loadingManager.onLoad = () => {
     loadingScreen.style.display = 'none';
-    animate();
+
+    // Show start menu by setting its CSS display property to 'block'
+    menu.style.display = '';
 };
+
+
+// Start Menu
+function setupStartMenu(){
+    const startButton = document.getElementById('start-button');
+
+    startButton.addEventListener('click', () => {
+        // Hide the menu by setting its CSS display property to 'none'
+        menu.style.display = 'none';
+        animate();
+    });
+}
+
+
+//

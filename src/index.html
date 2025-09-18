@@ -32,7 +32,7 @@
 
       .fade-out {
           opacity: 0;
-          pointer-events: none;
+          pointer-events: none;  /* Disables interaction with the hidden menu */
       }
 
       .loading-text {
@@ -188,6 +188,36 @@
         #hold-button.completed .progress-circle {
           background: conic-gradient(#28a745 100%, transparent 0%);
         }
+
+
+        .menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+            z-index: 100; /* Ensures the menu is on top of the canvas */
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
     </style>
   </head>
   <body>
@@ -197,7 +227,13 @@
         <div class="progress-bar" id="progress-bar"></div>
     </div>
     </div>
-    <canvas id="game-canvas" class="hidden"></canvas>
+
+    <div id="start-menu" class="menu" style="display: none;">
+        <h1>My three.js Game</h1>
+        <button id="start-button">Start</button>
+    </div>
+
+    <canvas id="game-canvas"></canvas>
     <script type="importmap">
       {
         "imports": {
