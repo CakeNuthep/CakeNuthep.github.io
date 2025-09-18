@@ -136,8 +136,11 @@ class KeyDisplay {
                 {
                     this.characterControls.updateIdleAction();
                     const object = this.characterControls.getFirstObjecHasCollision();
-                    const elapsedTime = Date.now() - this.startTime;
-                    object.playAnimateHtml(elapsedTime);
+                    if(object)
+                    {
+                        const elapsedTime = Date.now() - this.startTime;
+                        object.playAnimateHtml(elapsedTime);
+                    }
                 }
             }, 30); // Repeat every 500 milliseconds
             console.log(this.holdInterval);
@@ -181,7 +184,11 @@ class KeyDisplay {
             this.holdInterval = null;
 
             const object = this.characterControls.getFirstObjecHasCollision();
-            object.stopAnimateHtml();
+
+            if(object)
+            {
+                object.stopAnimateHtml();
+            }
         }
         keysPressed[key] = false;
     }

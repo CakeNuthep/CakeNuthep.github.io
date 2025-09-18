@@ -10,7 +10,29 @@ import { Object } from './Objects.js';
 import { DanceObject } from './DanceObject.js';
 import GUI from 'lil-gui';
 
+
+
+// Get UI elements
+const loadingScreen = document.getElementById('loading-screen');
+const progressBar = document.getElementById('progress-bar');
+const gameCanvas = document.getElementById('game-canvas');
+
+
 // Constants
+const loadingManager = new THREE.LoadingManager();
+
+
+loadingManager.onProgress = function(url, itemsLoaded, itemsTotal) {
+    const progress = itemsLoaded / itemsTotal;
+    progressBar.style.width = `${progress * 100}%`;
+};
+
+
+
+loadingManager.onError = function(url) {
+    console.error('Error loading:', url);
+};
+
 const GRAVITY = 0.1;
 const FLOOR_SIZE = 80;
 const TERRAIN_SCALE = 0.02;
@@ -54,7 +76,7 @@ function init() {
     setupEventListeners();
     setupControls();
     
-    animate();
+    // animate();
     createBackGroundMusic();
     updateSetting();
 }
@@ -72,7 +94,7 @@ function setupCamera() {
 
 // Setup the renderer
 function setupRenderer() {
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ canvas: gameCanvas });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.shadowMap.enabled = true;
@@ -171,7 +193,7 @@ function initSky() {
 
 // Setup the floor
 function setupFloor() {
-    const textureLoader = new THREE.TextureLoader();
+    const textureLoader = new THREE.TextureLoader(loadingManager);
     const sandBaseColor = textureLoader.load('./textures/sand/Sand 002_COLOR.jpg');
     const sandNormalMap = textureLoader.load('./textures/sand/Sand 002_NRM.jpg');
     const sandHeightMap = textureLoader.load('./textures/sand/Sand 002_DISP.jpg');
@@ -285,7 +307,7 @@ function loadCharacterModel() {
     const chickenSong = createChickenDanceSound();
     const danceSong = createDanceSound();
     const jinnSong = createJinnSong();
-    new GLTFLoader().load('models/MyAvatar.glb', (gltf) => {
+    new GLTFLoader(loadingManager).load('models/MyAvatar.glb', (gltf) => {
         const model = gltf.scene;
         model.name = 'Soldier';
         model.traverse((object) => {
@@ -447,7 +469,7 @@ function createBackGroundMusic(){
     const listener = new THREE.AudioListener();
     camera.add( listener );
     audioBackground = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader();
+    const audioLoad = new THREE.AudioLoader(loadingManager);
     audioLoad.load( './Sound/Sound Background/Epic Spectrum.mp3', function( buffer ) {
         audioBackground.setBuffer( buffer );
         audioBackground.setLoop( true );
@@ -460,7 +482,7 @@ function createJumpLandSound(){
     const listener = new THREE.AudioListener();
     camera.add( listener );
     let jumpSound = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader();
+    const audioLoad = new THREE.AudioLoader(loadingManager);
     audioLoad.load( './Sound/Sound Effect/Jump Land.mp3', function( buffer ) {
         jumpSound.setBuffer( buffer );
         jumpSound.setLoop( false );
@@ -474,7 +496,7 @@ function createChickenDanceSound(){
     const listener = new THREE.AudioListener();
     camera.add( listener );
     let jumpSound = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader();
+    const audioLoad = new THREE.AudioLoader(loadingManager);
     audioLoad.load( './Sound/Sound Background/ChickenSong.mp3', function( buffer ) {
         jumpSound.setBuffer( buffer );
         jumpSound.setLoop( false );
@@ -487,7 +509,7 @@ function createDanceSound(){
     const listener = new THREE.AudioListener();
     camera.add( listener );
     let jumpSound = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader();
+    const audioLoad = new THREE.AudioLoader(loadingManager);
     audioLoad.load( './Sound/Sound Background/Dance.mp3', function( buffer ) {
         jumpSound.setBuffer( buffer );
         jumpSound.setLoop( false );
@@ -500,7 +522,7 @@ function createJinnSong(){
     const listener = new THREE.AudioListener();
     camera.add( listener );
     let jumpSound = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader();
+    const audioLoad = new THREE.AudioLoader(loadingManager);
     audioLoad.load( './Sound/Sound Background/Jinn.mp3', function( buffer ) {
         jumpSound.setBuffer( buffer );
         jumpSound.setLoop( false );
@@ -518,3 +540,9 @@ function initialObjectInCharacter(){
 }
 
 init();
+
+// Start rendering only after everything is loaded
+loadingManager.onLoad = () => {
+    loadingScreen.style.display = 'none';
+    animate();
+};
