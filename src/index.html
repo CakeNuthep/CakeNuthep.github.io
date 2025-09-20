@@ -30,6 +30,10 @@
           z-index: 100;
       }
 
+      #my-lil-gui {
+        z-index: 98; 
+      }
+
       .fade-out {
           opacity: 0;
           pointer-events: none;  /* Disables interaction with the hidden menu */
@@ -204,11 +208,12 @@
             color: white;
             font-family: sans-serif;
             text-align: center;
-            z-index: 100; /* Ensures the menu is on top of the canvas */
+            z-index: 99; /* Ensures the menu is on top of the canvas */
             transition: opacity 0.5s ease-in-out;
         }
 
-        button {
+        #start-button {
+            padding: 1rem 2rem;     
             font-size: 1.5rem;
             cursor: pointer;
             background-color: #4CAF50;
@@ -216,6 +221,24 @@
             border: none;
             border-radius: 5px;
             margin-top: 20px;
+        }
+
+        #orientation-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+            z-index: 100; /* Ensures the menu is on top of the canvas */
+            transition: opacity 0.9s ease-in-out;
         }
     </style>
   </head>
@@ -227,6 +250,9 @@
     </div>
     </div>
 
+    <div id="orientation-message" style="display: none;">
+        Please rotate your device to horizontal for the best experience.
+    </div>
     <div id="start-menu" class="menu" style="display: none;">
         <h1>My three.js Game</h1>
         <button id="start-button">Start</button>

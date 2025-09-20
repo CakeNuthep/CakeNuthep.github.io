@@ -45,6 +45,8 @@ let sky, sun;
 let audioBackground;
 let raycaster = new THREE.Raycaster();;
 let objects = [];
+let animationFrameId = null; // Stores the ID of the requestAnimationFrame call
+let isStart = false;
 
 const gui = new GUI();
 const settingGUI = gui.addFolder("Generic")
@@ -349,6 +351,13 @@ function loadCharacterModel() {
 
 // Setup event listeners
 function setupEventListeners() {
+     // Define a media query for landscape orientation
+    const mediaQuery = window.matchMedia("(orientation: landscape)");
+    // Set the initial state
+    handleOrientationChange(mediaQuery);
+
+    // Add a listener for future changes
+    mediaQuery.addEventListener("change", handleOrientationChange);
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('keydown', (event) => {
         keyDisplayQueue?.down(event.code, null);
@@ -365,6 +374,24 @@ function onWindowResize() {
     cssRenderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setSize(window.innerWidth, window.innerHeight);
     keyDisplayQueue?.updatePosition();
+}
+
+
+function startAnimation() {
+    // Only start the animation if it's not already running
+    if (animationFrameId === null) {
+        console.log("Starting animation.");
+        animate(); // Call the animate function to start the loop
+    }
+}
+
+function stopAnimation() {
+    // Only stop the animation if it's currently running
+    if (animationFrameId !== null) {
+        console.log("Stopping animation.");
+        cancelAnimationFrame(animationFrameId); // Stop the animation frame
+        animationFrameId = null; // Reset the ID
+    }
 }
 
 function animate() {
@@ -402,14 +429,15 @@ function animate() {
 
     // Standard 3D renderer
     renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(animate);
 
 }
 
 // Initialize the game
 function createMenuSettings(){
     // Create an object to hold the settings
-
+    const guiElement = settingGUI.domElement;
+    guiElement.id = 'my-lil-gui';
     // Add controls to the GUI
 
     settingGUI.add(settings, 'collisionDetection').name('Collision Detection').onChange((value) => {
@@ -419,10 +447,6 @@ function createMenuSettings(){
     settingGUI.add(settings, 'showCollisionBoxes').name('Show Collision Boxes').onChange((value) => {
         updateSetting();
     });
-
-    // settingGUI.add(settings, 'showFootBoxes').name('Show Foot Boxes').onChange((value) => {
-    //     updateSetting();
-    // });
 
     settingGUI.add(settings, 'gravityEnabled').name('Gravity Enabled').onChange((value) => {
         updateSetting();
@@ -561,7 +585,7 @@ function setupStartMenu(){
         menu.style.display = 'none';
         animate();
         if (!document.fullscreenElement) {
-
+            isStart = true;
             document.body.requestFullscreen();
             document.body.setAttribute("fullscreen",""); 
 
@@ -571,3 +595,36 @@ function setupStartMenu(){
 
 
 //
+
+
+
+
+// Function to handle the orientation change
+function handleOrientationChange(mediaQuery) {
+  const messageElement = document.getElementById("orientation-message");
+  const gameCanvas = document.getElementById("game-canvas");
+  if (mediaQuery.matches) {
+    console.log('Switched to horizontal view');
+    messageElement.style.display = "none";
+    gameCanvas.style.display = "";
+    if(isStart)
+    {
+        startAnimation();
+    }
+    // Place your Three.js code for horizontal view here
+    // For example, reposition objects, change camera FOV, etc.
+  } else {
+    console.log('Switched to portrait view');
+    messageElement.style.display = "flex";
+    gameCanvas.style.display = "none";
+    if(isStart)
+    {
+        stopAnimation();
+    }
+    // Place your Three.js code for portrait view here
+  }
+
+  onWindowResize();
+}
+
+
