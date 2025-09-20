@@ -207,16 +207,16 @@ function setupFloor() {
     geometry.rotateX(-Math.PI / 2);
 
     // Generate terrain using Perlin noise
-    const noise = new ImprovedNoise();
-    const positionAttribute = geometry.getAttribute('position');
-    for (let i = 0; i < positionAttribute.count; i++) {
-        const x = positionAttribute.getX(i);
-        const z = positionAttribute.getZ(i);
-        const y = noise.noise(x * TERRAIN_SCALE, z * TERRAIN_SCALE, 0) * TERRAIN_HEIGHT;
-        positionAttribute.setY(i, y);
-    }
-    positionAttribute.needsUpdate = true;
-    geometry.computeVertexNormals();
+    // const noise = new ImprovedNoise();
+    // const positionAttribute = geometry.getAttribute('position');
+    // for (let i = 0; i < positionAttribute.count; i++) {
+    //     const x = positionAttribute.getX(i);
+    //     const z = positionAttribute.getZ(i);
+    //     const y = noise.noise(x * TERRAIN_SCALE, z * TERRAIN_SCALE, 0) * TERRAIN_HEIGHT;
+    //     positionAttribute.setY(i, y);
+    // }
+    // positionAttribute.needsUpdate = true;
+    // geometry.computeVertexNormals();
 
     const material = new THREE.MeshStandardMaterial({
         map: sandBaseColor,
