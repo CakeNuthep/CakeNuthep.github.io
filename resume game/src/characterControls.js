@@ -48,8 +48,8 @@ class CharacterControls extends Box {
         this.cameraTarget = new THREE.Vector3();
 
         this.fadeDuration = 0.01;
-        this.runVelocity = 5;
-        this.walkVelocity = 2;
+        this.runVelocity = 0.01;
+        this.walkVelocity = 0.005;
         this.gravityEnabled = gravityEnabled;
         this.showCollisionBox = showCollisionBox;
         this.showFootBoxes = showFootBoxes;
@@ -75,6 +75,8 @@ class CharacterControls extends Box {
         this.IdleCurrentAction = this.IdleAction;
         this.IdelCurrentWaitAction = this.IdleYawnAction;
         this.currentDanceSong = this.danceSong;
+        this.angle = 0;
+        this.radius = 30;
         
     }
 
@@ -306,6 +308,7 @@ class CharacterControls extends Box {
 
         if (keysPressed[A]) {
             directionOffset = Math.PI / 2; // A
+            
         } else if (keysPressed[D]) {
             directionOffset = -Math.PI / 2; // D
         }
@@ -318,7 +321,7 @@ class CharacterControls extends Box {
             this.rotateAngle,
             angleYCameraDirection + directionOffset
         );
-        this.model.quaternion.rotateTowards(this.rotateQuaternion, 0.5);
+        this.model.quaternion.rotateTowards(this.rotateQuaternion, 2);
     }
 
     moveModel(delta, directionOffset) {
@@ -326,44 +329,40 @@ class CharacterControls extends Box {
 
         const velocity =
             this.currentAction === 'Run' ? this.runVelocity : this.walkVelocity;
-        const moveX = this.walkDirection.x * velocity * delta;
-        const moveZ = this.walkDirection.z * velocity * delta;
 
-        this.model.position.x += moveX;
-        this.model.position.z += moveZ;
+
+        this.angle += velocity * this.walkDirection.x;
+        
+        // Calculate new position
+        this.model.position.x = this.radius * Math.cos(this.angle);
+        this.model.position.z = this.radius * Math.sin(this.angle);
+        console.log(`X: ${this.model.position.x} Z: ${this.model.position.z}`);
     }
 
     calculateWalkDirection(directionOffset) {
-        this.camera.getWorldDirection(this.walkDirection);
-        this.walkDirection.y = 0;
-        this.walkDirection.normalize();
-        this.walkDirection.applyAxisAngle(this.rotateAngle, directionOffset);
+        if(directionOffset > 0){
+            this.walkDirection.x = 1;
+            this.walkDirection.z = 1;
+            this.walkDirection.y = 0;
+        }
+        else{
+            this.walkDirection.x = -1;
+            this.walkDirection.z = -1;
+            this.walkDirection.y = 0;
+        }
     }
 
     updateCameraTarget() {
-        const distance = 5; // Desired distance from the model
-        const direction = new THREE.Vector3();
-        direction.subVectors(this.model.position, this.camera.position);
-        const magnitude = direction.length();
+        this.camera.position.x = Math.cos(this.angle) * (this.radius+10);
+        this.camera.position.z = Math.sin(this.angle) * (this.radius+10);
+        this.camera.position.y = 3; // Keep camera elevated
 
-        // 2. Normalize the direction vector (set its length to 1)
-        direction.normalize();
-
-        // 3. Scale the direction vector by the step size
-        direction.multiplyScalar(magnitude - distance);
-
-         // 4. Add the resulting vector to vectorA
-        const cameraPosition = this.camera.position.clone().add(direction);
-
-        this.camera.position.lerp(cameraPosition, 0.1); // Smooth transition
-        this.camera.position.y = this.model.position.y + 3; // Maintain a height above the model
-
-        // Update camera target
         this.cameraTarget.set(
             this.model.position.x,
             this.model.position.y + 1, // Keep target slightly above the model
             this.model.position.z
         );
+
         this.orbitControl.target = this.cameraTarget;
     }
 

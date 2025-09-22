@@ -247,7 +247,7 @@ function setupInteractiveCube() {
         width: 1,
         height: 1,
         depth: 1,
-        position: new THREE.Vector3(2, 1, 0)
+        position: new THREE.Vector3(29, 0, 5)
     };
     const cubeObject = new Object(objParams);
     cubeObject.model.name = 'InteractiveCube';
@@ -266,7 +266,7 @@ function setupDanceCube() {
         width: 1,
         height: 2,
         depth: 1,
-        position: new THREE.Vector3(5, 3, 0)
+        position: new THREE.Vector3(22, 0, 20)
     };
     const cubeObject = new DanceObject(objParams);
     cubeObject.model.name = 'DanceCube';
@@ -282,7 +282,7 @@ function setupDanceCube2() {
         width: 1,
         height: 1,
         depth: 1,
-        position: new THREE.Vector3(5, 3, 2)
+        position: new THREE.Vector3(15, 0, 25)
     };
     const cubeObject = new DanceObject(objParams);
     cubeObject.model.name = 'DanceCube2';
