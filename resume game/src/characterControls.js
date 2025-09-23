@@ -40,7 +40,7 @@ class CharacterControls extends Box {
         this.toggleRun = true;
         this.isJumping = false;
         this.onGround = true;
-        this.jumpStrength = 1;
+        this.jumpStrength = 3.5;
 
         this.walkDirection = new THREE.Vector3();
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
@@ -130,7 +130,7 @@ class CharacterControls extends Box {
         if(this.gravityEnabled)
         {
             const currentPosition = this.model.position.clone();
-            let { y, velocity, onGround } =  this.applyGravity(floor);
+            let { y, velocity, onGround } =  this.applyGravity(floor,delta);
             this.model.position.y = y;
             let {isColiision,isPassThrough}  = this.collisionDetection(this.mapObject);
             if (isColiision && !isPassThrough) {
@@ -336,7 +336,7 @@ class CharacterControls extends Box {
         // Calculate new position
         this.model.position.x = this.radius * Math.cos(this.angle);
         this.model.position.z = this.radius * Math.sin(this.angle);
-        console.log(`X: ${this.model.position.x} Z: ${this.model.position.z}`);
+        console.log(`X: ${this.model.position.x} Z: ${this.model.position.z} Y:${this.model.position.y}`);
     }
 
     calculateWalkDirection(directionOffset) {

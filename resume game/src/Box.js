@@ -8,7 +8,7 @@ class Box {
             depth,
             position,
             velocity = new THREE.Vector3(0, 0, 0),
-            gravity = 0.1,
+            gravity = 7,
             isCollition = true,
             passThroughWhenCollision = true,
             
@@ -62,13 +62,14 @@ class Box {
         return false;
     }
 
-    applyGravity(floor) {
+    applyGravity(floor,delta) {
         // const player = characterControls.model;
         const down = new THREE.Vector3(0, -1, 0); // Ray points straight down
         let position = new THREE.Vector3();
         this.cube.getWorldPosition(position);
         position.y = position.y - this.cube.position.y; 
-        this.velocity.y -= this.GRAVITY;
+        console.log(` delta: ${delta}`)
+        this.velocity.y -= (this.GRAVITY*delta);
         
     
         const rayOrigin = new THREE.Vector3(position.x, position.y + 10, position.z);
