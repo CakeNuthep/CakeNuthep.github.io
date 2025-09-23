@@ -410,7 +410,11 @@ class CharacterControls extends Box {
     }
 
     playDanceSong(){
+
+        const angleYCameraDirection = this.calculateCameraDirectionAngle();
+        this.rotateModel(angleYCameraDirection, Math.PI);
         if(!this.currentDanceSong.isPlaying){
+
             this.currentDanceSong.play();
         }
     }
