@@ -49,7 +49,7 @@ class CharacterControls extends Box {
 
         this.fadeDuration = 0.01;
         this.runVelocity = 0.01;
-        this.walkVelocity = 0.005;
+        this.walkVelocity = 0.01;
         this.gravityEnabled = gravityEnabled;
         this.showCollisionBox = showCollisionBox;
         this.showFootBoxes = showFootBoxes;
