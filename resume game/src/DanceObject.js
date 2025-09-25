@@ -70,7 +70,7 @@ class DanceObject extends Box {
         this.setHtmlElement(holdButton)
     
         const label = new CSS2DObject(holdContainer);
-        label.position.set(0, 1.5, 0);
+        label.position.set(0, this.height+1, 0);
         cube.add(label);
 
         cube.position.set(position.x, position.y, position.z);

@@ -76,7 +76,7 @@ class CharacterControls extends Box {
         this.IdelCurrentWaitAction = this.IdleYawnAction;
         this.currentDanceSong = this.danceSong;
         this.angle = 0;
-        this.radius = 30;
+        this.radius = 25;
         
     }
 
@@ -334,9 +334,17 @@ class CharacterControls extends Box {
         this.angle += velocity * this.walkDirection.x;
         
         // Calculate new position
-        this.model.position.x = this.radius * Math.cos(this.angle);
-        this.model.position.z = this.radius * Math.sin(this.angle);
+        const {x, z} = this.circlePosition(this.angle, this.radius);
+        this.model.position.x = x;
+        this.model.position.z = z;
         console.log(`X: ${this.model.position.x} Z: ${this.model.position.z} Y:${this.model.position.y}`);
+    }
+
+    circlePosition(angle, radius) {
+        return {
+            x: radius * Math.cos(angle),
+            z: radius * Math.sin(angle)
+        };
     }
 
     calculateWalkDirection(directionOffset) {

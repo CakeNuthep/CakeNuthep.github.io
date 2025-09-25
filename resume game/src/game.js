@@ -8,6 +8,7 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Sky } from 'three/addons/objects/Sky.js';
 import { Object } from './Objects.js';
 import { DanceObject } from './DanceObject.js';
+import { glbObject } from './glbObject.js';
 import GUI from 'lil-gui';
 
 
@@ -74,6 +75,11 @@ function init() {
     initSky();
     setupFloor();
     setupInteractiveCube();
+    setupHouse();
+    setupSchool();
+    setupOfficeBuilding1();
+    setupOfficeBuilding2();
+    setupCrystal()
     setupDanceCube();
     setupDanceCube2();
     setupDanceCube3();
@@ -262,12 +268,13 @@ function setupInteractiveCube() {
 
 // Setup interactive cube
 function setupDanceCube() {
+    const {x,z} = circlePosition(Math.PI, 25);
     const objParams = {
         name: "DanceCube",
         width: 1,
         height: 2,
         depth: 1,
-        position: new THREE.Vector3(22, 0, 20)
+        position: new THREE.Vector3(x, 0, z)
     };
     const cubeObject = new DanceObject(objParams);
     cubeObject.model.name = 'DanceCube';
@@ -278,12 +285,13 @@ function setupDanceCube() {
 }
 
 function setupDanceCube2() {
+    const {x,z} = circlePosition(Math.PI/2+Math.PI/20, 25);
     const objParams = {
         name: "DanceCube2",
         width: 1,
         height: 2,
         depth: 1,
-        position: new THREE.Vector3(15, 0, 25)
+        position: new THREE.Vector3(x, 0, z)
     };
     const cubeObject = new DanceObject(objParams);
     cubeObject.model.name = 'DanceCube2';
@@ -294,12 +302,13 @@ function setupDanceCube2() {
 }
 
 function setupDanceCube3() {
+    const {x,z} = circlePosition(3*Math.PI/2, 25);
     const objParams = {
         name: "DanceCube3",
         width: 1,
         height: 2,
         depth: 1,
-        position: new THREE.Vector3(8, 0, 28)
+        position: new THREE.Vector3(x, 0, z)
     };
     const cubeObject = new DanceObject(objParams);
     cubeObject.model.name = 'DanceCube3';
@@ -322,6 +331,162 @@ function handleCubeClick(event, cube) {
     }
 }
 
+function setupHouse() {
+    const loader = new GLTFLoader(loadingManager);
+    loader.load('models/residential_family_house.glb', (gltf) => {
+        const model = gltf.scene;
+        model.name = 'House';
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
+                object.receiveShadow = true;
+            }
+        });
+        const {x,z} = circlePosition(0, 20);
+        model.position.set(x, 0, z);
+        model.rotation.y = Math.PI;
+        model.scale.set(7, 7, 7);
+        scene.add(model);
+        const house = new glbObject('House', 
+            model, 
+            2, 
+            2, 
+            2, 
+            settings.collisionDetectionEnabled, 
+            settings.gravityEnabled, 
+            settings.showCollisionBoxes
+        );
+        objects.push(house);
+    });
+}
+
+
+function setupSchool() {
+    const loader = new GLTFLoader(loadingManager);
+    loader.load('models/school_building.glb', (gltf) => {
+        const model = gltf.scene;
+        model.name = 'House';
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
+                object.receiveShadow = true;
+            }
+        });
+        const {x,z} = circlePosition(Math.PI/2, 20);
+        model.position.set(x, 3, z);
+        model.rotation.y = Math.PI;
+        model.scale.set(7, 7, 7);
+        scene.add(model);
+        const house = new glbObject('House', 
+            model, 
+            2, 
+            2, 
+            2, 
+            settings.collisionDetectionEnabled, 
+            settings.gravityEnabled, 
+            settings.showCollisionBoxes
+        );
+        objects.push(house);
+    });
+}
+
+function setupOfficeBuilding1() {
+    const loader = new GLTFLoader(loadingManager);
+    loader.load('models/old_office_building.glb', (gltf) => {
+        const model = gltf.scene;
+        model.name = 'OfficeBuilding1';
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
+                object.receiveShadow = true;
+            }
+        });
+        const {x,z} = circlePosition(Math.PI, 20);
+        model.position.set(x, 3, z);
+        model.rotation.y = Math.PI;
+        model.scale.set(7, 7, 7);
+        scene.add(model);
+        const house = new glbObject('OfficeBuilding1', 
+            model, 
+            2, 
+            2, 
+            2, 
+            settings.collisionDetectionEnabled, 
+            settings.gravityEnabled, 
+            settings.showCollisionBoxes
+        );
+        objects.push(house);
+    });
+}
+
+
+
+function setupOfficeBuilding2() {
+    const loader = new GLTFLoader(loadingManager);
+    loader.load('models/singapore_office_skyscraper_free.glb', (gltf) => {
+        const model = gltf.scene;
+        model.name = 'OfficeBuilding2';
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
+                object.receiveShadow = true;
+            }
+        });
+        const {x,z} = circlePosition(3*Math.PI/2, 20);
+        model.position.set(x, 0, z);
+        model.rotation.y = Math.PI;
+        model.scale.set(0.1, 0.1, 0.1);
+        scene.add(model);
+        const house = new glbObject('OfficeBuilding2', 
+            model, 
+            2, 
+            2, 
+            2, 
+            settings.collisionDetectionEnabled, 
+            settings.gravityEnabled, 
+            settings.showCollisionBoxes
+        );
+        objects.push(house);
+    });
+}
+
+
+function setupCrystal() {
+    const loader = new GLTFLoader(loadingManager);
+    loader.load('models/korok_seed_amulet__botw_inspired.glb', (gltf) => {
+        const model = gltf.scene;
+        model.name = 'House';
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
+                object.receiveShadow = true;
+            }
+        });
+        
+        model.position.set(0, 0, 0);
+        model.rotation.y = Math.PI;
+        model.scale.set(1, 1, 1);
+        scene.add(model);
+        const house = new glbObject('House', 
+            model, 
+            2, 
+            2, 
+            2, 
+            settings.collisionDetectionEnabled, 
+            settings.gravityEnabled, 
+            settings.showCollisionBoxes
+        );
+        objects.push(house);
+    });
+}
+
+function circlePosition(angle, radius) {
+        return {
+            x: radius * Math.cos(angle),
+            z: radius * Math.sin(angle)
+        };
+    }
+
 // Load character model
 function loadCharacterModel() {
     const jumpSound = createJumpLandSound();
@@ -334,6 +499,8 @@ function loadCharacterModel() {
         model.traverse((object) => {
             if (object.isMesh) object.castShadow = true;
         });
+        const {x,z} = circlePosition(0, 30);
+        model.position.set(x, 0, z);
         scene.add(model);
 
         const mixer = new THREE.AnimationMixer(model);
