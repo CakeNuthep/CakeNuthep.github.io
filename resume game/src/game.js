@@ -76,6 +76,7 @@ function init() {
     setupInteractiveCube();
     setupDanceCube();
     setupDanceCube2();
+    setupDanceCube3();
     loadCharacterModel();
     setupEventListeners();
     setupControls();
@@ -280,13 +281,29 @@ function setupDanceCube2() {
     const objParams = {
         name: "DanceCube2",
         width: 1,
-        height: 1,
+        height: 2,
         depth: 1,
         position: new THREE.Vector3(15, 0, 25)
     };
     const cubeObject = new DanceObject(objParams);
     cubeObject.model.name = 'DanceCube2';
     cubeObject.setPalyerAction('ChickenDance');
+    scene.add(cubeObject.model);
+    // scene.add(cubeObject.cube);
+    objects.push(cubeObject);
+}
+
+function setupDanceCube3() {
+    const objParams = {
+        name: "DanceCube3",
+        width: 1,
+        height: 2,
+        depth: 1,
+        position: new THREE.Vector3(8, 0, 28)
+    };
+    const cubeObject = new DanceObject(objParams);
+    cubeObject.model.name = 'DanceCube3';
+    cubeObject.setPalyerAction('SnakeDance');
     scene.add(cubeObject.model);
     // scene.add(cubeObject.cube);
     objects.push(cubeObject);

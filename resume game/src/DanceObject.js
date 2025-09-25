@@ -35,7 +35,7 @@ class DanceObject extends Box {
             metalness: 0.5,
             roughness: 0.7,
             transparent: true,
-            opacity: 0.5
+            opacity: 0
         });
         const cube = new THREE.Mesh(geometry, material);
 
