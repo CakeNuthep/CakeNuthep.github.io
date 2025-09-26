@@ -8,7 +8,7 @@ class Box {
             depth,
             position,
             velocity = new THREE.Vector3(0, 0, 0),
-            gravity = 7,
+            gravity = 9.8,
             isCollition = true,
             passThroughWhenCollision = true,
             

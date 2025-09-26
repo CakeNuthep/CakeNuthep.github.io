@@ -40,7 +40,7 @@ class CharacterControls extends Box {
         this.toggleRun = true;
         this.isJumping = false;
         this.onGround = true;
-        this.jumpStrength = 3.5;
+        this.jumpStrength = 2;
 
         this.walkDirection = new THREE.Vector3();
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
