@@ -205,10 +205,10 @@ function initSky() {
 // Setup the floor
 function setupFloor() {
     const textureLoader = new THREE.TextureLoader(loadingManager);
-    const sandBaseColor = textureLoader.load('./textures/sand/Sand 002_COLOR.jpg');
-    const sandNormalMap = textureLoader.load('./textures/sand/Sand 002_NRM.jpg');
-    const sandHeightMap = textureLoader.load('./textures/sand/Sand 002_DISP.jpg');
-    const sandAmbientOcclusion = textureLoader.load('./textures/sand/Sand 002_OCC.jpg');
+    const sandBaseColor = textureLoader.load('./textures/grass/Ground_Grass_001_COLOR.jpg');
+    const sandNormalMap = textureLoader.load('./textures/grass/Ground_Grass_001_NORM.jpg');
+    const sandHeightMap = textureLoader.load('./textures/grass/Ground_Grass_001_DISP.PNG');
+    const sandAmbientOcclusion = textureLoader.load('./textures/grass/Ground_Grass_001_OCC.jpg');
 
     const geometry = new THREE.PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE, 512, 512);
     geometry.rotateX(-Math.PI / 2);
