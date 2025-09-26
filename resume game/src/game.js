@@ -36,7 +36,7 @@ loadingManager.onError = function(url) {
 };
 
 const GRAVITY = 0.1;
-const FLOOR_SIZE = 80;
+const FLOOR_SIZE = 40;
 const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
 
@@ -210,7 +210,7 @@ function setupFloor() {
     const sandHeightMap = textureLoader.load('./textures/grass/Ground_Grass_001_DISP.PNG');
     const sandAmbientOcclusion = textureLoader.load('./textures/grass/Ground_Grass_001_OCC.jpg');
 
-    const geometry = new THREE.PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE, 512, 512);
+    const geometry = new THREE.CircleGeometry(FLOOR_SIZE, 512);
     geometry.rotateX(-Math.PI / 2);
 
     // Generate terrain using Perlin noise

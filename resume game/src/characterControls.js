@@ -48,8 +48,8 @@ class CharacterControls extends Box {
         this.cameraTarget = new THREE.Vector3();
 
         this.fadeDuration = 0.01;
-        this.runVelocity = 0.01;
-        this.walkVelocity = 0.01;
+        this.runVelocity = 0.004;
+        this.walkVelocity = 0.004;
         this.gravityEnabled = gravityEnabled;
         this.showCollisionBox = showCollisionBox;
         this.showFootBoxes = showFootBoxes;
