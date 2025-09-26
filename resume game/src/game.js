@@ -499,8 +499,9 @@ function loadCharacterModel() {
         model.traverse((object) => {
             if (object.isMesh) object.castShadow = true;
         });
-        const {x,z} = circlePosition(0, 30);
+        const {x,z} = circlePosition(0, 25);
         model.position.set(x, 0, z);
+        model.rotation.y = -Math.PI/2;
         scene.add(model);
 
         const mixer = new THREE.AnimationMixer(model);

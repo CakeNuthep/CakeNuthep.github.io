@@ -376,7 +376,7 @@ class CharacterControls extends Box {
 
     setupCameraTarget() {
         // Set initial camera position for third-person view
-        const cameraOffset = new THREE.Vector3(0, 3, -4); // Adjust height and distance
+        const cameraOffset = new THREE.Vector3(4, 3, 0); // Adjust height and distance
         const initialCameraPosition = this.model.position.clone().add(cameraOffset);
 
         this.camera.position.copy(initialCameraPosition);
