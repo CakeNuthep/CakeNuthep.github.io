@@ -420,7 +420,7 @@ function setupHouse() {
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(house);
+        // objects.push(house);
     });
 }
 
@@ -450,7 +450,7 @@ function setupSchool() {
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(school);
+        // objects.push(school);
     });
 }
 
@@ -479,7 +479,7 @@ function setupOfficeBuilding1() {
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(building1);
+        // objects.push(building1);
     });
 }
 
@@ -510,7 +510,7 @@ function setupOfficeBuilding2() {
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(building2);
+        // objects.push(building2);
     });
 }
 
@@ -544,7 +544,7 @@ function setupTree(radius,
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(building2);
+        // objects.push(building2);
     });
 }
 
