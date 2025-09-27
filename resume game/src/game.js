@@ -268,12 +268,12 @@ function setupInteractiveCube() {
 
 // Setup interactive cube
 function setupDanceCube() {
-    const {x,z} = circlePosition(Math.PI, 25);
+    const {x,z} = circlePosition(Math.PI-Math.PI/20, 25);
     const objParams = {
         name: "DanceCube",
-        width: 1,
+        width: 3,
         height: 2,
-        depth: 1,
+        depth: 5,
         position: new THREE.Vector3(x, 0, z)
     };
     const cubeObject = new DanceObject(objParams);
@@ -288,9 +288,9 @@ function setupDanceCube2() {
     const {x,z} = circlePosition(Math.PI/2+Math.PI/20, 25);
     const objParams = {
         name: "DanceCube2",
-        width: 1,
+        width: 3,
         height: 2,
-        depth: 1,
+        depth: 3,
         position: new THREE.Vector3(x, 0, z)
     };
     const cubeObject = new DanceObject(objParams);
@@ -302,12 +302,12 @@ function setupDanceCube2() {
 }
 
 function setupDanceCube3() {
-    const {x,z} = circlePosition(3*Math.PI/2, 25);
+    const {x,z} = circlePosition(3*Math.PI/2-Math.PI/30, 25);
     const objParams = {
         name: "DanceCube3",
-        width: 1,
+        width: 3,
         height: 2,
-        depth: 1,
+        depth: 3,
         position: new THREE.Vector3(x, 0, z)
     };
     const cubeObject = new DanceObject(objParams);

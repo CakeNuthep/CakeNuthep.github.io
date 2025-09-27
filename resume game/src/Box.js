@@ -21,7 +21,9 @@ class Box {
        
         this.raycaster = new THREE.Raycaster();
 
+        // console.log(`Creating Box: width=${width}, height=${height}, depth=${depth}`);
         this.cube = this.createBox(width, height, depth, position);
+        // console.log(`Box ${this.name} sides: scaleX=${this.cube.scale.x}, scaleY=${this.cube.scale.y}, scaleZ=${this.cube.scale.z}`);
         this.cube.name = 'CollisionBox';
         this.showCollisionBox = false;
         this.collisionDetectionEnabled = isCollition;
@@ -34,15 +36,20 @@ class Box {
     updateSides() {
         if(!this.cube) return;
         let position = new THREE.Vector3();
+        const boundingBox = new THREE.Box3();
+        const size = new THREE.Vector3();
+        boundingBox.setFromObject(this.cube);
+        boundingBox.getSize(size);
         this.cube.getWorldPosition(position);
-        this.right = position.x + this.cube.scale.x / 2
-        this.left = position.x - this.cube.scale.x / 2
+        this.right = position.x + size.x / 2
+        this.left = position.x - size.x / 2
 
-        this.bottom = position.y - this.cube.scale.y / 2
-        this.top = position.y + this.cube.scale.y / 2
+        this.bottom = position.y - size.y / 2
+        this.top = position.y + size.y / 2
 
-        this.front = position.z + this.cube.scale.z / 2
-        this.back = position.z - this.cube.scale.z / 2
+        this.front = position.z + size.z / 2
+        this.back = position.z - size.z / 2
+
         this.cube.visible = this.showCollisionBox;
     }
 
