@@ -365,11 +365,19 @@ class CharacterControls extends Box {
         this.camera.position.z = Math.sin(this.angle) * (this.radius+10);
         this.camera.position.y = 3; // Keep camera elevated
 
-        this.cameraTarget.set(
-            this.model.position.x,
-            this.camera.position.y, // Keep target slightly above the model
-            this.model.position.z
-        );
+
+        if(this.isColiision || this.onGround){
+            this.cameraTarget.setY(this.model.position.y + 1);
+        }
+
+       
+        this.cameraTarget.setX(this.model.position.x);
+        this.cameraTarget.setZ(this.model.position.z);
+        // this.cameraTarget.set(
+        //     this.model.position.x,
+        //     y,
+        //     this.model.position.z
+        // );
 
         this.orbitControl.target = this.cameraTarget;
     }
