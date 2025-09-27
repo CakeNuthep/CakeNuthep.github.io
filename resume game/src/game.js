@@ -36,7 +36,7 @@ loadingManager.onError = function(url) {
 };
 
 const GRAVITY = 0.1;
-const FLOOR_SIZE = 40;
+const FLOOR_SIZE = 24;
 const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
 
@@ -414,7 +414,7 @@ function setupOfficeBuilding1() {
             }
         });
         const {x,z} = circlePosition(Math.PI, 20);
-        model.position.set(x, 3, z);
+        model.position.set(x, 10, z);
         model.rotation.y = Math.PI;
         model.scale.set(7, 7, 7);
         scene.add(model);
