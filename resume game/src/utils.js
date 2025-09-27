@@ -106,20 +106,22 @@ class KeyDisplay {
 
         if(key == E && this.characterControls && !this.holdInterval){
             this.startTime = Date.now();
-            this.holdInterval = setInterval(() => {
-                console.log('E is still held...');
-                if(this.characterControls)
-                {
-                    this.characterControls.updateIdleAction();
-                    const object = this.characterControls.getFirstObjecHasCollision();
-                    if(object)
+            if(!this.characterControls.isDancing()){
+                this.holdInterval = setInterval(() => {
+                    console.log('E is still held...');
+                    if(this.characterControls)
                     {
-                        const elapsedTime = Date.now() - this.startTime;
-                        object.playAnimateHtml(elapsedTime);
+                        this.characterControls.updateIdleAction();
+                        const object = this.characterControls.getFirstObjecHasCollision();
+                        if(object)
+                        {
+                            const elapsedTime = Date.now() - this.startTime;
+                            object.playAnimateHtml(elapsedTime);
+                        }
                     }
-                }
-            }, 30); // Repeat every 500 milliseconds
-            console.log(this.holdInterval);
+                }, 30); // Repeat every 500 milliseconds
+                console.log(this.holdInterval);
+            }
         }
         keysPressed[key] = true;
 

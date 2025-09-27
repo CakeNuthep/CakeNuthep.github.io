@@ -403,7 +403,7 @@ function animate() {
             var keysPressed = keyDisplayQueue.getKeysPressed();
             characterControls.update(mixerUpdateDelta, keysPressed, floor, objects);
             //get is dance from characterControls
-            if(characterControls.issDancing()){
+            if(characterControls.isDancing()){
                 //stop sound background
                 if(audioBackground.isPlaying){
                     audioBackground.pause();

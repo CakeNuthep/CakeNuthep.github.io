@@ -436,7 +436,7 @@ class CharacterControls extends Box {
         }
     }
 
-    issDancing(){
+    isDancing(){
         if(this.IdleCurrentAction == this.IdleDanceAction)
         {
             this.currentDanceSong = this.danceSong;

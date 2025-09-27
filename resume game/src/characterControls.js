@@ -209,14 +209,19 @@ class CharacterControls extends Box {
     }
 
     updateIdleAction(){
+        let isColiision = false;
         this.mapObject.forEach((object, objName) => {
             const obj = object.object
             if(object.collision)
             {
                 this.updateIdleCurrentAction(obj.action);
                 this.updateIdleCurrentWaitAction(obj.action);
+                isColiision = true;
             }
         });
+        if(!isColiision){
+            this.setDefaultIdleAction();
+        }
         
     }
 
@@ -441,7 +446,7 @@ class CharacterControls extends Box {
         }
     }
 
-    issDancing(){
+    isDancing(){
         if(this.IdleCurrentAction == this.IdleDanceAction)
         {
             this.currentDanceSong = this.danceSong;
