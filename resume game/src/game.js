@@ -43,7 +43,7 @@ loadingManager.onError = function(url) {
     console.error('Error loading:', url);
 };
 
-const GRAVITY = 0.1;
+
 const FLOOR_SIZE = 24;
 const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
