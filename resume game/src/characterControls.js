@@ -40,7 +40,7 @@ class CharacterControls extends Box {
         this.toggleRun = true;
         this.isJumping = false;
         this.onGround = true;
-        this.jumpStrength = 2;
+        this.jumpStrength = 0.2;
 
         this.walkDirection = new THREE.Vector3();
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
@@ -367,7 +367,7 @@ class CharacterControls extends Box {
 
         this.cameraTarget.set(
             this.model.position.x,
-            this.model.position.y + 1, // Keep target slightly above the model
+            this.camera.position.y, // Keep target slightly above the model
             this.model.position.z
         );
 
