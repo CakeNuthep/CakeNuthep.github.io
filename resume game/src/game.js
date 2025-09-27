@@ -297,7 +297,7 @@ function setupDanceCube() {
 }
 
 function setupDanceCube2() {
-    const {x,z} = circlePosition(Math.PI/2+Math.PI/20, 25);
+    const {x,z} = circlePosition(Math.PI/2, 25);
     const objParams = {
         name: "DanceCube2",
         width: 3,
@@ -375,7 +375,7 @@ function setupHouse() {
 
 function setupSchool() {
     const loader = new GLTFLoader(loadingManager);
-    loader.load('models/school_building.glb', (gltf) => {
+    loader.load('models/the_japanese_school_classroom.glb', (gltf) => {
         const model = gltf.scene;
         model.name = 'School';
         model.traverse((object) => {
@@ -385,9 +385,9 @@ function setupSchool() {
             }
         });
         const {x,z} = circlePosition(Math.PI/2, 20);
-        model.position.set(x, 3, z);
+        model.position.set(x, 0.1, z);
         model.rotation.y = Math.PI;
-        model.scale.set(7, 7, 7);
+        model.scale.set(1, 1, 1);
         scene.add(model);
         const school = new glbObject('School', 
             model, 
