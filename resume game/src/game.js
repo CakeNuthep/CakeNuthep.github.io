@@ -16,6 +16,7 @@ import GUI from 'lil-gui';
 // Get UI elements
 const menu = document.getElementById('start-menu');
 const loadingScreen = document.getElementById('loading-screen');
+const loadingText = document.getElementById('loading-text');
 const progressBar = document.getElementById('progress-bar');
 const gameCanvas = document.getElementById('game-canvas');
 
@@ -25,7 +26,11 @@ const loadingManager = new THREE.LoadingManager();
 
 
 loadingManager.onProgress = function(url, itemsLoaded, itemsTotal) {
+    console.log(`Loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
+    
     const progress = itemsLoaded / itemsTotal;
+    console.log(loadingText);
+    loadingText.textContent = `Loading... ${Math.round(progress * 100)}%`;
     progressBar.style.width = `${progress * 100}%`;
 };
 
