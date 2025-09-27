@@ -48,8 +48,8 @@ class CharacterControls extends Box {
         this.cameraTarget = new THREE.Vector3();
 
         this.fadeDuration = 0.01;
-        this.runVelocity = 0.004;
-        this.walkVelocity = 0.004;
+        this.runVelocity = 0.2;
+        this.walkVelocity = 0.2;
         this.gravityEnabled = gravityEnabled;
         this.showCollisionBox = showCollisionBox;
         this.showFootBoxes = showFootBoxes;
@@ -331,7 +331,7 @@ class CharacterControls extends Box {
             this.currentAction === 'Run' ? this.runVelocity : this.walkVelocity;
 
 
-        this.angle += velocity * this.walkDirection.x;
+        this.angle += velocity * this.walkDirection.x*delta;
         
         // Calculate new position
         const {x, z} = this.circlePosition(this.angle, this.radius);
