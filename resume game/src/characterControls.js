@@ -116,13 +116,14 @@ class CharacterControls extends Box {
 
 
     update(delta, keysPressed, floor) {
+
         const directionPressed = this.isDirectionPressed(keysPressed);
         const {isJump,isMove,nextAction} = this.determineNextAction(directionPressed);
         // console.log(`isJump: ${isJump}, isMove: ${isMove}, nextAction: ${nextAction}`);
         this.updateAnimation(nextAction);
         this.mixer.update(delta);
 
-        if (isMove) {
+        if (isMove && !this.isDancing()) {
             this.handleMovement(delta, keysPressed,this.mapObject);
         }
         
