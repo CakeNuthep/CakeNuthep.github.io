@@ -83,6 +83,18 @@ function init() {
     setupDanceCube();
     setupDanceCube2();
     setupDanceCube3();
+    setupTree(15, Math.PI/4, 0.5, 'models/jabami_anime_tree_v2.glb', 'Tree1');
+    setupTree(15, Math.PI/4 + Math.PI/6, 0.8, 'models/jabami_anime_tree_v3.glb', 'Tree2');
+    setupTree(15, Math.PI/4 + Math.PI/3, 0.6, 'models/jabami_anime_tree_v4.glb', 'Tree3');
+    setupTree(15, Math.PI/4 + Math.PI/2, 0.7, 'models/jabami_anime_tree_v2.glb', 'Tree4');
+    setupTree(15, Math.PI/4 + 2*Math.PI/3, 0.5, 'models/jabami_anime_tree_v3.glb', 'Tree5');
+    setupTree(15, Math.PI/4 + 5*Math.PI/6, 0.6, 'models/jabami_anime_tree_v4.glb', 'Tree6');
+    setupTree(15, Math.PI/4 + Math.PI, 0.7, 'models/jabami_anime_tree_v2.glb', 'Tree7');
+    setupTree(15, Math.PI/4 + 7*Math.PI/6, 0.5, 'models/jabami_anime_tree_v3.glb', 'Tree8');
+    setupTree(15, Math.PI/4 + 4*Math.PI/3, 0.6, 'models/jabami_anime_tree_v4.glb', 'Tree9');
+    setupTree(15, Math.PI/4 + 3*Math.PI/2, 0.8, 'models/jabami_anime_tree_v2.glb', 'Tree10');
+    setupTree(15, Math.PI/4 + 5*Math.PI/3, 0.6, 'models/jabami_anime_tree_v3.glb', 'Tree11');
+    setupTree(15, Math.PI/4 + 11*Math.PI/6, 0.7, 'models/jabami_anime_tree_v4.glb', 'Tree12');
     loadCharacterModel();
     setupEventListeners();
     setupControls();
@@ -450,6 +462,40 @@ function setupOfficeBuilding2() {
     });
 }
 
+function setupTree(radius, 
+    angle, 
+    scale, 
+    modelPath, 
+    name
+) {
+    const loader = new GLTFLoader(loadingManager);
+    loader.load(modelPath, (gltf) => {
+        const model = gltf.scene;
+        model.name = name;
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
+                object.receiveShadow = true;
+            }
+        });
+        const {x,z} = circlePosition(angle, radius);
+        model.position.set(x, 0, z);
+        model.rotation.y = Math.PI;
+        model.scale.set(scale, scale, scale);
+        scene.add(model);
+        const building2 = new glbObject(name, 
+            model, 
+            1, 
+            1, 
+            1, 
+            settings.collisionDetectionEnabled, 
+            settings.gravityEnabled, 
+            settings.showCollisionBoxes
+        );
+        objects.push(building2);
+    });
+}
+
 
 function setupCrystal() {
     const loader = new GLTFLoader(loadingManager);
@@ -605,7 +651,7 @@ function animate() {
             }
             else{
                 characterControls.stopDanceSong();
-                
+
                 playBackGroundMusic();
             }
         }
