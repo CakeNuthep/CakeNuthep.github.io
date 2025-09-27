@@ -9,6 +9,7 @@ class glbObject extends Box {
         collisionDetectionEnabled=false,
         gravityEnabled=false,
         showCollisionBox=false,
+        updateFunction = null,
 
     ) {
 
@@ -27,13 +28,20 @@ class glbObject extends Box {
         this.gravityEnabled = gravityEnabled;
         this.showCollisionBox = showCollisionBox;
         this.collisionDetectionEnabled = collisionDetectionEnabled;    
+        this.updateFunction = updateFunction;
     }
 
     
 
+    setUpdateFunction(updateFunction) {
+        this.updateFunction = updateFunction;
+    }
 
-    update() {
+    update(delta) {
         this.updateSides();
+        if (this.updateFunction) {
+            this.updateFunction(delta);
+        }
     }
 }
 

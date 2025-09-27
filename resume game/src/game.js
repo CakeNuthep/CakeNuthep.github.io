@@ -365,7 +365,7 @@ function setupSchool() {
     const loader = new GLTFLoader(loadingManager);
     loader.load('models/school_building.glb', (gltf) => {
         const model = gltf.scene;
-        model.name = 'House';
+        model.name = 'School';
         model.traverse((object) => {
             if (object.isMesh) {
                 object.castShadow = true;
@@ -377,7 +377,7 @@ function setupSchool() {
         model.rotation.y = Math.PI;
         model.scale.set(7, 7, 7);
         scene.add(model);
-        const house = new glbObject('House', 
+        const school = new glbObject('School', 
             model, 
             2, 
             2, 
@@ -386,7 +386,7 @@ function setupSchool() {
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(house);
+        objects.push(school);
     });
 }
 
@@ -406,7 +406,7 @@ function setupOfficeBuilding1() {
         model.rotation.y = Math.PI;
         model.scale.set(7, 7, 7);
         scene.add(model);
-        const house = new glbObject('OfficeBuilding1', 
+        const building1 = new glbObject('OfficeBuilding1', 
             model, 
             2, 
             2, 
@@ -415,7 +415,7 @@ function setupOfficeBuilding1() {
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(house);
+        objects.push(building1);
     });
 }
 
@@ -437,7 +437,7 @@ function setupOfficeBuilding2() {
         model.rotation.y = Math.PI;
         model.scale.set(0.1, 0.1, 0.1);
         scene.add(model);
-        const house = new glbObject('OfficeBuilding2', 
+        const building2 = new glbObject('OfficeBuilding2', 
             model, 
             2, 
             2, 
@@ -446,7 +446,7 @@ function setupOfficeBuilding2() {
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(house);
+        objects.push(building2);
     });
 }
 
@@ -463,11 +463,11 @@ function setupCrystal() {
             }
         });
         
-        model.position.set(0, 0, 0);
+        model.position.set(0, 5, 0);
         model.rotation.y = Math.PI;
-        model.scale.set(1, 1, 1);
+        model.scale.set(0.6, 0.6, 0.6);
         scene.add(model);
-        const house = new glbObject('House', 
+        const crystal = new glbObject('House', 
             model, 
             2, 
             2, 
@@ -476,8 +476,14 @@ function setupCrystal() {
             settings.gravityEnabled, 
             settings.showCollisionBoxes
         );
-        objects.push(house);
+        objects.push(crystal);
+
+        function update(delta){
+            model.rotation.y += delta * 0.5; // Rotate at 0.5 radians per second
+        }
+        crystal.setUpdateFunction(update);
     });
+    
 }
 
 function circlePosition(angle, radius) {
@@ -605,7 +611,7 @@ function animate() {
     }
 
     for (let obj of objects) {
-        obj.update();
+        obj.update(mixerUpdateDelta);
     }
 
     orbitControls.update();
