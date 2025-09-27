@@ -17,6 +17,7 @@ import GUI from 'lil-gui';
 const menu = document.getElementById('start-menu');
 const loadingScreen = document.getElementById('loading-screen');
 const loadingText = document.getElementById('loading-text');
+let loadingCount = 0;
 const progressBar = document.getElementById('progress-bar');
 const gameCanvas = document.getElementById('game-canvas');
 
@@ -30,7 +31,9 @@ loadingManager.onProgress = function(url, itemsLoaded, itemsTotal) {
     
     const progress = itemsLoaded / itemsTotal;
     console.log(loadingText);
-    loadingText.textContent = `Loading... ${Math.round(progress * 100)}%`;
+    loadingCount++;
+    const dot = '.'.repeat(loadingCount % 4);
+    loadingText.textContent = `Loading${dot} (${Math.round(progress * 100)}%)`;
     progressBar.style.width = `${progress * 100}%`;
 };
 
