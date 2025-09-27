@@ -173,11 +173,11 @@ function initSky() {
 
     const effectController = {
         turbidity: 0,
-        rayleigh: 0.46,
+        rayleigh: 0.116,
         mieCoefficient: 0.007,
         mieDirectionalG: 0.594,
-        elevation: 5.9,
-        azimuth: -180,
+        elevation: 12.6,
+        azimuth: -94.4,
         exposure: renderer.toneMappingExposure
     };
 
@@ -216,42 +216,94 @@ function initSky() {
 
 // Setup the floor
 function setupFloor() {
-    const textureLoader = new THREE.TextureLoader(loadingManager);
-    const sandBaseColor = textureLoader.load('./textures/grass/Ground_Grass_001_COLOR.jpg');
-    const sandNormalMap = textureLoader.load('./textures/grass/Ground_Grass_001_NORM.jpg');
-    const sandHeightMap = textureLoader.load('./textures/grass/Ground_Grass_001_DISP.PNG');
-    const sandAmbientOcclusion = textureLoader.load('./textures/grass/Ground_Grass_001_OCC.jpg');
+    {
+        const textureLoader = new THREE.TextureLoader(loadingManager);
+        const sandBaseColor = textureLoader.load('./textures/sand/Sand 002_COLOR.jpg');
+        const sandNormalMap = textureLoader.load('./textures/sand/Sand 002_NRM.jpg');
+        const sandHeightMap = textureLoader.load('./textures/sand/Sand 002_DISP.jpg');
+        const sandAmbientOcclusion = textureLoader.load('./textures/sand/Sand 002_OCC.jpg');
 
-    const geometry = new THREE.CircleGeometry(FLOOR_SIZE, 512);
-    geometry.rotateX(-Math.PI / 2);
+        const geometry = new THREE.CircleGeometry(FLOOR_SIZE+3, 512, 0, 2*Math.PI);
+        
+        geometry.rotateX(-Math.PI / 2);
 
-    // Generate terrain using Perlin noise
-    // const noise = new ImprovedNoise();
-    // const positionAttribute = geometry.getAttribute('position');
-    // for (let i = 0; i < positionAttribute.count; i++) {
-    //     const x = positionAttribute.getX(i);
-    //     const z = positionAttribute.getZ(i);
-    //     const y = noise.noise(x * TERRAIN_SCALE, z * TERRAIN_SCALE, 0) * TERRAIN_HEIGHT;
-    //     positionAttribute.setY(i, y);
-    // }
-    // positionAttribute.needsUpdate = true;
-    // geometry.computeVertexNormals();
+        // Generate terrain using Perlin noise
+        // const noise = new ImprovedNoise();
+        // const positionAttribute = geometry.getAttribute('position');
+        // for (let i = 0; i < positionAttribute.count; i++) {
+        //     const x = positionAttribute.getX(i);
+        //     const z = positionAttribute.getZ(i);
+        //     const y = noise.noise(x * TERRAIN_SCALE, z * TERRAIN_SCALE, 0) * TERRAIN_HEIGHT;
+        //     positionAttribute.setY(i, y);
+        // }
+        // positionAttribute.needsUpdate = true;
+        // geometry.computeVertexNormals();
 
-    const material = new THREE.MeshStandardMaterial({
-        map: sandBaseColor,
-        normalMap: sandNormalMap,
-        displacementMap: sandHeightMap,
-        displacementScale: 0.1,
-        aoMap: sandAmbientOcclusion,
-    });
-    wrapAndRepeatTexture(material.map);
-    wrapAndRepeatTexture(material.normalMap);
-    wrapAndRepeatTexture(material.displacementMap);
-    wrapAndRepeatTexture(material.aoMap);
+        const material = new THREE.MeshStandardMaterial({
+            map: sandBaseColor,
+            normalMap: sandNormalMap,
+            displacementMap: sandHeightMap,
+            displacementScale: 0.1,
+            aoMap: sandAmbientOcclusion,
+        });
+        wrapAndRepeatTexture(material.map);
+        wrapAndRepeatTexture(material.normalMap);
+        wrapAndRepeatTexture(material.displacementMap);
+        wrapAndRepeatTexture(material.aoMap);
 
-    floor = new THREE.Mesh(geometry, material);
-    floor.receiveShadow = true;
-    scene.add(floor);
+        floor = new THREE.Mesh(geometry, material);
+        floor.receiveShadow = true;
+        scene.add(floor);
+    }
+    {
+        const textureLoader = new THREE.TextureLoader(loadingManager);
+        const grassBaseColor = textureLoader.load('./textures/grass/Ground_Grass_001_COLOR.jpg');
+        const grassNormalMap = textureLoader.load('./textures/grass/Ground_Grass_001_NORM.jpg');
+        const grassHeightMap = textureLoader.load('./textures/grass/Ground_Grass_001_DISP.PNG');
+        const grassAmbientOcclusion = textureLoader.load('./textures/grass/Ground_Grass_001_OCC.jpg');
+
+        const geometry = new THREE.CircleGeometry(FLOOR_SIZE, 512);
+        
+        geometry.rotateX(-Math.PI / 2);
+
+        // Generate terrain using Perlin noise
+        // const noise = new ImprovedNoise();
+        // const positionAttribute = geometry.getAttribute('position');
+        // for (let i = 0; i < positionAttribute.count; i++) {
+        //     const x = positionAttribute.getX(i);
+        //     const z = positionAttribute.getZ(i);
+        //     const y = noise.noise(x * TERRAIN_SCALE, z * TERRAIN_SCALE, 0) * TERRAIN_HEIGHT;
+        //     positionAttribute.setY(i, y);
+        // }
+        // positionAttribute.needsUpdate = true;
+        // geometry.computeVertexNormals();
+
+        const material = new THREE.MeshStandardMaterial({
+            map: grassBaseColor,
+            normalMap: grassNormalMap,
+            displacementMap: grassHeightMap,
+            displacementScale: 0.1,
+            aoMap: grassAmbientOcclusion,
+        });
+        wrapAndRepeatTexture(material.map);
+        wrapAndRepeatTexture(material.normalMap);
+        wrapAndRepeatTexture(material.displacementMap);
+        wrapAndRepeatTexture(material.aoMap);
+
+        let floor2 = new THREE.Mesh(geometry, material);
+        floor2.position.y = 0.015;
+        floor2.receiveShadow = true;
+        scene.add(floor2);
+    }
+    {
+        
+        const geometry = new THREE.CylinderGeometry(FLOOR_SIZE+3, FLOOR_SIZE, 2, 512);
+        const material = new THREE.MeshStandardMaterial({ color: "#f5cda0" });
+        let sideWall = new THREE.Mesh(geometry, material);
+        sideWall.position.y = -0.965;
+        sideWall.receiveShadow = true;
+        scene.add(sideWall);
+    }
 }
 
 function wrapAndRepeatTexture(map) {
