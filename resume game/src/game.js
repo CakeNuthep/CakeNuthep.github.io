@@ -299,10 +299,10 @@ function setupFloor() {
         
         const geometry = new THREE.CylinderGeometry(FLOOR_SIZE+3, FLOOR_SIZE, 2, 512);
         const material = new THREE.MeshStandardMaterial({ color: "#f5cda0" });
-        let sideWall = new THREE.Mesh(geometry, material);
-        sideWall.position.y = -0.965;
-        sideWall.receiveShadow = true;
-        scene.add(sideWall);
+        let land = new THREE.Mesh(geometry, material);
+        land.position.y = -0.965;
+        land.receiveShadow = true;
+        scene.add(land);
     }
 }
 
