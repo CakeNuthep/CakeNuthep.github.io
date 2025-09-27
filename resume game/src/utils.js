@@ -104,21 +104,18 @@ class KeyDisplay {
             this.characterControls.jump();
         }
 
-        if(key == E && this.characterControls && !this.holdInterval){
-            this.startTime = Date.now();
-            if(!this.characterControls.isDancing()){
+        if(key == E && this.characterControls){
+            
+            this.characterControls.updateIdleAction();
+            const object = this.characterControls.getFirstObjecHasCollision();
+            if(object && !this.holdInterval)
+            {
+                this.startTime = Date.now();
                 this.holdInterval = setInterval(() => {
                     console.log('E is still held...');
-                    if(this.characterControls)
-                    {
-                        this.characterControls.updateIdleAction();
-                        const object = this.characterControls.getFirstObjecHasCollision();
-                        if(object)
-                        {
-                            const elapsedTime = Date.now() - this.startTime;
-                            object.playAnimateHtml(elapsedTime);
-                        }
-                    }
+                    const elapsedTime = Date.now() - this.startTime;
+                    object.playAnimateHtml(elapsedTime);
+                    
                 }, 30); // Repeat every 500 milliseconds
                 console.log(this.holdInterval);
             }

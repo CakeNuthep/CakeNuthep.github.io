@@ -605,6 +605,7 @@ function animate() {
             }
             else{
                 characterControls.stopDanceSong();
+                
                 playBackGroundMusic();
             }
         }
