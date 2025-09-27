@@ -316,7 +316,7 @@ function setupInteractiveCube() {
     const objParams = {
         name: "InterActiveCube",
         width: 1,
-        height: 1,
+        height: 2,
         depth: 1,
         position: new THREE.Vector3(29, 0, 5)
     };

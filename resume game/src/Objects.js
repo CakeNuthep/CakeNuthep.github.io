@@ -20,11 +20,11 @@ class Object extends Box {
             isCollition: true,
             passThroughWhenCollision: false,
         });
-        this.model = this.setupInteractiveCube(position);
-        this.model.add(this.cube);
         this.width = width;
         this.height = height;
         this.depth = depth;
+        this.model = this.setupInteractiveCube(position);
+        this.model.add(this.cube);
     }
 
     setupInteractiveCube(position) {
