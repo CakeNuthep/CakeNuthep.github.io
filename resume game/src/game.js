@@ -8,6 +8,7 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Sky } from 'three/addons/objects/Sky.js';
 import { DanceObject } from './DanceObject.js';
 import { glbObject } from './glbObject.js';
+import { getParticleSystem } from "./getParticleSystem.js";
 import GUI from 'lil-gui';
 
 
@@ -498,46 +499,12 @@ function setupTrees(threeData){
     });
 }
 
-// function setupTree(radius, 
-//     angle, 
-//     scale, 
-//     modelPath, 
-//     name
-// ) {
-//     const loader = new GLTFLoader(loadingManager);
-//     loader.load(modelPath, (gltf) => {
-//         const model = gltf.scene;
-//         model.name = name;
-//         model.traverse((object) => {
-//             if (object.isMesh) {
-//                 object.castShadow = true;
-//                 object.receiveShadow = true;
-//             }
-//         });
-//         const {x,z} = circlePosition(angle, radius);
-//         model.position.set(x, 0, z);
-//         model.rotation.y = Math.PI;
-//         model.scale.set(scale, scale, scale);
-//         scene.add(model);
-//         const building2 = new glbObject(name, 
-//             model, 
-//             1, 
-//             1, 
-//             1, 
-//             settings.collisionDetectionEnabled, 
-//             settings.gravityEnabled, 
-//             settings.showCollisionBoxes
-//         );
-//         // objects.push(building2);
-//     });
-// }
-
 
 function setupCrystal() {
     const loader = new GLTFLoader(loadingManager);
     loader.load('models/korok_seed_amulet__botw_inspired.glb', (gltf) => {
         const model = gltf.scene;
-        model.name = 'House';
+        model.name = 'Crystal';
         model.traverse((object) => {
             if (object.isMesh) {
                 object.castShadow = true;
@@ -549,11 +516,11 @@ function setupCrystal() {
         model.rotation.y = Math.PI;
         model.scale.set(0.6, 0.6, 0.6);
         scene.add(model);
-        const crystal = new glbObject('House', 
+        const crystal = new glbObject('Crystal', 
             model, 
-            2, 
-            2, 
-            2, 
+            5, 
+            12, 
+            5, 
             settings.collisionDetectionEnabled, 
             settings.gravityEnabled, 
             settings.showCollisionBoxes

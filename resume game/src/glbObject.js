@@ -6,6 +6,7 @@ class glbObject extends Box {
         width,
         height,
         depth,
+        position = new THREE.Vector3(0, 0, 0),
         collisionDetectionEnabled=false,
         gravityEnabled=false,
         showCollisionBox=false,
@@ -20,7 +21,7 @@ class glbObject extends Box {
             width: width,
             height: height,
             depth: depth,
-            position: new THREE.Vector3(0, height/2, 0),
+            position: position,
         });
         model.add(this.cube);
         this.model = model;
