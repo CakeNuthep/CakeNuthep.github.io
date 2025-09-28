@@ -58,6 +58,7 @@ let animationFrameId = null; // Stores the ID of the requestAnimationFrame call
 let isStart = false;
 
 const gui = new GUI();
+gui.hide();
 const settingGUI = gui.addFolder("Generic")
 const skySettingGUI = gui.addFolder("Sky")
 
