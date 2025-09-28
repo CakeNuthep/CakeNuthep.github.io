@@ -501,6 +501,10 @@ function setupTrees(threeData){
 
 
 function setupCrystal() {
+    const position = new THREE.Vector3(0, 5, 0);
+    var light  = new THREE.PointLight('#fffbc5', 500,100);
+    light .position.set(position.x, position.y, position.z);
+    scene.add(light );
     const loader = new GLTFLoader(loadingManager);
     loader.load('models/korok_seed_amulet__botw_inspired.glb', (gltf) => {
         const model = gltf.scene;
@@ -512,7 +516,7 @@ function setupCrystal() {
             }
         });
         
-        model.position.set(0, 5, 0);
+        model.position.set(position.x, position.y, position.z);
         model.rotation.y = Math.PI;
         model.scale.set(0.6, 0.6, 0.6);
         scene.add(model);
@@ -526,9 +530,16 @@ function setupCrystal() {
             settings.showCollisionBoxes
         );
         objects.push(crystal);
-
+        const fireEffect = getParticleSystem({
+            camera,
+            emitter: model,
+            parent: scene,
+            rate: 12.0,
+            texture: 'textures/vfx/circle.png',
+        });
         function update(delta){
             model.rotation.y += delta * 0.5; // Rotate at 0.5 radians per second
+            fireEffect.update(0.016);
         }
         crystal.setUpdateFunction(update);
     });

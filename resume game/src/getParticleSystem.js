@@ -109,18 +109,21 @@ function getParticleSystem(params) {
     const c = a.clone();
     return c.lerp(b, t);
   });
-  colorSpline.addPoint(0.0, new THREE.Color(0xFFFFFF));
-  colorSpline.addPoint(1.0, new THREE.Color(0xff8080));
+  colorSpline.addPoint(0.0, new THREE.Color('#FFFFFF'));
+  colorSpline.addPoint(0.4, new THREE.Color('#6c85f3'));
+  colorSpline.addPoint(0.9, new THREE.Color('#f7d129'));
+  colorSpline.addPoint(1.0, new THREE.Color('#99eb3b'));
 
   const sizeSpline = getLinearSpline((t, a, b) => {
     return a + t * (b - a);
   });
   sizeSpline.addPoint(0.0, 0.0);
-  sizeSpline.addPoint(1.0, 1.0);
+  sizeSpline.addPoint(0.7, 1.0);
+  sizeSpline.addPoint(1, 0.1);
  // max point size = 512; => console.log(ctx.getParameter(ctx.ALIASED_POINT_SIZE_RANGE));
   const radius = 0.5;
-  const maxLife = 1.5;
-  const maxSize = 3.0;
+  const maxLife = 10;
+  const maxSize = 1.25;
   let gdfsghk = 0.0;
   function _AddParticles(timeElapsed) {
     gdfsghk += timeElapsed;
@@ -140,7 +143,7 @@ function getParticleSystem(params) {
         maxLife: life,
         rotation: Math.random() * 2.0 * Math.PI,
         rotationRate: Math.random() * 0.01 - 0.005,
-        velocity: new THREE.Vector3(0, 1.5, 0),
+        velocity: new THREE.Vector3(Math.random()*2-1, Math.random()*2-0.2, Math.random()*2-1),
       });
     }
   }
