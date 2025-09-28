@@ -154,7 +154,7 @@ class DanceObject extends Box {
         //text fit to container
         detailsContainer.style.boxSizing = 'border-box';
         detailsContainer.style.maxWidth = '200px';
-        detailsContainer.style.fontSize = '0.8vw';
+        detailsContainer.style.fontSize = '1vw';
         detailsContainer.style.color = '#000';
         detailsContainer.style.fontFamily = 'Arial, sans-serif';
 
