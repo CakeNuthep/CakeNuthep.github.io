@@ -502,7 +502,7 @@ function setupTrees(threeData){
 
 function setupCrystal() {
     const position = new THREE.Vector3(0, 5, 0);
-    var light  = new THREE.PointLight('#fffbc5', 500,100);
+    var light  = new THREE.PointLight('#fffbc5', 300,100);
     light .position.set(position.x, position.y, position.z);
     scene.add(light );
     const loader = new GLTFLoader(loadingManager);
