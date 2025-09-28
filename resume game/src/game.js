@@ -52,7 +52,6 @@ let scene, camera, renderer, cssRenderer, orbitControls;
 let floor, characterControls, keyDisplayQueue;
 let sky, sun;
 let audioBackground;
-let raycaster = new THREE.Raycaster();;
 let objects = [];
 let animationFrameId = null; // Stores the ID of the requestAnimationFrame call
 let isStart = false;
@@ -802,12 +801,6 @@ function setupStartMenu(){
         }
     });
 }
-
-
-//
-
-
-
 
 // Function to handle the orientation change
 function handleOrientationChange(mediaQuery) {
