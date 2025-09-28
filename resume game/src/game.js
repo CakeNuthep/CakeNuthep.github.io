@@ -6,7 +6,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Sky } from 'three/addons/objects/Sky.js';
-import { Object } from './Objects.js';
 import { DanceObject } from './DanceObject.js';
 import { glbObject } from './glbObject.js';
 import GUI from 'lil-gui';
@@ -82,11 +81,9 @@ function init() {
     setupLights();
     initSky();
     setupFloor();
-    setupInteractiveCube();
+    // setupInteractiveCube();
     setupCrystal()
-    setupDanceCube();
-    setupDanceCube2();
-    setupDanceCube3();
+    
     const treeData = [
         { radius:15, angle: Math.PI/4, scale: 0.5, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
         { radius:12, angle: Math.PI/4 + Math.PI/6, scale: 0.8, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree2', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
@@ -114,6 +111,61 @@ function init() {
         { radius:20, angle: Math.PI, scale: 7, modelPath: 'models/old_office_building.glb', name: 'OfficeBuilding1', rotate: new THREE.Euler(0, Math.PI, 0), positionY:10 },
         { radius:20, angle: 3*Math.PI/2, scale: 0.1, modelPath: 'models/singapore_office_skyscraper_free.glb', name: 'OfficeBuilding2', rotate: new THREE.Euler(0, Math.PI, 0), positionY:0.1  },
     ];
+
+    const danceData = [
+        {
+            name: "DanceCube1",
+            width: 3,
+            height: 2,
+            depth: 3,
+            title: "university",
+            details: {
+                "Year Start": "2011",
+                "Year End": "2014",
+                "Position": "Computer Engineering Student",
+                "GPA": "3.76/4.0"
+            },
+            link: "https://www.linkedin.com/in/suppachai-nuthep/",
+            playAction: 'ChickenDance',
+            radius:25,
+            angle: Math.PI/2
+        },
+        {
+            name: "DanceCube2",
+            width: 3,
+            height: 2,
+            depth: 5,
+            title: "GlobeTech Company",
+            details: {
+                "Year Start": "2015",
+                "Year End": "2021",
+                "Position": "System Engineer",
+            },
+            link: "https://www.linkedin.com/in/suppachai-nuthep/",
+            playAction: 'Dance',
+            radius:25,
+            angle: Math.PI-Math.PI/20
+        },
+        {
+            name: "DanceCube3",
+            width: 3,
+            height: 2,
+            depth: 3,
+            title: "LSEG Company",
+            details: {
+                "Year Start": "2021",
+                "Year End": "Now",
+                "Position": "Software Engineer",
+            },
+            link: "https://www.linkedin.com/in/suppachai-nuthep/",
+            playAction: 'SnakeDance',
+            radius:25,
+            angle: 3*Math.PI/2-Math.PI/30
+        }
+
+    ]
+
+    setupDanceCube(danceData);
     setupTrees(treeData);
     setupBuildinds(buildingData);
     loadCharacterModel();
@@ -320,75 +372,31 @@ function wrapAndRepeatTexture(map) {
     map.repeat.x = map.repeat.y = 10;
 }
 
-// Setup interactive cube
-function setupInteractiveCube() {
-    const objParams = {
-        name: "InterActiveCube",
-        width: 1,
-        height: 2,
-        depth: 1,
-        position: new THREE.Vector3(29, 0, 5)
-    };
-    const cubeObject = new Object(objParams);
-    cubeObject.model.name = 'InteractiveCube';
-    scene.add(cubeObject.model);
-    // scene.add(cubeObject.cube);
-    objects.push(cubeObject);
 
-    // Add click event listener
-    window.addEventListener('click', (event) => handleCubeClick(event, cubeObject.model));
-}
 
 // Setup interactive cube
-function setupDanceCube() {
-    const {x,z} = circlePosition(Math.PI-Math.PI/20, 25);
-    const objParams = {
-        name: "DanceCube",
-        width: 3,
-        height: 2,
-        depth: 5,
-        position: new THREE.Vector3(x, 0, z)
-    };
-    const cubeObject = new DanceObject(objParams);
-    cubeObject.model.name = 'DanceCube';
-    cubeObject.setPalyerAction('Dance');
-    scene.add(cubeObject.model);
-    // scene.add(cubeObject.cube);
-    objects.push(cubeObject);
-}
+function setupDanceCube(dance) {
+    
+    for(const data of dance){
+        const {x,z} = circlePosition(data.angle, data.radius);
 
-function setupDanceCube2() {
-    const {x,z} = circlePosition(Math.PI/2, 25);
-    const objParams = {
-        name: "DanceCube2",
-        width: 3,
-        height: 2,
-        depth: 3,
-        position: new THREE.Vector3(x, 0, z)
-    };
-    const cubeObject = new DanceObject(objParams);
-    cubeObject.model.name = 'DanceCube2';
-    cubeObject.setPalyerAction('ChickenDance');
-    scene.add(cubeObject.model);
-    // scene.add(cubeObject.cube);
-    objects.push(cubeObject);
-}
-
-function setupDanceCube3() {
-    const {x,z} = circlePosition(3*Math.PI/2-Math.PI/30, 25);
-    const objParams = {
-        name: "DanceCube3",
-        width: 3,
-        height: 2,
-        depth: 3,
-        position: new THREE.Vector3(x, 0, z)
-    };
-    const cubeObject = new DanceObject(objParams);
-    cubeObject.model.name = 'DanceCube3';
-    cubeObject.setPalyerAction('SnakeDance');
-    scene.add(cubeObject.model);
-    // scene.add(cubeObject.cube);
-    objects.push(cubeObject);
+        const objParams = {
+            name: data.name,
+            width: data.width,
+            height: data.height,
+            depth: data.depth,
+            position: new THREE.Vector3(x, data.height/2, z),
+            title: data.title,
+            details: data.details,
+            link: data.link
+        };
+        const cubeObject = new DanceObject(objParams);
+        cubeObject.model.name = data.name;
+        cubeObject.setPalyerAction(data.playAction);
+        scene.add(cubeObject.model);
+        // scene.add(cubeObject.cube);
+        objects.push(cubeObject);
+    }
 }
 
 // Handle cube click
