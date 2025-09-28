@@ -370,13 +370,13 @@ class CharacterControls extends Box {
     }
 
     updateCameraTarget() {
-        this.camera.position.x = Math.cos(this.angle) * (this.radius+20);
-        this.camera.position.z = Math.sin(this.angle) * (this.radius+20);
-        this.camera.position.y = 7; // Keep camera elevated
+        this.camera.position.x = Math.cos(this.angle) * (this.radius+15);
+        this.camera.position.z = Math.sin(this.angle) * (this.radius+15);
+        this.camera.position.y = 5; // Keep camera elevated
 
 
         if(this.isColiision || this.onGround){
-            this.cameraTarget.setY(this.model.position.y + 3);
+            this.cameraTarget.setY(this.model.position.y + 4);
         }
 
        
