@@ -12,6 +12,14 @@ class CharacterControls extends Box {
         showFootBoxes=false,
         gravityEnabled=true,
         showCollisionBox=false,
+        IdleAction='Idle',
+        IdleYawnAction='Yawn',
+        IdleDanceAction='Dance',
+        IdleChickenDanceAction='ChickenDance',
+        IdleSnakeDaceAction='SnakeDance',
+        WalkAction='Walk',
+        RunAction='Run',
+        JumpAction='ForwardFlip',
 
     ) {
 
@@ -23,6 +31,7 @@ class CharacterControls extends Box {
             height: size.y,
             depth: size.z,
             position: new THREE.Vector3(0, size.y/2, 0),
+            
         });
         model.add(this.cube);
         this.model = model;
@@ -64,14 +73,14 @@ class CharacterControls extends Box {
         this.mapObject = null;
 
         
-        this.IdleAction = 'Idle';
-        this.IdleYawnAction = 'Yawn';
-        this.IdleDanceAction = 'Dance';
-        this.IdleChickenDanceAction = 'ChickenDance';
-        this.IdleSnakeDaceAction = 'SnakeDance';
-        this.RunAction = 'Run';
-        this.WalkAction = 'Walk';
-        this.JumpAction = 'ForwardFlip';
+        this.IdleAction = IdleAction;
+        this.IdleYawnAction = IdleYawnAction;
+        this.IdleDanceAction = IdleDanceAction;
+        this.IdleChickenDanceAction = IdleChickenDanceAction;
+        this.IdleSnakeDaceAction = IdleSnakeDaceAction;
+        this.RunAction = RunAction;
+        this.WalkAction = WalkAction;
+        this.JumpAction = JumpAction;
         this.IdleCurrentAction = this.IdleAction;
         this.IdelCurrentWaitAction = this.IdleYawnAction;
         this.currentDanceSong = this.danceSong;
