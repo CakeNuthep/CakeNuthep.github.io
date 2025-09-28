@@ -175,7 +175,7 @@ function init() {
     setupControls();
     
     // animate();
-    createBackGroundMusic();
+    audioBackground = createMusic("./Sound/Sound Background/Epic Spectrum.mp3", true,0.5);
     updateSetting();
 }
 
@@ -556,10 +556,10 @@ function circlePosition(angle, radius) {
 
 // Load character model
 function loadCharacterModel() {
-    const jumpSound = createJumpLandSound();
-    const chickenSong = createChickenDanceSound();
-    const danceSong = createDanceSound();
-    const jinnSong = createJinnSong();
+    const jumpSound = createMusic('./Sound/Sound Effect/Jump Land.mp3',false,1);//createJumpLandSound();
+    const chickenSong = createMusic('./Sound/Sound Background/ChickenSong.mp3',false,1);//createChickenDanceSound();
+    const danceSong = createMusic('./Sound/Sound Background/Dance.mp3',false,1);//createDanceSound();
+    const jinnSong = createMusic('./Sound/Sound Background/Jinn.mp3',false,1);//createJinnSong();
     new GLTFLoader(loadingManager).load('models/MyAvatar.glb', (gltf) => {
         const model = gltf.scene;
         model.name = 'Soldier';
@@ -744,70 +744,18 @@ function playBackGroundMusic(){
     }
 }
 
-function createBackGroundMusic(){
+function createMusic(musicPath, loop,volumne){
     const listener = new THREE.AudioListener();
     camera.add( listener );
-    audioBackground = new THREE.Audio( listener );
+    let music = new THREE.Audio( listener );
     const audioLoad = new THREE.AudioLoader(loadingManager);
-    audioLoad.load( './Sound/Sound Background/Epic Spectrum.mp3', function( buffer ) {
-        audioBackground.setBuffer( buffer );
-        audioBackground.setLoop( true );
-        audioBackground.setVolume( 0.5 );
-        // audioBackground.play();
+    audioLoad.load( musicPath, function( buffer ) {
+        music.setBuffer( buffer );
+        music.setLoop( loop );
+        music.setVolume( volumne );
+        // music.play();
     } );
-}
-
-function createJumpLandSound(){
-    const listener = new THREE.AudioListener();
-    camera.add( listener );
-    let jumpSound = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader(loadingManager);
-    audioLoad.load( './Sound/Sound Effect/Jump Land.mp3', function( buffer ) {
-        jumpSound.setBuffer( buffer );
-        jumpSound.setLoop( false );
-        jumpSound.setVolume( 1 );
-    } );
-    return jumpSound;
-}
-
-
-function createChickenDanceSound(){
-    const listener = new THREE.AudioListener();
-    camera.add( listener );
-    let jumpSound = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader(loadingManager);
-    audioLoad.load( './Sound/Sound Background/ChickenSong.mp3', function( buffer ) {
-        jumpSound.setBuffer( buffer );
-        jumpSound.setLoop( false );
-        jumpSound.setVolume( 1 );
-    } );
-    return jumpSound;
-}
-
-function createDanceSound(){
-    const listener = new THREE.AudioListener();
-    camera.add( listener );
-    let jumpSound = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader(loadingManager);
-    audioLoad.load( './Sound/Sound Background/Dance.mp3', function( buffer ) {
-        jumpSound.setBuffer( buffer );
-        jumpSound.setLoop( false );
-        jumpSound.setVolume( 1 );
-    } );
-    return jumpSound;
-}
-
-function createJinnSong(){
-    const listener = new THREE.AudioListener();
-    camera.add( listener );
-    let jumpSound = new THREE.Audio( listener );
-    const audioLoad = new THREE.AudioLoader(loadingManager);
-    audioLoad.load( './Sound/Sound Background/Jinn.mp3', function( buffer ) {
-        jumpSound.setBuffer( buffer );
-        jumpSound.setLoop( false );
-        jumpSound.setVolume( 1 );
-    } );
-    return jumpSound;
+    return music;
 }
 
 function initialObjectInCharacter(){
