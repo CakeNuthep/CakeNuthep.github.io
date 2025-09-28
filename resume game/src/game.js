@@ -90,7 +90,7 @@ function init() {
     const treeData = [
         { radius:15, angle: Math.PI/4, scale: 0.5, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
         { radius:12, angle: Math.PI/4 + Math.PI/6, scale: 0.8, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree2', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
-        { radius:14, angle: Math.PI/4 + Math.PI/3, scale: 0.6, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree3', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:12, angle: Math.PI/4 + Math.PI/3, scale: 0.6, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree3', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
         { radius:15, angle: Math.PI/4 + Math.PI/2, scale: 0.7, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree4', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
         { radius:12, angle: Math.PI/4 + 2*Math.PI/3, scale: 0.5, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree5', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
         { radius:13, angle: Math.PI/4 + 5*Math.PI/6, scale: 0.6, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree6', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
