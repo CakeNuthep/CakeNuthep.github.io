@@ -118,7 +118,7 @@ function init() {
             width: 3,
             height: 2,
             depth: 3,
-            title: "university",
+            title: "University",
             details: {
                 "Year Start": "2011",
                 "Year End": "2014",
