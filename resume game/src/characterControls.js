@@ -262,15 +262,18 @@ class CharacterControls extends Box {
     }
 
     handleMovement(delta, keysPressed, mapObjects) {
+        const currentPosition = this.model.position.clone();
+        const currentAngle = this.angle;
         const angleYCameraDirection = this.calculateCameraDirectionAngle();
         const directionOffset = this.calculateDirectionOffset(keysPressed);
-        const currentPosition = this.model.position.clone();
+        
 
         this.rotateModel(angleYCameraDirection, directionOffset);
         this.moveModel(delta, directionOffset);
         let {isColiision,isPassThrough} = this.collisionDetection(mapObjects);
         if (isColiision && !isPassThrough) {
             this.model.position.copy(currentPosition);
+            this.angle = currentAngle;
         }
         
     }
