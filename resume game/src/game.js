@@ -83,26 +83,39 @@ function init() {
     initSky();
     setupFloor();
     setupInteractiveCube();
-    setupHouse();
-    setupSchool();
-    setupOfficeBuilding1();
-    setupOfficeBuilding2();
     setupCrystal()
     setupDanceCube();
     setupDanceCube2();
     setupDanceCube3();
-    setupTree(15, Math.PI/4, 0.5, 'models/jabami_anime_tree_v2.glb', 'Tree1');
-    setupTree(15, Math.PI/4 + Math.PI/6, 0.8, 'models/jabami_anime_tree_v3.glb', 'Tree2');
-    setupTree(15, Math.PI/4 + Math.PI/3, 0.6, 'models/jabami_anime_tree_v4.glb', 'Tree3');
-    setupTree(15, Math.PI/4 + Math.PI/2, 0.7, 'models/jabami_anime_tree_v2.glb', 'Tree4');
-    setupTree(15, Math.PI/4 + 2*Math.PI/3, 0.5, 'models/jabami_anime_tree_v3.glb', 'Tree5');
-    setupTree(15, Math.PI/4 + 5*Math.PI/6, 0.6, 'models/jabami_anime_tree_v4.glb', 'Tree6');
-    setupTree(15, Math.PI/4 + Math.PI, 0.7, 'models/jabami_anime_tree_v2.glb', 'Tree7');
-    setupTree(15, Math.PI/4 + 7*Math.PI/6, 0.5, 'models/jabami_anime_tree_v3.glb', 'Tree8');
-    setupTree(15, Math.PI/4 + 4*Math.PI/3, 0.6, 'models/jabami_anime_tree_v4.glb', 'Tree9');
-    setupTree(15, Math.PI/4 + 3*Math.PI/2, 0.8, 'models/jabami_anime_tree_v2.glb', 'Tree10');
-    setupTree(15, Math.PI/4 + 5*Math.PI/3, 0.6, 'models/jabami_anime_tree_v3.glb', 'Tree11');
-    setupTree(15, Math.PI/4 + 11*Math.PI/6, 0.7, 'models/jabami_anime_tree_v4.glb', 'Tree12');
+    const treeData = [
+        { radius:15, angle: Math.PI/4, scale: 0.5, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:12, angle: Math.PI/4 + Math.PI/6, scale: 0.8, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree2', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:14, angle: Math.PI/4 + Math.PI/3, scale: 0.6, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree3', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:15, angle: Math.PI/4 + Math.PI/2, scale: 0.7, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree4', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:12, angle: Math.PI/4 + 2*Math.PI/3, scale: 0.5, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree5', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:13, angle: Math.PI/4 + 5*Math.PI/6, scale: 0.6, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree6', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:14, angle: Math.PI/4 + Math.PI, scale: 0.7, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree7', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:15, angle: Math.PI/4 + 7*Math.PI/6, scale: 0.5, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree8', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:11, angle: Math.PI/4 + 4*Math.PI/3, scale: 0.6, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree9', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:15, angle: Math.PI/4 + 3*Math.PI/2, scale: 0.8, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree10', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:15, angle: Math.PI/4 + 5*Math.PI/3, scale: 0.6, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree11', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:13, angle: Math.PI/4 + 11*Math.PI/6, scale: 0.7, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree12', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:14, angle: Math.PI/4 + Math.PI/4, scale: 0.5, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree13', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:12, angle: Math.PI/4 + 3*Math.PI/4, scale: 0.6, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree14', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:15, angle: Math.PI/4 + 5*Math.PI/4, scale: 0.7, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree15', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:10, angle: Math.PI/4 + 7*Math.PI/4, scale: 0.8, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree16', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:9, angle: Math.PI/4 + 15*Math.PI/8, scale: 0.5, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree17', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        { radius:8, angle: Math.PI/4 + 13*Math.PI/8, scale: 0.6, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree18', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+    ];
+
+    const buildingData = [
+        { radius:20, angle: 0, scale: 7, modelPath: 'models/residential_family_house.glb', name: 'House', rotate: new THREE.Euler(0, Math.PI, 0), positionY:0.1 },
+        { radius:20, angle: Math.PI/2, scale: 1, modelPath: 'models/the_japanese_school_classroom.glb', name: 'School', rotate: new THREE.Euler(0, Math.PI, 0), positionY:0.1   },
+        { radius:20, angle: Math.PI, scale: 7, modelPath: 'models/old_office_building.glb', name: 'OfficeBuilding1', rotate: new THREE.Euler(0, Math.PI, 0), positionY:10 },
+        { radius:20, angle: 3*Math.PI/2, scale: 0.1, modelPath: 'models/singapore_office_skyscraper_free.glb', name: 'OfficeBuilding2', rotate: new THREE.Euler(0, Math.PI, 0), positionY:0.1  },
+    ];
+    setupTrees(treeData);
+    setupBuildinds(buildingData);
     loadCharacterModel();
     setupEventListeners();
     setupControls();
@@ -403,158 +416,125 @@ function handleCubeClick(event, cube) {
     }
 }
 
-function setupHouse() {
-    const loader = new GLTFLoader(loadingManager);
-    loader.load('models/residential_family_house.glb', (gltf) => {
-        const model = gltf.scene;
-        model.name = 'House';
-        model.traverse((object) => {
-            if (object.isMesh) {
-                object.castShadow = true;
-                object.receiveShadow = true;
-            }
+function setupBuildinds(buildingData){
+    let map = new Map();
+    buildingData.forEach(data => {
+        if(!map.has(data.modelPath)){
+            map.set(data.modelPath, []);
+        }
+        map.get(data.modelPath).push(data);
+    });
+
+    map.forEach((value, key) => {
+        const loader = new GLTFLoader(loadingManager);
+        loader.load(key, (gltf) => {
+            const model = gltf.scene;
+            model.traverse((object) => {
+                if (object.isMesh) {
+                    object.castShadow = true;
+                    object.receiveShadow = true;
+                }
+            });
+            value.forEach(data => {
+                const instance = model.clone();
+                const {x,z} = circlePosition(data.angle, data.radius);
+                instance.position.set(x, data.positionY, z);
+                instance.rotation.y = data.rotate.y;
+                instance.rotation.x = data.rotate.x;
+                instance.rotation.z = data.rotate.z;
+                instance.scale.set(data.scale, data.scale, data.scale);
+                scene.add(instance);
+                const building = new glbObject(data.name,
+                    instance,
+                    1,
+                    1,
+                    1,
+                    settings.collisionDetectionEnabled,
+                    settings.gravityEnabled,
+                    settings.showCollisionBoxes
+                );
+                // objects.push(building);
+            });
         });
-        const {x,z} = circlePosition(0, 20);
-        model.position.set(x, 0, z);
-        model.rotation.y = Math.PI;
-        model.scale.set(7, 7, 7);
-        scene.add(model);
-        const house = new glbObject('House', 
-            model, 
-            2, 
-            2, 
-            2, 
-            settings.collisionDetectionEnabled, 
-            settings.gravityEnabled, 
-            settings.showCollisionBoxes
-        );
-        // objects.push(house);
     });
 }
 
+function setupTrees(threeData){
+    let map = new Map();
+    threeData.forEach(data => {
+        if(!map.has(data.modelPath)){
+            map.set(data.modelPath, []);
+        }
+        map.get(data.modelPath).push(data);
+    });
 
-function setupSchool() {
-    const loader = new GLTFLoader(loadingManager);
-    loader.load('models/the_japanese_school_classroom.glb', (gltf) => {
-        const model = gltf.scene;
-        model.name = 'School';
-        model.traverse((object) => {
-            if (object.isMesh) {
-                object.castShadow = true;
-                object.receiveShadow = true;
-            }
+    map.forEach((value, key) => {
+        const loader = new GLTFLoader(loadingManager);
+        loader.load(key, (gltf) => {
+            const model = gltf.scene;
+            model.traverse((object) => {
+                if (object.isMesh) {
+                    object.castShadow = true;
+                    object.receiveShadow = true;
+                }
+            });
+            value.forEach(data => {
+                const instance = model.clone();
+                const {x,z} = circlePosition(data.angle, data.radius);
+                instance.position.set(x, 0, z);
+                instance.rotation.y = data.rotate.y;
+                instance.rotation.x = data.rotate.x;
+                instance.rotation.z = data.rotate.z;
+                instance.scale.set(data.scale, data.scale, data.scale);
+                scene.add(instance);
+                const tree = new glbObject(data.name,
+                    instance,
+                    1,
+                    1,
+                    1,
+                    settings.collisionDetectionEnabled,
+                    settings.gravityEnabled,
+                    settings.showCollisionBoxes
+                );
+                // objects.push(tree);
+            });
         });
-        const {x,z} = circlePosition(Math.PI/2, 20);
-        model.position.set(x, 0.1, z);
-        model.rotation.y = Math.PI;
-        model.scale.set(1, 1, 1);
-        scene.add(model);
-        const school = new glbObject('School', 
-            model, 
-            2, 
-            2, 
-            2, 
-            settings.collisionDetectionEnabled, 
-            settings.gravityEnabled, 
-            settings.showCollisionBoxes
-        );
-        // objects.push(school);
     });
 }
 
-function setupOfficeBuilding1() {
-    const loader = new GLTFLoader(loadingManager);
-    loader.load('models/old_office_building.glb', (gltf) => {
-        const model = gltf.scene;
-        model.name = 'OfficeBuilding1';
-        model.traverse((object) => {
-            if (object.isMesh) {
-                object.castShadow = true;
-                object.receiveShadow = true;
-            }
-        });
-        const {x,z} = circlePosition(Math.PI, 20);
-        model.position.set(x, 10, z);
-        model.rotation.y = Math.PI;
-        model.scale.set(7, 7, 7);
-        scene.add(model);
-        const building1 = new glbObject('OfficeBuilding1', 
-            model, 
-            2, 
-            2, 
-            2, 
-            settings.collisionDetectionEnabled, 
-            settings.gravityEnabled, 
-            settings.showCollisionBoxes
-        );
-        // objects.push(building1);
-    });
-}
-
-
-
-function setupOfficeBuilding2() {
-    const loader = new GLTFLoader(loadingManager);
-    loader.load('models/singapore_office_skyscraper_free.glb', (gltf) => {
-        const model = gltf.scene;
-        model.name = 'OfficeBuilding2';
-        model.traverse((object) => {
-            if (object.isMesh) {
-                object.castShadow = true;
-                object.receiveShadow = true;
-            }
-        });
-        const {x,z} = circlePosition(3*Math.PI/2, 20);
-        model.position.set(x, 0, z);
-        model.rotation.y = Math.PI;
-        model.scale.set(0.1, 0.1, 0.1);
-        scene.add(model);
-        const building2 = new glbObject('OfficeBuilding2', 
-            model, 
-            2, 
-            2, 
-            2, 
-            settings.collisionDetectionEnabled, 
-            settings.gravityEnabled, 
-            settings.showCollisionBoxes
-        );
-        // objects.push(building2);
-    });
-}
-
-function setupTree(radius, 
-    angle, 
-    scale, 
-    modelPath, 
-    name
-) {
-    const loader = new GLTFLoader(loadingManager);
-    loader.load(modelPath, (gltf) => {
-        const model = gltf.scene;
-        model.name = name;
-        model.traverse((object) => {
-            if (object.isMesh) {
-                object.castShadow = true;
-                object.receiveShadow = true;
-            }
-        });
-        const {x,z} = circlePosition(angle, radius);
-        model.position.set(x, 0, z);
-        model.rotation.y = Math.PI;
-        model.scale.set(scale, scale, scale);
-        scene.add(model);
-        const building2 = new glbObject(name, 
-            model, 
-            1, 
-            1, 
-            1, 
-            settings.collisionDetectionEnabled, 
-            settings.gravityEnabled, 
-            settings.showCollisionBoxes
-        );
-        // objects.push(building2);
-    });
-}
+// function setupTree(radius, 
+//     angle, 
+//     scale, 
+//     modelPath, 
+//     name
+// ) {
+//     const loader = new GLTFLoader(loadingManager);
+//     loader.load(modelPath, (gltf) => {
+//         const model = gltf.scene;
+//         model.name = name;
+//         model.traverse((object) => {
+//             if (object.isMesh) {
+//                 object.castShadow = true;
+//                 object.receiveShadow = true;
+//             }
+//         });
+//         const {x,z} = circlePosition(angle, radius);
+//         model.position.set(x, 0, z);
+//         model.rotation.y = Math.PI;
+//         model.scale.set(scale, scale, scale);
+//         scene.add(model);
+//         const building2 = new glbObject(name, 
+//             model, 
+//             1, 
+//             1, 
+//             1, 
+//             settings.collisionDetectionEnabled, 
+//             settings.gravityEnabled, 
+//             settings.showCollisionBoxes
+//         );
+//         // objects.push(building2);
+//     });
+// }
 
 
 function setupCrystal() {
