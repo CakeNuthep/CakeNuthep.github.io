@@ -112,7 +112,7 @@ class KeyDisplay {
             {
                 this.startTime = Date.now();
                 this.holdInterval = setInterval(() => {
-                    console.log('E is still held...');
+                    // console.log('E is still held...');
                     const elapsedTime = Date.now() - this.startTime;
                     object.playAnimateHtml(elapsedTime);
                     
