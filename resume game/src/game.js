@@ -84,7 +84,16 @@ function init() {
     initSky();
     setupFloor();
     // setupInteractiveCube();
-    setupCrystal()
+    setupCrystal('Crystal',
+                'models/korok_seed_amulet__botw_inspired.glb',
+                '#fffbc5',
+                new THREE.Vector3(0, 5, 0),
+                new THREE.Vector3(0.6, 0.6, 0.6),
+                new THREE.Vector3(5, 12, 5),
+                0.5,
+                'textures/vfx/circle.png',
+                12.0
+    );
     
     const treeData = [
         { radius:15, angle: Math.PI/4, scale: 0.5, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
@@ -170,7 +179,14 @@ function init() {
     setupDanceCube(danceData);
     setupTrees(treeData);
     setupBuildinds(buildingData);
-    loadCharacterModel();
+    loadCharacterModel(
+        'Player',
+        'models/MyAvatar.glb',
+        './Sound/Sound Effect/Jump Land.mp3',
+        './Sound/Sound Background/ChickenSong.mp3',
+        './Sound/Sound Background/Dance.mp3',
+        './Sound/Sound Background/Jinn.mp3'
+    );
     setupEventListeners();
     setupControls();
     
@@ -488,15 +504,14 @@ function setupTrees(threeData){
 }
 
 
-function setupCrystal() {
-    const position = new THREE.Vector3(0, 5, 0);
-    var light  = new THREE.PointLight('#fffbc5', 300,100);
+function setupCrystal(name,modelPath,lightColor,position,scale,box,rotationSpeed,vfxPath,effectRate=12.0) {
+    var light  = new THREE.PointLight(lightColor, 300,100);
     light .position.set(position.x, position.y, position.z);
     scene.add(light );
     const loader = new GLTFLoader(loadingManager);
-    loader.load('models/korok_seed_amulet__botw_inspired.glb', (gltf) => {
+    loader.load(modelPath, (gltf) => {
         const model = gltf.scene;
-        model.name = 'Crystal';
+        model.name = name;
         model.traverse((object) => {
             if (object.isMesh) {
                 object.castShadow = true;
@@ -506,13 +521,13 @@ function setupCrystal() {
         
         model.position.set(position.x, position.y, position.z);
         model.rotation.y = Math.PI;
-        model.scale.set(0.6, 0.6, 0.6);
+        model.scale.set(scale.x, scale.y, scale.z);
         scene.add(model);
-        const crystal = new glbObject('Crystal', 
+        const crystal = new glbObject(name, 
             model, 
-            5, 
-            12, 
-            5, 
+            box.x, 
+            box.y, 
+            box.z, 
             settings.collisionDetectionEnabled, 
             settings.gravityEnabled, 
             settings.showCollisionBoxes
@@ -522,11 +537,11 @@ function setupCrystal() {
             camera,
             emitter: model,
             parent: scene,
-            rate: 12.0,
-            texture: 'textures/vfx/circle.png',
+            rate: effectRate,
+            texture: vfxPath,
         });
         function update(delta){
-            model.rotation.y += delta * 0.5; // Rotate at 0.5 radians per second
+            model.rotation.y += delta * rotationSpeed; // Rotate radians per second
             fireEffect.update(0.016);
         }
         crystal.setUpdateFunction(update);
@@ -542,14 +557,14 @@ function circlePosition(angle, radius) {
     }
 
 // Load character model
-function loadCharacterModel() {
-    const jumpSound = createMusic('./Sound/Sound Effect/Jump Land.mp3',false,1);//createJumpLandSound();
-    const chickenSong = createMusic('./Sound/Sound Background/ChickenSong.mp3',false,1);//createChickenDanceSound();
-    const danceSong = createMusic('./Sound/Sound Background/Dance.mp3',false,1);//createDanceSound();
-    const jinnSong = createMusic('./Sound/Sound Background/Jinn.mp3',false,1);//createJinnSong();
-    new GLTFLoader(loadingManager).load('models/MyAvatar.glb', (gltf) => {
+function loadCharacterModel(name, modlePath, jumpSoundPath, danceSong1Path, danceSong2Path, danceSong3Path) {
+    const jumpSound = createMusic(jumpSoundPath,false,1);//createJumpLandSound();
+    const chickenSong = createMusic(danceSong1Path,false,1);//createChickenDanceSound();
+    const danceSong = createMusic(danceSong2Path,false,1);//createDanceSound();
+    const jinnSong = createMusic(danceSong3Path,false,1);//createJinnSong();
+    new GLTFLoader(loadingManager).load(modlePath, (gltf) => {
         const model = gltf.scene;
-        model.name = 'Soldier';
+        model.name = name;
         model.traverse((object) => {
             if (object.isMesh) object.castShadow = true;
         });
@@ -565,7 +580,7 @@ function loadCharacterModel() {
         });
 
         characterControls = new CharacterControls(
-            "Player",
+            name,
             model, 
             mixer, 
             animationsMap, 

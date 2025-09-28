@@ -346,7 +346,7 @@ class CharacterControls extends Box {
         this.calculateWalkDirection(directionOffset);
 
         const velocity =
-            this.currentAction === 'Run' ? this.runVelocity : this.walkVelocity;
+            this.currentAction === this.RunAction ? this.runVelocity : this.walkVelocity;
 
 
         this.angle += velocity * this.walkDirection.x*delta;
