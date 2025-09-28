@@ -3,7 +3,7 @@ import { A, D, DIRECTIONS } from './utils.js';
 import {Box} from './Box.js';
 
 class CharacterControls extends Box {
-    constructor(name,model, mixer, animationsMap, orbitControl, camera, initialAction,
+    constructor(name,model, mixer, animationsMap, orbitControl, camera,
         jumpSound,
         chickenSong,
         danceSong,
@@ -45,7 +45,7 @@ class CharacterControls extends Box {
         this.orbitControl = orbitControl;
         this.camera = camera;
 
-        this.currentAction = initialAction;
+        this.currentAction = IdleAction;
         this.toggleRun = true;
         this.isJumping = false;
         this.onGround = true;

@@ -586,7 +586,6 @@ function loadCharacterModel(name, modlePath, jumpSoundPath, danceSong1Path, danc
             animationsMap, 
             orbitControls, 
             camera, 
-            'Idle',
             jumpSound,
             chickenSong,
             danceSong,
@@ -594,7 +593,15 @@ function loadCharacterModel(name, modlePath, jumpSoundPath, danceSong1Path, danc
             settings.collisionDetectionEnabled,
             settings.showFootBoxes,
             settings.gravityEnabled,
-            settings.showCollisionBoxes
+            settings.showCollisionBoxes,
+            'Idle',
+            'Yawn',
+            'Dance',
+            'ChickenDance',
+            'SnakeDance',
+            'Walk',
+            'Run',
+            'ForwardFlip',
         );
         keyDisplayQueue = new KeyDisplay(characterControls);
         initialObjectInCharacter()
