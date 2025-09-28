@@ -75,7 +75,6 @@ class Box {
         let position = new THREE.Vector3();
         this.cube.getWorldPosition(position);
         position.y = position.y - this.cube.position.y; 
-        console.log(` delta: ${delta}`)
         this.velocity.y -= (this.GRAVITY*delta);
         
     
@@ -125,7 +124,7 @@ class Box {
 
     showHtml(){
         const html = this.getHtmlElement();
-        if(html){
+        if(html && html.style && html.style.display !== "block") {
             html.style.display = "block";
         }
         
@@ -133,7 +132,7 @@ class Box {
 
     hideHtml(){
         const html = this.getHtmlElement();
-        if(html)
+        if(html && html.style && html.style.display !== "none")
         {
             html.style.display = "none";
         }

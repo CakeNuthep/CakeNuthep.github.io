@@ -285,7 +285,7 @@ class CharacterControls extends Box {
             const obj = object.object
             obj.updateSides();
             if (this.boxCollision({ box1: this, box2: obj })) {
-                console.log('Collision detected');
+                // console.log('Collision detected');
                 obj.showHtml();
                 isColiision = true;
                 this.mapObject.set(objName, {object: obj, collision: true});
@@ -343,7 +343,7 @@ class CharacterControls extends Box {
         const {x, z} = this.circlePosition(this.angle, this.radius);
         this.model.position.x = x;
         this.model.position.z = z;
-        console.log(`X: ${this.model.position.x} Z: ${this.model.position.z} Y:${this.model.position.y}`);
+        // console.log(`X: ${this.model.position.x} Z: ${this.model.position.z} Y:${this.model.position.y}`);
     }
 
     circlePosition(angle, radius) {
