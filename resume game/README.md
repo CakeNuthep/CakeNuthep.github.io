@@ -1,7 +1,7 @@
 # Resume Game
 
 A fun, interactive game about resumes, built using [Three.js](https://threejs.org/).
-let try to play game at [`Resume Game`](https://cakenuthep.github.io/resume%20game/src/).
+let play game at [`Resume Game`](https://cakenuthep.github.io/resume%20game/src/).
 
 ## About
 
