@@ -306,6 +306,8 @@ export default class GhibliGrass {
 	}
 
 	setMaterial() {
+		console.log(this.landscapeMesh.geometry.boundingBox);
+
 		const heightmap = new THREE.TextureLoader().load(
 			"./textures/heightMap.png"
 		);
