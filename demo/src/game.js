@@ -9,6 +9,7 @@ import { Sky } from 'three/addons/objects/Sky.js';
 import { Object } from './Objects.js';
 import { DanceObject } from './DanceObject.js';
 import GUI from 'lil-gui';
+import GhibliGrass from "./GhibliGrass.js";
 
 
 
@@ -40,7 +41,7 @@ const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
 
 let scene, camera, renderer, cssRenderer, orbitControls;
-let floor, characterControls, keyDisplayQueue;
+let floor, grass, characterControls, keyDisplayQueue;
 let sky, sun;
 let audioBackground;
 let raycaster = new THREE.Raycaster();;
@@ -83,6 +84,7 @@ function init() {
     // animate();
     createBackGroundMusic();
     updateSetting();
+    
 }
 
 // Setup the scene
@@ -342,6 +344,8 @@ function loadCharacterModel() {
             settings.gravityEnabled,
             settings.showCollisionBoxes
         );
+
+        setGrass(floor, characterControls);
         keyDisplayQueue = new KeyDisplay(characterControls);
         initialObjectInCharacter()
         
@@ -396,6 +400,7 @@ function stopAnimation() {
 
 function animate() {
     var mixerUpdateDelta = clock.getDelta();
+    var elapsed = clock.getElapsedTime();
 
     if (characterControls) {
         if(keyDisplayQueue)
@@ -424,6 +429,10 @@ function animate() {
     }
 
     orbitControls.update();
+
+    if(grass){
+        grass.tick(elapsed);
+    }
     // Update the CSS renderer
     cssRenderer.render(scene, camera);
 
@@ -625,6 +634,12 @@ function handleOrientationChange(mediaQuery) {
   }
 
   onWindowResize();
+}
+
+function setGrass(floorMesh, characterControls){
+		grass = new GhibliGrass(floorMesh, characterControls);
+        scene.add(grass.mesh);
+        characterControls.model.add(grass.mesh);
 }
 
 
