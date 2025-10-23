@@ -86,7 +86,7 @@ void main() {
 
     vec3 heightMapColor = mix(mix(h00, h10, uvFrac.x), mix(h01, h11, uvFrac.x), uvFrac.y);
 
-    float terrainHeight = heightMapColor.x;
+    float terrainHeight = heightMapColor.y;
     float displacement = map(terrainHeight, 0.0, 1.0, uBoundingBoxMin.y, uBoundingBoxMax.y);
     transformed.y += displacement - uPlayerPosition.y;
 
@@ -170,11 +170,12 @@ void main() {
 `;
 
 export default class GhibliGrass {
-	constructor(landscapeMesh, player) {
+	constructor(landscapeMesh, player ) {
 		this.landscapeMesh = landscapeMesh;
 		this.sampler = new MeshSurfaceSampler(landscapeMesh).build();
 		this.center = new THREE.Vector3();
 		this.player = player;
+		this.floorDataTexture = this.generateFloorDataTexture(landscapeMesh);
 
 		this.settings = {
 			count: 200000,
@@ -305,6 +306,60 @@ export default class GhibliGrass {
 		this.mesh.frustumCulled = false;
 	}
 
+
+	generateFloorDataTexture(landscapeMesh){
+		// Assume 'floor' has been defined:
+        // const floor = new THREE.Mesh(geometry, material);
+
+        // Compute the geometry's bounding box
+        landscapeMesh.geometry.computeBoundingBox();
+        const boundingBox = landscapeMesh.geometry.boundingBox;
+        const min = boundingBox.min;
+        const max = boundingBox.max;
+
+        // Get the size of the bounding box
+        const size = new THREE.Vector3();
+        boundingBox.getSize(size);
+        // Get the position attribute from the floor's geometry
+        const positions = landscapeMesh.geometry.getAttribute('position');
+        const numVertices = positions.count;
+
+        // Choose a square texture size that can hold all vertex data.
+        // A texture of size N x N has N*N texels. We need 2 values (x, z) per vertex.
+        // The total number of values is numVertices * 2.
+        // So, we find the smallest N where N*N >= numVertices * 2.
+        const textureSize = Math.ceil(Math.sqrt(numVertices));
+
+        // Create a Float32Array to store the data, with 4 channels (RGBA)
+        const data = new Float32Array(textureSize * textureSize * 4);
+
+        // Populate the data array with vertex positions (x, z).
+        for (let i = 0; i < numVertices; i++) {
+            const stride = i * 4; // Use a stride of 4 for the RGBA format
+            const x = positions.getX(i);
+            const y = positions.getY(i);
+            const z = positions.getZ(i);
+
+
+            data[stride]     =  (x - min.x) / size.x;
+            data[stride + 1] =  (y - min.y) / size.y;
+            data[stride + 2] = (z - min.z) / size.z;
+            data[stride + 3] = 0; // Padding
+        }
+
+        // Create the DataTexture
+        const floorDataTexture = new THREE.DataTexture(
+            data,
+            textureSize,
+            textureSize,
+            THREE.RGBAFormat,
+            THREE.FloatType
+        );
+        floorDataTexture.needsUpdate = true; // Tell three.js to upload the data to the GPU
+		return floorDataTexture;
+	}
+
+
 	setMaterial() {
 		console.log(this.landscapeMesh.geometry.boundingBox);
 
@@ -339,7 +394,7 @@ export default class GhibliGrass {
 				uNoiseTexture: { value: noiseTexture },
 				uDiffuseMap: { value: grassTexture },
 				uPlayerPosition: { value: new THREE.Vector3() },
-				uHeightMap: { value: heightmap},
+				uHeightMap: { value: this.floorDataTexture},
 				uBoundingBoxMin: { value: this.landscapeMesh.geometry.boundingBox.min },
 				uBoundingBoxMax: { value: this.landscapeMesh.geometry.boundingBox.max },
 				uPatchSize: { value: this.settings.patchSize },

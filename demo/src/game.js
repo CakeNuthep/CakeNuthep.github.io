@@ -200,56 +200,56 @@ function initSky() {
 
 // Setup the floor
 function setupFloor() {
-    // const textureLoader = new THREE.TextureLoader(loadingManager);
-    // const sandBaseColor = textureLoader.load('./textures/sand/Sand 002_COLOR.jpg');
-    // const sandNormalMap = textureLoader.load('./textures/sand/Sand 002_NRM.jpg');
-    // const sandHeightMap = textureLoader.load('./textures/sand/Sand 002_DISP.jpg');
-    // const sandAmbientOcclusion = textureLoader.load('./textures/sand/Sand 002_OCC.jpg');
+    const textureLoader = new THREE.TextureLoader(loadingManager);
+    const sandBaseColor = textureLoader.load('./textures/sand/Sand 002_COLOR.jpg');
+    const sandNormalMap = textureLoader.load('./textures/sand/Sand 002_NRM.jpg');
+    const sandHeightMap = textureLoader.load('./textures/sand/Sand 002_DISP.jpg');
+    const sandAmbientOcclusion = textureLoader.load('./textures/sand/Sand 002_OCC.jpg');
 
-    // const geometry = new THREE.PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE, 512, 512);
-    // geometry.rotateX(-Math.PI / 2);
+    const geometry = new THREE.PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE, 512, 512);
+    geometry.rotateX(-Math.PI / 2);
 
-    // // Generate terrain using Perlin noise
-    // const noise = new ImprovedNoise();
-    // const positionAttribute = geometry.getAttribute('position');
-    // for (let i = 0; i < positionAttribute.count; i++) {
-    //     const x = positionAttribute.getX(i);
-    //     const z = positionAttribute.getZ(i);
-    //     const y = noise.noise(x * TERRAIN_SCALE, z * TERRAIN_SCALE, 0) * TERRAIN_HEIGHT;
-    //     positionAttribute.setY(i, y);
-    // }
-    // positionAttribute.needsUpdate = true;
-    // geometry.computeVertexNormals();
+    // Generate terrain using Perlin noise
+    const noise = new ImprovedNoise();
+    const positionAttribute = geometry.getAttribute('position');
+    for (let i = 0; i < positionAttribute.count; i++) {
+        const x = positionAttribute.getX(i);
+        const z = positionAttribute.getZ(i);
+        const y = noise.noise(x * TERRAIN_SCALE, z * TERRAIN_SCALE, 0) * TERRAIN_HEIGHT;
+        positionAttribute.setY(i, y);
+    }
+    positionAttribute.needsUpdate = true;
+    geometry.computeVertexNormals();
 
-    // const material = new THREE.MeshStandardMaterial({
-    //     map: sandBaseColor,
-    //     normalMap: sandNormalMap,
-    //     displacementMap: sandHeightMap,
-    //     displacementScale: 0.1,
-    //     aoMap: sandAmbientOcclusion,
-    // });
-    // wrapAndRepeatTexture(material.map);
-    // wrapAndRepeatTexture(material.normalMap);
-    // wrapAndRepeatTexture(material.displacementMap);
-    // wrapAndRepeatTexture(material.aoMap);
-
-    // floor = new THREE.Mesh(geometry, material);
-    // floor.receiveShadow = true;
-    // scene.add(floor);
-
-    const gltfLoader = new GLTFLoader(loadingManager);
-    
-    const dracoLoader = new DRACOLoader(loadingManager);
-
-    // Use a CDN-hosted Draco decoder to avoid missing local /draco/ files.
-    // The Google CDN hosts the decoders including draco_decoder.wasm.
-    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
-    gltfLoader.setDRACOLoader(dracoLoader);
-    gltfLoader.load('models/level.glb', (gltf) => {
-        floor = gltf.scene;
-        floor.receiveShadow = true;
-        scene.add(floor);
+    const material = new THREE.MeshStandardMaterial({
+        map: sandBaseColor,
+        normalMap: sandNormalMap,
+        displacementMap: sandHeightMap,
+        displacementScale: 0.1,
+        aoMap: sandAmbientOcclusion,
     });
+    wrapAndRepeatTexture(material.map);
+    wrapAndRepeatTexture(material.normalMap);
+    wrapAndRepeatTexture(material.displacementMap);
+    wrapAndRepeatTexture(material.aoMap);
+
+    floor = new THREE.Mesh(geometry, material);
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // const gltfLoader = new GLTFLoader(loadingManager);
+    
+    // const dracoLoader = new DRACOLoader(loadingManager);
+
+    // // Use a CDN-hosted Draco decoder to avoid missing local /draco/ files.
+    // // The Google CDN hosts the decoders including draco_decoder.wasm.
+    // dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
+    // gltfLoader.setDRACOLoader(dracoLoader);
+    // gltfLoader.load('models/level.glb', (gltf) => {
+    //     floor = gltf.scene;
+    //     floor.receiveShadow = true;
+    //     scene.add(floor);
+    // });
 
 
 }
@@ -595,8 +595,8 @@ init();
 
 // Start rendering only after everything is loaded
 loadingManager.onLoad = () => {
-    const landscapeMesh = floor.getObjectByName("Landscape");
-    setGrass(landscapeMesh, characterControls);
+    // const landscapeMesh = floor.getObjectByName("Landscape");
+    setGrass(floor, characterControls);
     loadingScreen.style.display = 'none';
 
     // Show start menu by setting its CSS display property to 'block'
@@ -657,8 +657,7 @@ function handleOrientationChange(mediaQuery) {
 }
 
 function setGrass(floorMesh, characterControls){
-        
-		grass = new GhibliGrass(floorMesh, characterControls);
+		grass = new GhibliGrass(floorMesh, characterControls );
         scene.add(grass.mesh);
         characterControls.model.add(grass.mesh);
 }
