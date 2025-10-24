@@ -5,11 +5,9 @@ import * as THREE from "three";
 const vertexShader = `
 attribute vec3 aYaw;
 attribute vec3 aBladeOrigin;
-
 varying vec3 vColor;
-
 uniform float uTime;
-uniform vec3 uPlayerPosition;
+uniform vec3 uPlayerPosition; // Use this for world position, not local origin
 uniform sampler2D uHeightMap;
 uniform sampler2D uDiffuseMap;
 uniform sampler2D uNoiseTexture;
@@ -52,50 +50,45 @@ float map(float value, float inMin, float inMax, float outMin, float outMax) {
 }
 
 void main() {
-    // Initial blade position
+    // Start with the local position and origin from the attributes
     vec3 transformed = position;
     vec3 origin = aBladeOrigin;
 
-    // Wrap origin within patch bounds relative to player
-    float halfPatchSize = uPatchSize * 0.5;
-    origin.x = mod(origin.x - uPlayerPosition.x + halfPatchSize, uPatchSize) - halfPatchSize;
-    origin.z = mod(origin.z - uPlayerPosition.z + halfPatchSize, uPatchSize) - halfPatchSize;
+    // The model matrix automatically includes parent (player) rotation and translation.
+    vec4 worldPosition = modelMatrix * vec4(origin, 1.0);
 
-    vec3 worldPos = uPlayerPosition + origin;
-
-    transformed.x = origin.x;
-    transformed.z = origin.z;
-
-    // Map to height map UVs
+    // Use the *real* world position for texture mapping and other world-space effects
     vec2 uv = vec2(
-        map(uPlayerPosition.x + origin.x, uBoundingBoxMin.x, uBoundingBoxMax.x, 0.0, 1.0),
-        map(uPlayerPosition.z + origin.z, uBoundingBoxMin.z, uBoundingBoxMax.z, 0.0, 1.0)
+        map(worldPosition.x, uBoundingBoxMin.x, uBoundingBoxMax.x, 0.0, 1.0),
+        map(worldPosition.z, uBoundingBoxMin.z, uBoundingBoxMax.z, 0.0, 1.0)
     );
 
+    // The rest of the logic remains the same, but uses the correct worldPosition
     // Height map sampling
-    vec2 texSize = vec2(textureSize(uHeightMap, 0)); 
+    vec2 texSize = vec2(textureSize(uHeightMap, 0));
     vec2 uvTexel = uv * texSize - 0.5;
     vec2 uvFloor = floor(uvTexel) / texSize;
     vec2 uvCeil = ceil(uvTexel) / texSize;
     vec2 uvFrac = fract(uvTexel);
-
     vec3 h00 = texture2D(uHeightMap, uvFloor).rgb;
     vec3 h10 = texture2D(uHeightMap, vec2(uvCeil.x, uvFloor.y)).rgb;
     vec3 h01 = texture2D(uHeightMap, vec2(uvFloor.x, uvCeil.y)).rgb;
     vec3 h11 = texture2D(uHeightMap, uvCeil).rgb;
-
     vec3 heightMapColor = mix(mix(h00, h10, uvFrac.x), mix(h01, h11, uvFrac.x), uvFrac.y);
-
     float terrainHeight = heightMapColor.y;
     float displacement = map(terrainHeight, 0.0, 1.0, uBoundingBoxMin.y, uBoundingBoxMax.y);
-    transformed.y += displacement - uPlayerPosition.y;
+
+    // Apply displacement relative to the world position, but adjust locally
+    transformed.y += displacement - worldPosition.y;
 
     // Height variation using noise and randomness
     vec3 heightNoise = texture2D(uNoiseTexture, uv.yx * vec2(uHeightNoiseFrequency)).rgb;
     float heightModifier = ((heightNoise.r + heightNoise.g + heightNoise.b) * uMaxBladeHeight) * uHeightNoiseAmplitude;
     heightModifier += random(uv) * (uRandomHeightAmount * 0.1);
 
-    // Edge falloff calculation
+    // Edge falloff calculation. Calculate based on world position relative to the player
+    float halfPatchSize = uPatchSize * 0.5;
+    vec3 localPlayerPosition = vec3(0.0, 0.0, 0.0); // Child is at (0,0,0) locally
     float edgeDistanceX = abs(origin.x) / halfPatchSize;
     float edgeDistanceZ = abs(origin.z) / halfPatchSize;
     float edgeFactor = 1.0 - max(edgeDistanceX, edgeDistanceZ);
@@ -106,12 +99,10 @@ void main() {
     heightModifier -= baldPatchOffset;
 
     // Edge fade for bounding box limits
-    float edgeFade = 
-        smoothstep(uBoundingBoxMin.x, uBoundingBoxMin.x + 2.0, worldPos.x) *
-        smoothstep(uBoundingBoxMax.x, uBoundingBoxMax.x - 2.0, worldPos.x) *
-        smoothstep(uBoundingBoxMin.z, uBoundingBoxMin.z + 2.0, worldPos.z) *
-        smoothstep(uBoundingBoxMax.z, uBoundingBoxMax.z - 2.0, worldPos.z);
-
+    float edgeFade = smoothstep(uBoundingBoxMin.x, uBoundingBoxMin.x + 2.0, worldPosition.x) *
+                     smoothstep(uBoundingBoxMax.x, uBoundingBoxMax.x - 2.0, worldPosition.x) *
+                     smoothstep(uBoundingBoxMin.z, uBoundingBoxMin.z + 2.0, worldPosition.z) *
+                     smoothstep(uBoundingBoxMax.z, uBoundingBoxMax.z - 2.0, worldPosition.z);
     heightModifier *= edgeFade;
 
     // Width adjustment
@@ -131,34 +122,30 @@ void main() {
 
     // Wind effect using noise texture
     float noiseScale = uWindNoiseScale * 0.1;
-    vec2 noiseUV = vec2(origin.x * noiseScale, origin.z * noiseScale);
-
+    vec2 noiseUV = vec2(worldPosition.x * noiseScale, worldPosition.z * noiseScale); // Use world position for consistent wind
     mat2 rotation = mat2(
         cos(uWindDirection), -sin(uWindDirection),
         sin(uWindDirection), cos(uWindDirection)
     );
     vec2 rotatedNoiseUV = rotation * noiseUV + uTime * vec2(uWindSpeed);
-
     vec3 windNoise = texture2D(uNoiseTexture, rotatedNoiseUV).rgb;
-
     vec3 axis = vec3(windNoise.g, 0.0, windNoise.b);
     float angle = radians(map(windNoise.g + windNoise.b, 0.0, 2.0, -uMaxBendAngle, uMaxBendAngle)) * color.g;
     mat3 rotationMatrix = rotate3d(axis, angle);
-
     vec3 basePosition = vec3(transformed.x, transformed.y - heightModifier, transformed.z);
     vec3 relativePosition = transformed - basePosition;
     relativePosition = rotationMatrix * relativePosition;
     transformed = basePosition + relativePosition;
-
     transformed.y += heightModifier * color.g;
 
     // Final position transformation
-    vec4 modelPosition = modelMatrix * vec4(transformed, 1.0);
-    vec4 viewPosition = viewMatrix * modelPosition;
+    vec4 finalModelPosition = modelMatrix * vec4(transformed, 1.0); // Apply final model matrix
+    vec4 viewPosition = viewMatrix * finalModelPosition;
     vec4 projectedPosition = projectionMatrix * viewPosition;
 
     gl_Position = projectedPosition;
 }
+
 
 `;
 const fragmentShader = `
