@@ -153,7 +153,7 @@ class CharacterControls extends Box {
         }
 
         if(this.isMoving(this.currentAction) || isJump){
-            this.updateCameraTarget();
+            this.updateCameraTarget(floor);
         }
     }
 
@@ -354,28 +354,45 @@ class CharacterControls extends Box {
         this.walkDirection.applyAxisAngle(this.rotateAngle, directionOffset);
     }
 
-    updateCameraTarget() {
+    updateCameraTarget(floor) {
         const distance = 5; // Desired distance from the model
         const direction = new THREE.Vector3();
         direction.subVectors(this.model.position, this.camera.position);
         const magnitude = direction.length();
 
-        // 2. Normalize the direction vector (set its length to 1)
+        // Normalize and scale to keep desired distance
         direction.normalize();
-
-        // 3. Scale the direction vector by the step size
         direction.multiplyScalar(magnitude - distance);
 
-         // 4. Add the resulting vector to vectorA
+        // Proposed camera position (smoothly approached below)
         const cameraPosition = this.camera.position.clone().add(direction);
 
-        this.camera.position.lerp(cameraPosition, 0.1); // Smooth transition
-        this.camera.position.y = this.model.position.y + 3; // Maintain a height above the model
+        // Keep camera a bit above the model by default
+        cameraPosition.y = Math.max(cameraPosition.y, this.model.position.y + 3);
 
-        // Update camera target
+        // If floor is provided, raycast down from the proposed camera XZ to find terrain height
+        if (floor) {
+            const down = new THREE.Vector3(0, -1, 0);
+            // Ray origin high above the proposed camera position to ensure intersection
+            const rayOrigin = new THREE.Vector3(cameraPosition.x, cameraPosition.y + 50, cameraPosition.z);
+            this.raycaster.set(rayOrigin, down);
+            const intersects = this.raycaster.intersectObject(floor);
+            if (intersects.length > 0) {
+                const terrainHeight = intersects[0].point.y;
+                const minCameraHeight = terrainHeight + 2.5; // camera offset above terrain
+                if (cameraPosition.y < minCameraHeight) {
+                    cameraPosition.y = minCameraHeight;
+                }
+            }
+        }
+
+        // Smoothly move camera
+        this.camera.position.lerp(cameraPosition, 0.1);
+
+        // Update camera target to follow the model (slightly above the model)
         this.cameraTarget.set(
             this.model.position.x,
-            this.model.position.y + 1, // Keep target slightly above the model
+            this.model.position.y + 1,
             this.model.position.z
         );
         this.orbitControl.target = this.cameraTarget;
