@@ -394,7 +394,7 @@ export default class GhibliGrass {
 				uHeightNoiseFrequency: { value: 12 },
 				uHeightNoiseAmplitude: { value: 3 },
 				uMaxBendAngle: { value: 22 },
-				uMaxBladeHeight: { value: 0.35 },
+				uMaxBladeHeight: { value: 0.2 },
 				uRandomHeightAmount: { value: 0.25 },
 			},
 		});

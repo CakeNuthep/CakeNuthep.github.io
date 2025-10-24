@@ -371,20 +371,20 @@ class CharacterControls extends Box {
         cameraPosition.y = Math.max(cameraPosition.y, this.model.position.y + 3);
 
         // If floor is provided, raycast down from the proposed camera XZ to find terrain height
-        if (floor) {
-            const down = new THREE.Vector3(0, -1, 0);
-            // Ray origin high above the proposed camera position to ensure intersection
-            const rayOrigin = new THREE.Vector3(cameraPosition.x, cameraPosition.y + 50, cameraPosition.z);
-            this.raycaster.set(rayOrigin, down);
-            const intersects = this.raycaster.intersectObject(floor);
-            if (intersects.length > 0) {
-                const terrainHeight = intersects[0].point.y;
-                const minCameraHeight = terrainHeight + 2.5; // camera offset above terrain
-                if (cameraPosition.y < minCameraHeight) {
-                    cameraPosition.y = minCameraHeight;
-                }
-            }
-        }
+        // if (floor) {
+        //     const down = new THREE.Vector3(0, -1, 0);
+        //     // Ray origin high above the proposed camera position to ensure intersection
+        //     const rayOrigin = new THREE.Vector3(cameraPosition.x, cameraPosition.y + 50, cameraPosition.z);
+        //     this.raycaster.set(rayOrigin, down);
+        //     const intersects = this.raycaster.intersectObject(floor);
+        //     if (intersects.length > 0) {
+        //         const terrainHeight = intersects[0].point.y;
+        //         const minCameraHeight = terrainHeight + 2.5; // camera offset above terrain
+        //         if (cameraPosition.y < minCameraHeight) {
+        //             cameraPosition.y = minCameraHeight;
+        //         }
+        //     }
+        // }
 
         // Smoothly move camera
         this.camera.position.lerp(cameraPosition, 0.1);
