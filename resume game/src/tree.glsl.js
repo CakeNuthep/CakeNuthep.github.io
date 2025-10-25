@@ -76,7 +76,7 @@ void main() {
   vec4 worldPosition = modelMatrix  * vec4(position, 1.0);
   vPosition = worldPosition.xyz;
 
-  //worldViewPosition += vec4(mix(vec3(0.0), inflatedVertexOffset, u_effectBlend), 0.0);
+  //worldPosition += vec4(mix(vec3(0.0), inflatedVertexOffset, u_effectBlend), 0.0);
 
   //worldPosition = applyWind(worldPosition);
 

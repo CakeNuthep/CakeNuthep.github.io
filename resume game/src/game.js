@@ -59,7 +59,7 @@ let isStart = false;
 let abtLight, dirLight;
 
 const gui = new GUI();
-gui.hide();
+//gui.hide();
 const settingGUI = gui.addFolder("Generic")
 const skySettingGUI = gui.addFolder("Sky")
 
@@ -507,7 +507,7 @@ function setupTrees(threeData){
 }
 
 function setupTreeWind(){
-    const data = { radius:15, angle: Math.PI/4, scale: 1, modelPath: 'models/tree.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) }
+    const data = { radius:15, angle: Math.PI/4, scale: 1, modelPath: 'models/tree.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.PI/2, 0) }
     const loader = new GLTFLoader(loadingManager);
     loader.load(data.modelPath, (gltf) => {
         const model = gltf.scene;
@@ -537,10 +537,10 @@ function setupTreeWind(){
         //         blending: THREE.AdditiveBlending,
         //         u_effectBlend: { value: 1.0 },
         //         u_inflate: { value: 0.1 },
-        //         u_scale: { value: 0.5 },
+        //         u_scale: { value: 1.0 },
         //         u_windSpeed: { value: 5.0 },
         //         u_windTime: { value: 0.0 },
-        //         u_color: {value: new THREE.Color('#3f6d21')},
+        //         u_color: {value: new THREE.Color('#97fa56')},
         //     },
         //     vertexShader: shader,
         //     fragmentShader: `
@@ -588,8 +588,8 @@ function setupTreeWind(){
 
         const leafMaterial = new THREE.MeshStandardMaterial( {
             color: new THREE.Color('#85e843').convertLinearToSRGB(),
-            alphaTest: 0,
-            transparent: true,
+            alphaTest: 0.5,
+            transparent: false,
             side: THREE.DoubleSide,
             alphaMap: leafTexture,
 
@@ -600,10 +600,10 @@ function setupTreeWind(){
         leafMaterial.onBeforeCompile = (shader) => {
             // Add our custom uniforms
             shader.uniforms.u_windTime  = { value: 0 };
-            shader.uniforms.u_effectBlend = { value: THREE.AdditiveBlending, };
-            shader.uniforms.u_inflate = { value: 0.1 };
-            shader.uniforms.u_scale = { value: 0.5 };
-            shader.uniforms.u_windSpeed = { value: .5 };
+            shader.uniforms.u_effectBlend = { value: 0.9};
+            shader.uniforms.u_inflate = { value: 0.0 };
+            shader.uniforms.u_scale = { value: 1.0 };
+            shader.uniforms.u_windSpeed = { value: 1.0 };
 
              // Inject our uniform declaration
             shader.vertexShader = shader.vertexShader.replace(
@@ -624,13 +624,6 @@ function setupTreeWind(){
                 float remap(float v, float inMin, float inMax, float outMin, float outMax) {
                     float t = inverseLerp(v, inMin, inMax);
                     return mix(outMin, outMax, t);
-                }
-
-                vec2 rotate(vec2 v, float a) {
-                    float s = sin(a);
-                    float c = cos(a);
-                    mat2 m = mat2(c, -s, s, c);
-                    return m * v;
                 }
 
                 mat4 rotationZ(float radians) {
@@ -662,9 +655,9 @@ function setupTreeWind(){
                     offset *= vec2(-1.0, 1.0);
                     offset = normalize(offset) * u_scale;
                     return offset;
-                    }
+                }
 
-                    vec3 inflateOffset(vec3 offset) {
+                vec3 inflateOffset(vec3 offset) {
                     return offset + normal.xyz * u_inflate;
                 }
                 `
@@ -676,27 +669,14 @@ function setupTreeWind(){
                 `
                 #include <begin_vertex>
                 
+                 
                 vec2 vertexOffset = calcInitialOffsetFromUVs();
                 vec3 inflatedVertexOffset = inflateOffset(vec3(vertexOffset, 0.0));
+
                 transformed += mix(vec3(0.0), inflatedVertexOffset, u_effectBlend);
-                
+                transformed = applyWind(vec4(transformed,0.0)).xyz;
                 // This is a Three.js chunk. The applyWind function operates on
                 // world-space, so we will apply it later.
-                `
-            );
-            
-            // The `applyWind` function should be called after `transformed` is converted
-            // to a world-space position, which happens in the standard shader.
-            shader.vertexShader = shader.vertexShader.replace(
-                `#include <worldpos_vertex>`,
-                `
-                #include <worldpos_vertex>
-
-                // Apply wind effect to the world position
-                vec4 wPosition = modelMatrix  * vec4(transformed, 1.0);
-                wPosition = applyWind(wPosition);
-                
-                gl_Position = projectionMatrix * viewMatrix * wPosition;
                 `
             );
 
@@ -724,7 +704,6 @@ function setupTreeWind(){
             if(leafMaterial.userData.shader){
                 leafMaterial.userData.shader.uniforms.u_windTime.value += leafMaterial.userData.shader.uniforms.u_windSpeed.value * delta;
             }
-            //leafMaterial.uniforms.u_windTime.value += leafMaterial.uniforms.u_windSpeed.value * delta;
         }
         tree.setUpdateFunction(update);
     });
