@@ -587,10 +587,10 @@ function setupTreeWind(){
         // } );
 
         const leafMaterial = new THREE.MeshStandardMaterial( {
-            color: new THREE.Color('#3f6d21').convertLinearToSRGB(),
-            alphaTest: 0.5,
+            color: new THREE.Color('#85e843').convertLinearToSRGB(),
+            alphaTest: 0,
             transparent: true,
-            side: THREE.FrontSide,
+            side: THREE.DoubleSide,
             alphaMap: leafTexture,
 
         } );
