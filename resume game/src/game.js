@@ -9,6 +9,7 @@ import { Sky } from 'three/addons/objects/Sky.js';
 import { DanceObject } from './DanceObject.js';
 import { glbObject } from './glbObject.js';
 import { getParticleSystem } from "./getParticleSystem.js";
+import { shader} from './tree.glsl.js';
 import GUI from 'lil-gui';
 
 
@@ -55,6 +56,7 @@ let audioBackground;
 let objects = [];
 let animationFrameId = null; // Stores the ID of the requestAnimationFrame call
 let isStart = false;
+let abtLight, dirLight;
 
 const gui = new GUI();
 gui.hide();
@@ -95,7 +97,7 @@ function init() {
     );
     
     const treeData = [
-        { radius:15, angle: Math.PI/4, scale: 0.5, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
+        //{ radius:15, angle: Math.PI/4, scale: 0.5, modelPath: 'models/tree.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
         { radius:12, angle: Math.PI/4 + Math.PI/6, scale: 0.8, modelPath: 'models/jabami_anime_tree_v3.glb', name: 'Tree2', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
         { radius:12, angle: Math.PI/4 + Math.PI/3, scale: 0.6, modelPath: 'models/jabami_anime_tree_v4.glb', name: 'Tree3', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
         { radius:15, angle: Math.PI/4 + Math.PI/2, scale: 0.7, modelPath: 'models/jabami_anime_tree_v2.glb', name: 'Tree4', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) },
@@ -177,6 +179,7 @@ function init() {
 
     setupDanceCube(danceData);
     setupTrees(treeData);
+    setupTreeWind();
     setupBuildinds(buildingData);
     loadCharacterModel(
         'Player',
@@ -233,9 +236,10 @@ function setupControls() {
 
 // Setup lights
 function setupLights() {
-    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    abtLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(abtLight);
 
-    var dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight = new THREE.DirectionalLight(0xffffff, 1);
     dirLight.position.set(-60, 100, -10);
     dirLight.castShadow = true;
     dirLight.shadow.camera.top = 50;
@@ -499,6 +503,230 @@ function setupTrees(threeData){
                 // objects.push(tree);
             });
         });
+    });
+}
+
+function setupTreeWind(){
+    const data = { radius:15, angle: Math.PI/4, scale: 1, modelPath: 'models/tree.glb', name: 'Tree1', rotate: new THREE.Euler(0, Math.random()*2*Math.PI, 0) }
+    const loader = new GLTFLoader(loadingManager);
+    loader.load(data.modelPath, (gltf) => {
+        const model = gltf.scene;
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
+                object.receiveShadow = true;
+            }
+        });
+        const instance = model.clone();
+        const {x,z} = circlePosition(data.angle, data.radius);
+        instance.position.set(x, 0, z);
+        instance.rotation.y = data.rotate.y;
+        instance.rotation.x = data.rotate.x;
+        instance.rotation.z = data.rotate.z;
+        instance.scale.set(data.scale, data.scale, data.scale);
+
+        const textureLoader = new THREE.TextureLoader(loadingManager);
+        const leafTexture = textureLoader.load('textures/tree/foliage_alpha3.png');
+        leafTexture.flipY = false;
+        // const leafMaterial = new THREE.ShaderMaterial( {
+        //     uniforms: {
+        //         u_diffuseTexture: { value: leafTexture },
+        //         u_lightColor: { value: dirLight.color },
+        //         u_lightDirection: { value: dirLight.position.clone().normalize() },
+        //         u_ambientStrength: { value: dirLight.intensity },
+        //         blending: THREE.AdditiveBlending,
+        //         u_effectBlend: { value: 1.0 },
+        //         u_inflate: { value: 0.1 },
+        //         u_scale: { value: 0.5 },
+        //         u_windSpeed: { value: 5.0 },
+        //         u_windTime: { value: 0.0 },
+        //         u_color: {value: new THREE.Color('#3f6d21')},
+        //     },
+        //     vertexShader: shader,
+        //     fragmentShader: `
+        //         uniform sampler2D u_diffuseTexture;
+        //         uniform  vec3 u_color;
+        //         uniform vec3 lightColor;
+        //         uniform vec3 lightDirection;
+        //         uniform float ambientStrength;
+
+
+        //         varying vec2 v_UV;
+        //         varying vec3 vNormal;
+        //         varying vec3 vPosition;
+        //         void main() {
+        //             // Ambient component
+        //             vec3 ambient = ambientStrength * lightColor;
+
+        //             // Sample the red channel of the alpha map for alpha value
+        //             float alpha = texture2D(u_diffuseTexture, v_UV).r; 
+
+        //             vec3 baseColor = u_color;
+
+        //             // Diffuse component
+        //             vec3 norm = normalize(vNormal);
+        //             vec3 lightDir = normalize(-lightDirection);
+        //             float diff = max(dot(norm, lightDir), 0.0);
+        //             vec3 diffuse = diff * lightColor;
+
+        //             // Final color
+        //             vec3 result = (ambient + diffuse) * baseColor;
+
+
+        //             gl_FragColor = vec4(result, alpha);
+        //         }
+        //     `,
+        //     transparent: true,
+        //     side: THREE.DoubleSide,
+        //     map: leafTexture,
+        //     depthTest: true,
+        //     depthWrite: false,
+        //     transparent: true,
+        //     vertexColors: true,
+
+        // } );
+
+        const leafMaterial = new THREE.MeshStandardMaterial( {
+            color: new THREE.Color('#3f6d21').convertLinearToSRGB(),
+            alphaTest: 0.5,
+            transparent: true,
+            side: THREE.FrontSide,
+            alphaMap: leafTexture,
+
+        } );
+
+        leafMaterial.customProgramCacheKey = () => 'vertex_wavy_shader_key';
+
+        leafMaterial.onBeforeCompile = (shader) => {
+            // Add our custom uniforms
+            shader.uniforms.u_windTime  = { value: 0 };
+            shader.uniforms.u_effectBlend = { value: THREE.AdditiveBlending, };
+            shader.uniforms.u_inflate = { value: 0.1 };
+            shader.uniforms.u_scale = { value: 0.5 };
+            shader.uniforms.u_windSpeed = { value: .5 };
+
+             // Inject our uniform declaration
+            shader.vertexShader = shader.vertexShader.replace(
+                `#include <common>`,
+                `
+                #include <common>
+                uniform float u_effectBlend;
+                uniform float u_inflate;
+                uniform float u_scale;
+                uniform float u_windSpeed;
+                uniform float u_windTime;
+
+                // Custom functions from your GLSL
+                float inverseLerp(float v, float minValue, float maxValue) {
+                    return (v - minValue) / (maxValue - minValue);
+                }
+
+                float remap(float v, float inMin, float inMax, float outMin, float outMax) {
+                    float t = inverseLerp(v, inMin, inMax);
+                    return mix(outMin, outMax, t);
+                }
+
+                vec2 rotate(vec2 v, float a) {
+                    float s = sin(a);
+                    float c = cos(a);
+                    mat2 m = mat2(c, -s, s, c);
+                    return m * v;
+                }
+
+                mat4 rotationZ(float radians) {
+                    float c = cos(radians);
+                    float s = sin(radians);
+                        return mat4(
+                        c, -s, 0, 0,
+                        s, c, 0, 0,
+                        0, 0, 1, 0,
+                        0, 0, 0, 1
+                    );
+                }
+
+                vec4 applyWind(vec4 v) {
+                    float boundedYNormal = remap(normal.y, -1.0, 1.0, 0.0, 1.0);
+                    float posXZ = position.x + position.z;
+                    float power = u_windSpeed / 5.0 * -0.5;
+                    float topFacing = remap(sin(u_windTime + posXZ), -1.0, 1.0, 0.0, power);
+                    float bottomFacing = remap(cos(u_windTime + posXZ), -1.0, 1.0, 0.0, 0.05);
+                    float radians = mix(bottomFacing, topFacing, boundedYNormal);
+                    return rotationZ(radians) * v;
+                }
+
+                vec2 calcInitialOffsetFromUVs() {
+                    vec2 offset = vec2(
+                        remap(uv.x, 0.0, 1.0, -1.0, 1.0),
+                        remap(uv.y, 0.0, 1.0, -1.0, 1.0)
+                    );
+                    offset *= vec2(-1.0, 1.0);
+                    offset = normalize(offset) * u_scale;
+                    return offset;
+                    }
+
+                    vec3 inflateOffset(vec3 offset) {
+                    return offset + normal.xyz * u_inflate;
+                }
+                `
+            );
+
+            // Call custom functions and modify the vertex position
+            shader.vertexShader = shader.vertexShader.replace(
+                `#include <begin_vertex>`,
+                `
+                #include <begin_vertex>
+                
+                vec2 vertexOffset = calcInitialOffsetFromUVs();
+                vec3 inflatedVertexOffset = inflateOffset(vec3(vertexOffset, 0.0));
+                transformed += mix(vec3(0.0), inflatedVertexOffset, u_effectBlend);
+                
+                // This is a Three.js chunk. The applyWind function operates on
+                // world-space, so we will apply it later.
+                `
+            );
+            
+            // The `applyWind` function should be called after `transformed` is converted
+            // to a world-space position, which happens in the standard shader.
+            shader.vertexShader = shader.vertexShader.replace(
+                `#include <worldpos_vertex>`,
+                `
+                #include <worldpos_vertex>
+
+                // Apply wind effect to the world position
+                vec4 wPosition = modelMatrix  * vec4(transformed, 1.0);
+                wPosition = applyWind(wPosition);
+                
+                gl_Position = projectionMatrix * viewMatrix * wPosition;
+                `
+            );
+
+            // Store the custom uniforms and the material itself for the animation loop
+            leafMaterial.userData.shader = shader;
+        };
+
+        instance.traverse((object) => {
+            if (object.isMesh && object.name.includes('foliage')) {
+                object.material = leafMaterial;
+            }
+        });
+        scene.add(instance);
+        const tree = new glbObject(data.name,
+            instance,
+            1,
+            1,
+            1,
+            settings.collisionDetectionEnabled,
+            settings.gravityEnabled,
+            settings.showCollisionBoxes
+        );
+        objects.push(tree);
+        function update(delta){
+            if(leafMaterial.userData.shader){
+                leafMaterial.userData.shader.uniforms.u_windTime.value += leafMaterial.userData.shader.uniforms.u_windSpeed.value * delta;
+            }
+            //leafMaterial.uniforms.u_windTime.value += leafMaterial.uniforms.u_windSpeed.value * delta;
+        }
+        tree.setUpdateFunction(update);
     });
 }
 
