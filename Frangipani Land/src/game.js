@@ -43,7 +43,7 @@ loadingManager.onError = function(url) {
 };
 
 
-const FLOOR_SIZE = 24;
+const FLOOR_SIZE = 10;
 const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
 
@@ -85,7 +85,7 @@ function init() {
 
     // setupDanceCube(danceData);
     // setupTrees(treeData);
-    setupTreeWind();
+    setupTreeWind(3);
     // setupBuildinds(buildingData);
     loadCharacterModel(
         'Player',
@@ -443,13 +443,14 @@ function setupTreeWind(effectRate=12.0){
 
 
         //////// emit broom //////
-        const vfxPath = 'textures/vfx/circle.png';
+        const vfxPath = 'textures/vfx/bloom.png';
         const bloomEffect = bloom({
             camera,
             emitter: foliageModel,
             parent: scene,
             rate: effectRate,
             texture: vfxPath,
+            scale: data.scale,
         });
        
         function update(delta){
@@ -481,7 +482,7 @@ function loadCharacterModel(name, modlePath, jumpSoundPath, danceSong1Path, danc
         model.traverse((object) => {
             if (object.isMesh) object.castShadow = true;
         });
-        const {x,z} = circlePosition(0, 25);
+        const {x,z} = circlePosition(0, FLOOR_SIZE+1);
         model.position.set(x, 0, z);
         model.rotation.y = -Math.PI/2;
         scene.add(model);
@@ -515,6 +516,7 @@ function loadCharacterModel(name, modlePath, jumpSoundPath, danceSong1Path, danc
             'Walk',
             'Run',
             'ForwardFlip',
+            FLOOR_SIZE+1,
         );
         keyDisplayQueue = new KeyDisplay(characterControls);
         initialObjectInCharacter()

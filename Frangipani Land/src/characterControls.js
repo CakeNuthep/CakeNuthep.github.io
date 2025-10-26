@@ -20,6 +20,7 @@ class CharacterControls extends Box {
         WalkAction='Walk',
         RunAction='Run',
         JumpAction='ForwardFlip',
+        radius=25,
 
     ) {
 
@@ -85,7 +86,7 @@ class CharacterControls extends Box {
         this.IdelCurrentWaitAction = this.IdleYawnAction;
         this.currentDanceSong = this.danceSong;
         this.angle = 0;
-        this.radius = 25;
+        this.radius = radius;
         
     }
 

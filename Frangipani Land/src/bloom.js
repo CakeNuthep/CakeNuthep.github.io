@@ -66,7 +66,7 @@ function getLinearSpline(lerp) {
 }
 
 function bloom(params) {
-  const { camera, emitter, parent, rate, texture } = params;
+  const { camera, emitter, parent, rate, texture, scale } = params;
   const uniforms = {
     diffuseTexture: {
       value: new THREE.TextureLoader().load(texture)
@@ -101,9 +101,9 @@ function bloom(params) {
   const alphaSpline = getLinearSpline((t, a, b) => {
     return a + t * (b - a);
   });
-  alphaSpline.addPoint(0.0, 0.0);
-  alphaSpline.addPoint(0.6, 1.0);
-  alphaSpline.addPoint(1.0, 0.0);
+  alphaSpline.addPoint(0.0, 0.8);
+  alphaSpline.addPoint(0.6, 0.9);
+  alphaSpline.addPoint(1.0, 1.0);
 
   const colorSpline = getLinearSpline((t, a, b) => {
     const c = a.clone();
@@ -117,12 +117,12 @@ function bloom(params) {
   const sizeSpline = getLinearSpline((t, a, b) => {
     return a + t * (b - a);
   });
-  sizeSpline.addPoint(0.0, 0.0);
-  sizeSpline.addPoint(0.7, 1.0);
-  sizeSpline.addPoint(1, 0.1);
+  sizeSpline.addPoint(0.0, 0.5);
+  sizeSpline.addPoint(0.7, 0.9);
+  sizeSpline.addPoint(1, 1.0);
  // max point size = 512; => console.log(ctx.getParameter(ctx.ALIASED_POINT_SIZE_RANGE));
-  const radius = 0.5;
-  const maxLife = 10;
+  const radius = 1;
+  const maxLife = 15;
   const maxSize = 1.25;
   let gdfsghk = 0.0;
   function _AddParticles(timeElapsed) {
@@ -133,9 +133,9 @@ function bloom(params) {
       const life = (Math.random() * 0.75 + 0.25) * maxLife;
       _particles.push({
         position: new THREE.Vector3(
-          (Math.random() * 2 - 1) * radius,
-          (Math.random() * 2 - 1) * radius,
-          (Math.random() * 2 - 1) * radius).add(emitter.position),
+          (Math.random() * 2 - 1) * radius*scale,
+          1* radius*scale,
+          (Math.random() * 2 - 1) * radius*scale).add(emitter.position),
         size: (Math.random() * 0.5 + 0.5) * maxSize,
         colour: new THREE.Color(),
         alpha: 1.0,
