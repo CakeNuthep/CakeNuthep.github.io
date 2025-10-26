@@ -143,7 +143,7 @@ function bloom(params) {
         maxLife: life,
         rotation: Math.random() * 2.0 * Math.PI,
         rotationRate: Math.random() * 0.01 - 0.005,
-        velocity: new THREE.Vector3(Math.random()*2-1, Math.random()*2-0.2, Math.random()*2-1),
+        velocity: new THREE.Vector3(Math.random()*2-1, -0.5, Math.random()*2-1),
       });
     }
   }
