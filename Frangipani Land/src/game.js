@@ -330,6 +330,10 @@ function setupTreeWind(effectRate=12.0){
             side: THREE.DoubleSide,
             alphaMap: leafTexture,
 
+            emissive: new THREE.Color(0x85e843).convertLinearToSRGB(), // Same color as the leaf, or different if you want
+            emissiveMap: textureLoader.load('textures/vfx/bloom Tree.png'),
+            emissiveIntensity: 3, // Increase this to make the object glow more brightly
+
         } );
 
         leafMaterial.customProgramCacheKey = () => 'vertex_wavy_shader_key';
@@ -389,7 +393,7 @@ function setupTreeWind(effectRate=12.0){
                         remap(uv.x, 0.0, 1.0, -1.0, 1.0),
                         remap(uv.y, 0.0, 1.0, -1.0, 1.0)
                     );
-                    offset *= vec2(-1.0, 1.0);
+                    //offset *= vec2(-1.0, 1.0);
                     offset = normalize(offset) * u_scale;
                     return offset;
                 }
