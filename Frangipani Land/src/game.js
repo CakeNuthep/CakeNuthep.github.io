@@ -57,7 +57,7 @@ let isStart = false;
 let abtLight, dirLight;
 
 const gui = new GUI();
-//gui.hide();
+gui.hide();
 const settingGUI = gui.addFolder("Generic")
 const skySettingGUI = gui.addFolder("Sky")
 
