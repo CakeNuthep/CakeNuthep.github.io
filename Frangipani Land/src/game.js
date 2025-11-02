@@ -43,7 +43,7 @@ loadingManager.onError = function(url) {
 };
 
 
-const FLOOR_SIZE = 10;
+const FLOOR_SIZE = 40;
 const TERRAIN_SCALE = 0.02;
 const TERRAIN_HEIGHT = 20;
 
@@ -67,7 +67,7 @@ const settings = {
         showFootBoxes: false,
         gravityEnabled: true,
         soundEffect: true,
-        soundBackground: true        
+        soundBackground: false        
     };
 
 const clock = new THREE.Clock();
@@ -218,10 +218,10 @@ function initSky() {
 function setupFloor() {
     {
         const textureLoader = new THREE.TextureLoader(loadingManager);
-        const sandBaseColor = textureLoader.load('./textures/sand/Sand 002_COLOR.jpg');
-        const sandNormalMap = textureLoader.load('./textures/sand/Sand 002_NRM.jpg');
-        const sandHeightMap = textureLoader.load('./textures/sand/Sand 002_DISP.jpg');
-        const sandAmbientOcclusion = textureLoader.load('./textures/sand/Sand 002_OCC.jpg');
+        const sandBaseColor = textureLoader.load('./textures/grass/Ground_Grass_001_COLOR.jpg');
+        const sandNormalMap = textureLoader.load('./textures/grass/Ground_Grass_001_NORM.jpg');
+        const sandHeightMap = textureLoader.load('./textures/grass/Ground_Grass_001_DISP.PNG');
+        const sandAmbientOcclusion = textureLoader.load('./textures/grass/Ground_Grass_001_OCC.jpg');
 
         const geometry = new THREE.CircleGeometry(FLOOR_SIZE+3, 512, 0, 2*Math.PI);
         
@@ -332,7 +332,7 @@ function setupTreeWind(effectRate=12.0){
 
             emissive: new THREE.Color(0x85e843).convertLinearToSRGB(), // Same color as the leaf, or different if you want
             emissiveMap: textureLoader.load('textures/vfx/bloom Tree.png'),
-            emissiveIntensity: 3, // Increase this to make the object glow more brightly
+            emissiveIntensity: 5, // Increase this to make the object glow more brightly
 
         } );
 
@@ -482,6 +482,7 @@ function loadCharacterModel(name, modlePath, jumpSoundPath, danceSong1Path, danc
     const jinnSong = createMusic(danceSong3Path,false,1);//createJinnSong();
     new GLTFLoader(loadingManager).load(modlePath, (gltf) => {
         const model = gltf.scene;
+        model.visible = false;
         model.name = name;
         model.traverse((object) => {
             if (object.isMesh) object.castShadow = true;
@@ -520,7 +521,7 @@ function loadCharacterModel(name, modlePath, jumpSoundPath, danceSong1Path, danc
             'Walk',
             'Run',
             'ForwardFlip',
-            FLOOR_SIZE+1,
+            FLOOR_SIZE-20,
         );
         keyDisplayQueue = new KeyDisplay(characterControls);
         initialObjectInCharacter()
@@ -606,7 +607,7 @@ function animate() {
     }
 
     if(grass){
-        grass.tick(time);
+        grass.tick(time*0.5);
     }
 
     orbitControls.update();

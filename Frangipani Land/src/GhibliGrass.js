@@ -166,7 +166,7 @@ export default class GhibliGrass {
 		this.floorDataTexture = this.generateFloorDataTexture(landscapeMesh);
 
 		this.settings = {
-			count: 200000,
+			count: 100000,
 			bladeHeight: 0.005,
 			bladeWidth: 0.08,
 			material: THREE.MeshBasicMaterial,
