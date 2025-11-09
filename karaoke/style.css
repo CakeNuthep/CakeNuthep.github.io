@@ -1,0 +1,46 @@
+#lyrics {
+    font-size: 24px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.word {
+    color: gray; /* Default color */
+    transition: color 0.1s;
+    cursor: pointer; /* Allows clicking a word to jump to that time */
+}
+
+.word.highlighted {
+    color: blue; /* Highlighted color */
+    font-weight: bold;
+}
+
+/* Line-based karaoke styles */
+.line {
+    color: gray;
+    margin: 8px 0;
+    font-size: 26px;
+    transition: color 0.15s, opacity 0.15s;
+    cursor: pointer;
+}
+
+.line.hidden {
+    display: none; /* Hidden until its time */
+}
+
+.line.highlighted {
+    color: #0b66ff;
+    font-weight: 700;
+}
+
+/* Word-level karaoke styling */
+.karaoke-word {
+    color: inherit;
+    transition: color 0.08s, font-weight 0.08s, text-shadow 0.08s;
+}
+
+.karaoke-word.marked {
+    color: #ff3b3b; /* marked word color */
+    font-weight: 800;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
