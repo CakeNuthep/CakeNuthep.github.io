@@ -4,9 +4,41 @@
 // If 'words' is missing we will split the text and distribute timings evenly across the line's duration.
 const lyricsData = {
     lines: [
-        { text: "Hello and welcome to JS Karaoke!", start: 1.0, words: [["Hello",1.0],["and",1.5],["welcome",1.9],["to",2.5],["JS",3.0],["Karaoke!",3.5]] },
-        { text: "This is the second line showing up after a few seconds.", start: 4.0, words: [["This",4.0],["the",4.5],["second",4.9],["line",5.0],["showing",5.1],["up",5.5],["after",6.0],["a",6.5],["few",7.0],["seconds",7.5]] },
-        { text: "And here comes the chorus — sing along!", start: 8.0, words: [["And",8.0],["here",8.5],["comes",8.9],["the",9.5],["sing",10.0],["along!",10.5]] }
+        { text: "เพราะกลิ่นหอมจางจางๆ ที่ลอยตามลมมา", start: 25.0 },
+        { text: "หวนให้ใจคำนึงนึกถึงคราเราต้องไกล", start: 29.0 },
+        { text: "กลิ่นสุคนธ์ปนหวานใยทำให้ใจต้องขืนข่ม", start: 36.0 },
+        { text: "ทุกข์ระทมตรอมตรม ทำให้ใจหวั่นไหว", start: 41.0 },
+        { text: "หากการพบ รักจะต้องเคียงคู่ข้างเคียงกับการร่ำลา", start: 48.0 },
+        { text: "จะสุขสมหวังได้นานเพียงใดก็แล้วแต่โชคชะตา", start: 54.0 },
+        { text: "ฟ้าให้เวลามาเท่าไหร่", start: 60.0 },
+        { text: "และมันจะยาวนานเท่าใด", start: 65.0 },
+        { text: "กลิ่นดอกไม้ลั่นทมเจ้าหอมรื่นรมย์", start: 71.0 },
+        { text: "เคยชื่นเคยชมดอมดม ให้ชื่นใจ", start: 75.0 },
+        { text: "มาบัดนี้ตัวเจ้า ร่วงโรยไม่โชยกลิ่นหอม", start: 82.0 },
+        { text: "กลีบขาวมัวหมอง ตรมตรอม เหี่ยวโรยร่วงไป", start: 88.0 },
+        { text: "จากเคยงาม กลายเป็นความทราม ที่ไม่จีรังหรือไร", start: 95.0 },
+        { text: "และความรักของฉันต้องเป็นดังเช่นเจ้าลั่นทมไหม", start: 101.0 },
+        { text: "หากขัดขืนไม่ให้เวลาพัดพาสิ่งแปรผันไป", start: 107.0 },
+        { text: "ฉันจะทำได้นานเท่าไหร่", start: 112.0 },
+        { text: "ถ้าฉันต้องการแค่ตลอดไป", start: 118.0 },
+        { text: "เพราะรักของฉันจะนานกว่านั้น นานชั่วกัลป์กัป นานนิรันดร์", start: 124.0 },
+        { text: "จะไม่มีสิ่งไหนลบเลือนให้หายสิ้นกัน", start: 133.5 },
+        { text: "ดอกไม้ใดจะหอมนานเกินกว่านั้น ไม่มี", start: 140.0 },
+        { text: "เพราะรักของฉันคงอยู่เสมอ อยู่เพื่อเธอ และ เป็นของเธอ", start: 146.0 },
+        { text: "กลิ่นหอมของความรักฉันจะติดตามพบเจอ", start: 157.0 },
+        { text: "ตามพบเธอไม่มีโรยรา ไม่มีวันจาง", start: 163.5 },
+        { text: "", start: 176.0 },
+        { text: "หากขัดขืนไม่ให้เวลาพัดพาสิ่งแปรผันไป", start: 194.0 },
+        { text: "ฉันจะทำได้นานเท่าไร", start: 200.0 },
+        { text: "เพราะรักของฉันจะนานกว่านั้น นานชั่วกัลป์กัป นานนิรันดร์", start: 206.0 },
+        { text: "จะไม่มีสิ่งไหนลบเลือนให้หายสิ้นกัน", start: 215.5 },   //9.5
+        { text: "ดอกไม้ใดจะหอมนานเกินกว่านั้น ไม่มี", start: 222.0 },  //6.5
+        { text: "เพราะรักของฉันคงอยู่เสมอ อยู่เพื่อเธอ และ เป็นของเธอ", start: 228.0 },  //6.0
+        { text: "กลิ่นหอมของความรักฉันจะติดตามพบเจอ", start: 239.0 },  //11.0
+        { text: "ตามพบเธอไม่มีโรยรา ไม่มีวันจาง", start: 245.5 },  //6.5
+        { text: " ", start: 255.5 },
+        { text: "กลิ่นดอกไม้ลั่นทมเจ้าหอมรื่นรมย์", start: 264.0 },
+        { text: "เคยชื่นเคยชมดอมดมให้ชื่นใจ", start: 269.0 },
     ]
 };
 
@@ -110,19 +142,10 @@ function renderLineWords(lineIndex) {
         line.words = words.slice();
     }
 
-    // Build spans
-    el.innerHTML = '';
-    words.forEach((w, wi) => {
-        const span = document.createElement('span');
-        // Always include a trailing space inside the span so the highlight covers the gap after the word
-        span.textContent = w[0] + ' ';
-        span.classList.add('karaoke-word');
-        span.dataset.startTime = w[1];
-        span.id = `line-${lineIndex}-word-${wi}`;
-        el.appendChild(span);
-    });
+    // Render the line as plain text (no per-word spans) since we don't want to mark words
+    el.textContent = line.text;
     el.dataset.rendered = 'true';
-    // reset currentWordIndex when a new line is rendered
+    // reset currentWordIndex in case other code relies on it
     currentWordIndex = -1;
 }
 
@@ -158,10 +181,7 @@ function updateHighlight() {
         currentLineIndex = nextLineIndex;
     }
 
-    // Update word highlighting for the current line only
-    if (currentLineIndex > -1) {
-        updateCurrentWord(currentTime);
-    }
+    // Word-level marking disabled: we only show the line text, no per-word highlighting.
 }
 
 function updateCurrentWord(currentTime) {
